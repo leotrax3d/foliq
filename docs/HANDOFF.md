@@ -240,3 +240,16 @@ Kompressionsdatei). SaveJob prüft nun schon den Öffnungsfehler des Gzip-Stream
 bevor XML geschrieben wird. Echter GTK-Test bestätigt sichtbaren Fehler bei
 lauffähiger App, unverändertes Original und erfolgreichen Retry nach Entfernen
 des Hindernisses. Dieser Test deckt einen anderen Pfad als die .bak-Simulation ab.
+
+## Paketprüfung: Quellbeilage vor Auslieferung korrigiert
+
+Windows-Lauf 42902030779 für 038bf789 erfolgreich: **101/101 Tests aus 21 Suites**,
+davon neun Foliq-Tests einschließlich echtem Win32-Lockfall. Portable EXE gebaut
+und im Runner per --version gestartet. ZIP tatsächlich heruntergeladen; SHA-256,
+ZIP-CRC, AMD64-PE-Header und beide enthaltenen Manifest-Prüfsummen erfolgreich.
+Die zusätzliche Inhaltsprüfung fand jedoch eine leere Quellbeilage (171 Byte,
+nur Git-PAX-Header): `git archive` wurde aus build/ aufgerufen und beschränkte
+sich damit auf das ignorierte Build-Unterverzeichnis. Dieses Paket wird nicht
+als vollständiges Testpaket ausgeliefert. Workflow verwendet nun ausdrücklich
+`git -C .. archive` und prüft per tar, dass Katalog, SaveJob und LICENSE enthalten
+sind. Neuer Windows-Paketlauf erforderlich; Produktcode unverändert.
