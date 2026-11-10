@@ -7,8 +7,11 @@ Branch `foliq` angelegt. Keine vorhandene Arbeit wurde überschrieben.
 - Remote: https://github.com/xournalpp/xournalpp.git (`origin`, unverändert)
 - Release-Basis: `v1.2.8`
 - Commit: `ce753d2e0c48a7026fe1fbe59f132586b2217296`
-- Import: `git clone --branch v1.2.8 --depth 1 …`; flacher Klon, kein vollständiges
-  Autorenlog. Bei Bedarf `git fetch --unshallow origin`.
+- Import: zunächst `git clone --branch v1.2.8 --depth 1 …`. Vor dem Push ins
+  Foliq-Repository wurde mit `git fetch --unshallow origin` die vollständige
+  erreichbare Upstream-Historie bis zu dieser Basis nachgeladen.
+- Foliq-Ziel: https://github.com/leotrax3d/foliq (zusätzlicher Remote `foliq`).
+  Die separate Historie der ersten UI-Uploads wurde regulär zusammengeführt.
 - Originalversion in CMake: 1.2.8. Foliq ist ein Arbeitsname, keine Aussage über
   Markenverfügbarkeit oder Zugehörigkeit zum Upstream-Projekt.
 

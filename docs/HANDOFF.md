@@ -139,4 +139,7 @@ mit den lokalen Dateien verglichen und sind identisch.
 Vor Veröffentlichung erneut geprüft: git diff --check, Shellsyntax des
 Buildhelpers, YAML-Parsing und gespeicherte Test-XMLs (je 92 Tests ohne Fehler).
 Keine C++-Änderung seit den erfolgreichen Linux-Builds; kein erneuter Hardwaretest.
+Vollständige erreichbare Upstream-Historie mit git fetch --unshallow origin
+nachgeladen. Lokale Basis als d92cabd2 committed; UI-Upload-Historie mit
+5595b6a4 konfliktfrei zusammengeführt. Die Referenzdateien blieben unverändert.
 Push-Ergebnis und erster CI-Status werden nach dem Upload ergänzt.
