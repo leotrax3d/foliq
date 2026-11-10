@@ -29,6 +29,7 @@ public:
     void run() override;
 
     bool save();
+    const std::string& errorMessage() const { return lastError; }
 
     static void updatePreview(Control* control);
 

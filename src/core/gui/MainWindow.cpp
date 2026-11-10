@@ -1,3 +1,5 @@
+#include "config.h"
+#include "folio/Navigation.h"
 #include "MainWindow.h"
 
 #include <regex>
@@ -71,6 +73,10 @@ MainWindow::MainWindow(GladeSearchpath* gladeSearchPath, Control* control, GtkAp
     boxContainerWidget.reset(get("mainContentContainer"), xoj::util::ref);
     mainContentWidget.reset(get("boxContents"), xoj::util::ref);
     sidebarWidget.reset(get("sidebar"), xoj::util::ref);
+    if (FOLIQ_BUILD) {
+        gtk_orientable_set_orientation(GTK_ORIENTABLE(get("mainContentContainer")), GTK_ORIENTATION_HORIZONTAL);
+        notebookNavigation = std::make_unique<foliq::Navigation>(control, get("mainContentContainer"));
+    }
 
     loadMainCSS(gladeSearchPath, "xournalpp.css");
 
@@ -200,6 +206,7 @@ void MainWindow::rebindMenubarAccelerators() {
 }
 
 MainWindow::~MainWindow() = default;
+bool MainWindow::rememberNotebookPosition() { return !notebookNavigation || notebookNavigation->rememberPosition(); }
 
 /**
  * Topmost widgets, to check if there is a menu above

@@ -1,3 +1,4 @@
+#include "folio/Storage.h"
 #include "Control.h"
 
 #include <algorithm>  // for max
@@ -2297,6 +2298,8 @@ auto Control::openFile(fs::path filepath, int scrollToPage, bool forceOpen) -> b
         return loadPdf(filepath, scrollToPage);
     }
 
+    try { foliq::watchDocument(filepath); }
+    catch (const std::exception& e) { XojMsgBox::showErrorToUser(getGtkWindow(), e.what()); return false; }
     LoadHandler loadHandler;
     Document* loadedDocument = loadHandler.loadDocument(filepath);
 
@@ -2644,7 +2647,8 @@ auto Control::save(bool synchron) -> bool {
     if (synchron) {
         result = job->save();
         unblock();
-        this->resetSavedStatus();
+        if (result) this->resetSavedStatus();
+        else XojMsgBox::showErrorToUser(getGtkWindow(), job->errorMessage());
     } else {
         this->scheduler->addJob(job, JOB_PRIORITY_URGENT);
     }
@@ -2820,6 +2824,7 @@ void Control::quit(bool allowCancel) {
 }
 
 auto Control::close(const bool allowDestroy, const bool allowCancel) -> bool {
+    if (win && !win->rememberNotebookPosition()) return false;
     clearSelectionEndText();
     metadata->documentChanged();
 

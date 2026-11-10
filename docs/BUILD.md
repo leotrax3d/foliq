@@ -1,8 +1,8 @@
 # Build-Basis
 
 Quellbasis und Commit: [UPSTREAM.md](UPSTREAM.md). Build verwendet weiterhin
-Upstream-CMake, Ninja und dieselben Bibliotheken; FOLIQ_BUILD steuert nur die
-Fensterkennung. `-DFOLIQ_BUILD=OFF` erhält den Xournal++-Titel. Exe und XOPP-Format
+Upstream-CMake, Ninja und dieselben Bibliotheken; FOLIQ_BUILD aktiviert die
+Notizbuchnavigation, Fensterkennung und getrennten Profilordner. `-DFOLIQ_BUILD=OFF` erhält den Xournal++-Titel. Exe und XOPP-Format
 werden nicht umbenannt. Keine Laufzeitbibliothek wurde ergänzt.
 
 ## Linux-Referenz (Ubuntu 24.04, x86_64)

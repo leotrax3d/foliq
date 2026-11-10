@@ -1,3 +1,4 @@
+#include "folio/Storage.h"
 #include "SaveHandler.h"
 
 #include <cinttypes>   // for PRIx32
@@ -268,7 +269,9 @@ void SaveHandler::visitPage(XmlNode* root, PageRef p, Document* doc, int id) {
             background->setAttrib("filename", filename);
             g_free(filename);
         } else if (p->getBackgroundImage().isAttached() && p->getBackgroundImage().getPixbuf()) {
-            char* filename = g_strdup_printf("bg_%d.png", this->attachBgId++);
+            char* backgroundId = g_uuid_string_random();
+            char* filename = g_strdup_printf("bg_%s.png", backgroundId);
+            g_free(backgroundId);
             background->setAttrib("domain", "attach");
             background->setAttrib("filename", filename);
             p->getBackgroundImage().setFilepath(filename);
@@ -359,7 +362,14 @@ void SaveHandler::saveTo(OutputStream* out, const fs::path& filepath, ProgressLi
 
     for (BackgroundImage const& img: backgroundImages) {
         auto tmpfn = (fs::path(filepath) += ".") += img.getFilepath();
-        if (!gdk_pixbuf_save(img.getPixbuf(), tmpfn.u8string().c_str(), "png", nullptr, nullptr)) {
+        gchar* buffer = nullptr; gsize size = 0;
+        bool saved = gdk_pixbuf_save_to_buffer(img.getPixbuf(), &buffer, &size, "png", nullptr, nullptr);
+        if (saved) {
+            try { foliq::atomicWrite(tmpfn, std::string(buffer, size)); }
+            catch (const std::exception&) { saved = false; }
+        }
+        g_free(buffer);
+        if (!saved) {
             if (!this->errorMessage.empty()) {
                 this->errorMessage += "\n";
             }

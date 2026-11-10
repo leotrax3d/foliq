@@ -59,3 +59,37 @@ CI=true build/test/test-units.exe
 
 Packaging benötigt NSIS am im Upstream-Skript angegebenen Windows-Pfad.
 Heruntergeladene Build-Abhängigkeiten sind vom Offline-Betrieb der App zu trennen.
+
+## Lokale Notizbuchverwaltung testen
+
+Portable Paket entpacken und `bin/xournalpp.exe` starten. Es gibt keine
+vorinstallierten Beispielnotizen. Optional in PowerShell vor dem Start:
+
+```powershell
+$env:FOLIQ_LIBRARY = "$env:USERPROFILE\Foliq-Testbibliothek"
+.\bin\xournalpp.exe
+```
+
+1. Notizbuch, zwei verschachtelte Gruppen, Abschnitt, Seite und Unterseite
+   anlegen. Namen wie `CON: Test?`, Unicode und abschließenden Punkt versuchen.
+2. Seite mit Doppelklick öffnen, zeichnen, fünf Sekunden warten. App beenden,
+   neu starten: Dokumentinhalt und letzte Position müssen wieder erscheinen.
+3. Abschnitt verschieben, Einträge mit Pfeilen sortieren, Seite umbenennen.
+   UUID-Dateiname und bestehende Unterseitenverweise müssen gleich bleiben.
+4. Teilbaum duplizieren (auch mit Bildhintergrund), Inhalt prüfen. Original
+   löschen: nur im Papierkorb sichtbar; wiederherstellen und öffnen.
+5. Aktives Notizbuch schließen, neu starten: es bleibt geschlossen. Öffnen und
+   Seite erneut aufrufen. Eine zweite App-Instanz muss einen sichtbaren
+   Katalog-Sperrfehler anzeigen; die erste darf weiter speichern.
+6. App beenden, eine Kopie der Bibliothek anlegen. Für einen echten Fehlerfall
+   einen Ordner `documents/<Seiten-ID>.xopp.bak` erzeugen (vorherige Sicherung
+   dafür außerhalb aufbewahren). Seite bearbeiten: Autosave muss einen Fehler
+   melden, Original bleibt unverändert, Editor bleibt geändert. Ordner entfernen
+   und explizit speichern: Inhalt wird erfolgreich übernommen.
+7. Separat Datei mit exklusivem Windows-Handle öffnen und Speichern versuchen.
+   Der Windows-GTest `WindowsLockedTargetKeepsOriginal` prüft diesen Fall ohne UI.
+8. Mit verwalteter Seite im Editor die XOPP-Datei extern durch eine andere gültige
+   Revision ersetzen: Speichern muss einen Konflikt melden. Änderungen über
+   „Speichern unter“ retten, Original nicht überschreiben.
+
+Automatische Tests sind kein Windows-Stift-/DPI-/Screenreader-/Hardwaretest.

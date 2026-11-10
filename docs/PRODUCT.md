@@ -24,7 +24,10 @@ PDF-Anmerkungen, einfache Textobjekte, lokale Textsuche im Dokument,
 Audiofunktionen und LaTeX-Workflow (externe TeX-Werkzeuge erforderlich).
 Diese Funktionen wurden übernommen; ihre vollständige Hardwareabnahme steht aus.
 
-Noch nicht implementiert: Notizbuchhierarchie, Rich Text mit gemischten Stilen,
+Lokale Notizbuchhierarchie mit XOPP-Navigation und Speicherung ist implementiert;
+Bedienung und Grenzen stehen in [NOTEBOOKS.md](NOTEBOOKS.md).
+
+Noch nicht implementiert: Rich Text mit gemischten Stilen,
 strukturierte Tabellen/Listen, beliebige Anhänge, Tags/Aufgaben, globale Suche,
 OCR, Handschrift-zu-Text, verschlüsselte Notizbücher, automatisch wachsende
 Arbeitsfläche und die neue Oberfläche. `HandRecognition` im Upstream ist

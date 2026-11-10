@@ -70,3 +70,14 @@ Verschlüsselung braucht Bedrohungsmodell, Schlüsselableitung und Behandlung
 von Autosave, Anhängen, Suchindex und temporären Dateien. Noch keine Auswahl
 neuer Bibliotheken. Konfigurations-/App-ID-Isolation vor paralleler Installation
 mit Xournal++ umsetzen. Upstream-Netzwerkaktionen/Plugins vor Release auditieren.
+
+## ADR-005: Lokaler Katalog v1 und Dokumenttransaktionen
+
+Implementiert unter `src/core/folio/`: GTK-unabhängiger Katalogkern mit GKeyFile,
+OS-Sperre, validierten UUID-Beziehungen und atomarem Replace; GTK-Adapter öffnet
+die XOPP-Dateien über Control. Keine SQLite-Abhängigkeit. Details, Konsistenzregel
+„Inhalt vor Referenz“, Wiederherstellung und Grenzen: [NOTEBOOKS.md](NOTEBOOKS.md).
+SaveJob behält Original und Backup bis zum erfolgreichen Commit; Bildhintergründe
+werden vorab unter neuen Namen geschrieben. Der synchrone Fehlerpfad in Control
+setzt den Dirty-Zustand jetzt nur nach Erfolg zurück. Foliq-Profil und GTK-App-ID
+sind von Xournal++ getrennt.

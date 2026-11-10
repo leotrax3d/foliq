@@ -22,6 +22,7 @@ runs:
         msystem: ${{inputs.msystem}}
         update: true
         install: >-
+          git
           mingw-w64-${{inputs.msys_package_env}}-toolchain
           mingw-w64-${{inputs.msys_package_env}}-cmake
           mingw-w64-${{inputs.msys_package_env}}-make

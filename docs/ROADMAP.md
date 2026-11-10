@@ -32,3 +32,8 @@ Jede Stufe aktualisiert HANDOFF und erhält bestehende Funktionen.
 
 M0 ist kein Abschluss des Produktumfangs. Keine der späteren Stufen ist allein
 durch ihre Dokumentation implementiert.
+
+M1-Implementierung: Katalog v1, echte GTK-Navigation und abgesicherte Speicherung
+liegen jetzt im Code. Testbelege und verbleibende Plattformabnahmen siehe
+HANDOFF; Format und Wiederherstellungsweg siehe NOTEBOOKS. M2 bleibt insbesondere
+für ausgearbeitete Gestaltung, DPI und vollständige Accessibility-Abnahme offen.

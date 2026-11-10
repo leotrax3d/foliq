@@ -173,3 +173,35 @@ Neuer vollständiger Windows-Lauf weiterhin ausstehend; kein Paket zugesagt.
 GitHub-Push und E-Mail-Korrektur sind erfolgt; Remote-HEAD stimmte mit lokalem
 HEAD überein. Die vier korrigierten/neuen Foliq-Commits hatten jeweils
 leotrax3d@gmx.net als Author und Committer, Arbeitsbaum danach sauber.
+
+## Schritt 8: Lokale Notizbuchverwaltung (laufende Validierung)
+
+Tatsächlichen Remote-main `1ff0784d` sauber geklont und Quellcode geprüft;
+die Dokumentation der früheren Arbeitsumgebung wurde nicht als Buildnachweis
+übernommen. Neuer Katalogkern `src/core/folio/{Catalog,Storage}` und GTK-Adapter
+`Navigation` implementiert. Enthält Notizbücher, beliebig verschachtelte Gruppen,
+Abschnitte, Seiten/Unterseiten, Anlegen/Umbenennen, persistente Reihenfolge,
+Verschieben, rekursive Duplikate, Papierkorb/Wiederherstellen, offene Bücher und
+letzte Position. Echte XOPP-Dateien werden über Control geöffnet, keine Fixtures
+oder Beispielnotizbücher in der Anwendung. Format/Ordner/Recovery: NOTEBOOKS.md.
+
+Katalogschema v1 mit Validierung, Revision und Backup; UUID-basierte Dateinamen
+vermeiden Windows-Namensprobleme. Inhalte vor Katalogreferenz, atomare durable
+GLib-Ersetzung, OS-Locks und Erkennung externer Änderungen. SaveJob schreibt
+zunächst vollständig nach .saving, behält .bak und ersetzt erst nach Erfolg.
+Bildhintergründe erhalten neue Namen; Duplikate kopieren Sidecars. Control setzt
+synchronen Dirty-Status bei Fehler nicht mehr zurück. Automatisches Speichern
+verwalteter Notizen alle 5 s, Fehlerdialog/Status und Wiederholungsbremse.
+Foliq verwendet eigene Profilordner und GTK-App-ID.
+
+Vorherigen Windows-Lauf 42897347723 am Log geprüft: Editor, Tests und NSIS-Paket
+wurden gebaut; anschließende Quellbeilage scheiterte an `git: command not found`.
+MSYS2-Dependency-Action installiert jetzt ausdrücklich git. Keine neue
+Laufzeitbibliothek. Eigener Entwicklungsbranch für Windows-Testpaket vorgesehen;
+keine Änderung direkt auf main. Neue Commits verwenden verbindliche E-Mail.
+
+Linux-Validierung in frischem Ubuntu-24.04-Container mit existierendem Buildhelper
+läuft; neue GTests decken Roundtrip/Neustart, Hierarchie, Reihenfolge, Zyklen,
+Duplikate, Sidecars, Papierkorb, Position, Versionsablehnung, fehlenden/beschädigten
+Katalog, Locks, fremde Änderungen und simulierte Schreibfehler ab. Ergebnisse
+und tatsächlicher Windows-Artefaktlink werden nach Abschluss ergänzt.

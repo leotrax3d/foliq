@@ -30,6 +30,7 @@
 #include "GladeGui.h"            // for GladeGui
 #include "ToolbarDefinitions.h"  // for TOOLBAR_DEFINITIONS_LEN
 
+namespace foliq { class Navigation; }
 class Control;
 class Layout;
 class SpinPageAdapter;
@@ -50,6 +51,7 @@ class MainWindow: public GladeGui, public LayerCtrlListener {
 public:
     MainWindow(GladeSearchpath* gladeSearchPath, Control* control, GtkApplication* parent);
     ~MainWindow() override;
+    bool rememberNotebookPosition();
 
     // LayerCtrlListener
 public:
@@ -183,6 +185,7 @@ private:
     static void loadMainCSS(GladeSearchpath* gladeSearchPath, const gchar* cssFilename);
 
 private:
+    std::unique_ptr<foliq::Navigation> notebookNavigation;
     Control* control;
 
     std::unique_ptr<XournalView> xournal;
