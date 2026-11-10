@@ -121,4 +121,7 @@ Das alte Artefakt ist nicht der ausgelieferte Download.
 
 Die Build-Schritte generieren Übersetzungskataloge und können die Versionskennung
 als `-dirty` markieren. Maßgeblich sind der beigelegte source-commit und die
-überprüften Quellinhalte; kein bitidentischer/hybrider Release-Build behauptet.
+überprüften Quellinhalte; kein bitidentischer Release-Build behauptet.
+
+Das Windows-Test-XML ist im Repository auf LF-Zeilenenden normalisiert.
+Das unveränderte Original bleibt im heruntergeladenen Diagnostik-ZIP erhalten.
