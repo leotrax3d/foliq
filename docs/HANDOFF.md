@@ -215,3 +215,13 @@ wird nun erst nach Expand wieder gesetzt. Zweispaltige Aktionsleiste schafft
 Platz für die eigentliche Navigation. Wiederholungsdurchlauf läuft.
 Zusätzlich neue Dokumentziele und explizit bestätigte Speichern-unter-Ziele mit
 Konflikt-Snapshot erfasst; unbekannte vorhandene Ziele werden nicht überschrieben.
+
+Zweiter Linux-Testlauf nach Konflikt-/Auswahlkorrekturen erneut **100/100**.
+GTK-Durchlauf anschließend vollständig bestanden: echte XOPP-Eingabe und Autosave,
+rekursives Duplizieren, Papierkorb/Wiederherstellen, echter Backup-Dateisystemfehler
+(Ordner statt .bak), unverändertes Original bei Fehler, erfolgreicher expliziter
+Retry und Neustart mit gleichem Dokument und Stiftstrichen. Windows-Lauf
+42899676301 für Zwischenstand 0145ef49 erfolgreich, inkl. portablem Testartefakt;
+der neuere Stand wird separat gebaut. Bei Prüfung des zweiten Instanzstarts
+wurde der Fehlerdialog vom noch nicht initialisierten Control-Fenster entkoppelt:
+Navigation erhält das bereits existierende GtkWindow direkt.

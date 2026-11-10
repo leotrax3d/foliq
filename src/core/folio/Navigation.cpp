@@ -29,7 +29,7 @@ static std::string blankDocument() {
         throw std::runtime_error("gzip fehlgeschlagen");
     return result;
 }
-Navigation::Navigation(Control* control, GtkWidget* container): control(control) {
+Navigation::Navigation(Control* control, GtkWidget* container, GtkWindow* window): control(control), window(window) {
     panel = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
     gtk_widget_set_size_request(panel, 250, -1);
     gtk_box_pack_start(GTK_BOX(container), panel, false, false, 0);
@@ -118,7 +118,7 @@ Navigation::~Navigation() {
 }
 void Navigation::error(const std::exception& e) {
     gtk_label_set_text(GTK_LABEL(status), (std::string("Speicherfehler: ") + e.what()).c_str());
-    XojMsgBox::showErrorToUser(control->getGtkWindow(), e.what());
+    XojMsgBox::showErrorToUser(window, e.what());
 }
 std::string Navigation::selected() const {
     GtkTreeIter iter;
@@ -163,8 +163,8 @@ void Navigation::refresh() {
                                                       "Lokal gespeichert · Autosave alle 5 s");
 }
 std::string Navigation::prompt(const char* title, const std::string& value) {
-    auto* dlg = gtk_dialog_new_with_buttons(title, control->getGtkWindow(), GTK_DIALOG_MODAL, "Abbrechen",
-                                            GTK_RESPONSE_CANCEL, "OK", GTK_RESPONSE_OK, nullptr);
+    auto* dlg = gtk_dialog_new_with_buttons(title, window, GTK_DIALOG_MODAL, "Abbrechen", GTK_RESPONSE_CANCEL, "OK",
+                                            GTK_RESPONSE_OK, nullptr);
     auto* entry = gtk_entry_new();
     gtk_entry_set_text(GTK_ENTRY(entry), value.c_str());
     gtk_entry_set_activates_default(GTK_ENTRY(entry), true);
@@ -273,9 +273,8 @@ void Navigation::action(const std::string& action) {
                     pos = static_cast<int>(i);
             catalog->move(id, n.parent, pos + (action == "↑" ? -1 : 1));
         } else if (action == "Verschieben") {
-            auto* dlg =
-                    gtk_dialog_new_with_buttons("Ziel wählen", control->getGtkWindow(), GTK_DIALOG_MODAL, "Abbrechen",
-                                                GTK_RESPONSE_CANCEL, "Verschieben", GTK_RESPONSE_OK, nullptr);
+            auto* dlg = gtk_dialog_new_with_buttons("Ziel wählen", window, GTK_DIALOG_MODAL, "Abbrechen",
+                                                    GTK_RESPONSE_CANCEL, "Verschieben", GTK_RESPONSE_OK, nullptr);
             auto* combo = gtk_combo_box_text_new();
             gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), "", "Oberste Ebene (Notizbuch)");
             for (const auto& e: catalog->nodes())

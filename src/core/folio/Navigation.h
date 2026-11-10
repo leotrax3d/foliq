@@ -7,12 +7,13 @@ class Control;
 namespace foliq {
 class Navigation {
 public:
-    Navigation(Control* control, GtkWidget* container);
+    Navigation(Control* control, GtkWidget* container, GtkWindow* window);
     ~Navigation();
     bool rememberPosition();
 
 private:
     Control* control;
+    GtkWindow* window;
     std::unique_ptr<Catalog> catalog;
     GtkWidget *tree, *status, *panel;
     GtkTreeStore* store;
