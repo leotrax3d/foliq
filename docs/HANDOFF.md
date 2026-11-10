@@ -234,3 +234,9 @@ geprüft. Screenshot: validation/notebooks-navigation.png (synthetische Testnoti
 CMake-/DEB-Mindestanforderung auf GLib 2.66 angehoben, passend zur verwendeten
 atomaren/durablen API; keine zusätzliche Bibliothek. Historische Einstiegsangaben
 in README/WINDOWS/UPSTREAM an den implementierten Stand angepasst.
+
+Zusätzlicher Dateisperrfall geprüft: blockierter `.saving`-Pfad (Ordner statt
+Kompressionsdatei). SaveJob prüft nun schon den Öffnungsfehler des Gzip-Streams,
+bevor XML geschrieben wird. Echter GTK-Test bestätigt sichtbaren Fehler bei
+lauffähiger App, unverändertes Original und erfolgreichen Retry nach Entfernen
+des Hindernisses. Dieser Test deckt einen anderen Pfad als die .bak-Simulation ab.

@@ -86,7 +86,9 @@ $env:FOLIQ_LIBRARY = "$env:USERPROFILE\Foliq-Testbibliothek"
    einen Ordner `documents/<Seiten-ID>.xopp.bak` erzeugen (vorherige Sicherung
    dafür außerhalb aufbewahren). Seite bearbeiten: Autosave muss einen Fehler
    melden, Original bleibt unverändert, Editor bleibt geändert. Ordner entfernen
-   und explizit speichern: Inhalt wird erfolgreich übernommen.
+   und explizit speichern: Inhalt wird erfolgreich übernommen. Anschließend
+   denselben Test mit einem Ordner `<Seiten-ID>.xopp.saving` wiederholen; schon
+   das Öffnen des Kompressionsziels muss als Fehler behandelt werden.
 7. Separat Datei mit exklusivem Windows-Handle öffnen und Speichern versuchen.
    Der Windows-GTest `WindowsLockedTargetKeepsOriginal` prüft diesen Fall ohne UI.
 8. Mit verwalteter Seite im Editor die XOPP-Datei extern durch eine andere gültige

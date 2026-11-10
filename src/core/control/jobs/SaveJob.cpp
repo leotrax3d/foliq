@@ -115,6 +115,7 @@ auto SaveJob::save() -> bool {
         doc->lock();
         try {
             GzOutputStream out(stage);
+            if (!out.getLastError().empty()) throw std::runtime_error(out.getLastError());
             h.saveTo(&out, target, this->control);
             out.close();
             if (!out.getLastError().empty()) throw std::runtime_error(out.getLastError());
