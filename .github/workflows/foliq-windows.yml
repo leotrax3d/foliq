@@ -16,8 +16,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/install_deps_windows
         with:
-          msystem: mingw64
-          msys_package_env: x86_64
+          msystem: ucrt64
+          msys_package_env: ucrt-x86_64
           gtk_compatibility_downgrade: 'false'
       - uses: ./.github/actions/build
         with:
@@ -41,7 +41,7 @@ jobs:
           cp ../LICENSE ../AUTHORS ../copyright.txt dist/share/foliq/legal/
           cp -r ../docs/licenses dist/share/foliq/legal/project-licenses
           cp ../docs/UPSTREAM.md ../docs/WINDOWS.md dist/share/foliq/
-          cp -r /mingw64/share/licenses dist/share/foliq/legal/dependencies
+          cp -r /ucrt64/share/licenses dist/share/foliq/legal/dependencies
           pacman -Q > dist/share/foliq/build/msys2-packages.txt
           cmake --version > dist/share/foliq/build/toolchain.txt
           g++ --version >> dist/share/foliq/build/toolchain.txt

@@ -63,3 +63,14 @@ Paketversionen in den Ubuntu-Repositories verfügbar sind, lässt sich derselbe
 Versionssatz erneut installieren. Zur langfristigen Reproduktion müssen die
 DEB-Dateien oder ein Repository-Snapshot zusätzlich archiviert werden. Der
 Lock dokumentiert auch Basispakete, nicht nur direkte Build-Abhängigkeiten.
+
+## Erster tatsächlicher Windows-CI-Lauf
+
+Run 42897015289 scheiterte bei MSYS2 vor dem Compiler: Das MINGW64-Paket
+mingw-w64-x86_64-gtksourceview4 ist nicht mehr verfügbar, und MSYS2 markiert
+MINGW64 als veraltet. Der Foliq-Workflow verwendet deshalb UCRT64 mit
+ucrt-x86_64-Paketen. Das benötigte GtkSourceView4-Paket ist für UCRT64 im
+MSYS2-Katalog vorhanden (4.8.4-3, am 2026-11-10 geprüft). Bibliothek und
+GTK3-Editor bleiben gleich; Paketierung nutzt das MSYSTEM_PREFIX des bestehenden
+Upstream-Skripts. Lizenzkopien werden aus /ucrt64 übernommen.
+Der vollständige UCRT64-Build ist erst nach tatsächlichem CI-Erfolg bestätigt.

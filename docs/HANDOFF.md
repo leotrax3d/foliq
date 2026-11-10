@@ -160,3 +160,16 @@ und Upstream-Historie bleiben erhalten. Dafür ist ein auf den zuvor selbst
 gepushten main-Stand begrenzter Force-with-lease-Push erforderlich.
 Prüfung: alle neu angelegten Commit-Identitäten kontrollieren, Remote-HEAD mit
 lokalem HEAD vergleichen und Arbeitsbaum auf ausstehende Änderungen prüfen.
+
+## Schritt 7: Ersten Windows-CI-Fehler konkret behoben
+
+Run 42897015289 ist bei der Dependency-Installation fehlgeschlagen:
+mingw-w64-x86_64-gtksourceview4 nicht gefunden, MINGW64 inzwischen deprecated.
+Im MSYS2-Katalog ist dieselbe Bibliothek für UCRT64 als Version 4.8.4-3
+nachgewiesen. Foliq-Workflow auf UCRT64/ucrt-x86_64 umgestellt; fest codierten
+Lizenzpfad und lokale Windows-Buildanleitung angepasst. Kein Frameworkwechsel,
+keine neue Laufzeitbibliothek und kein Abschalten von TeX-Syntaxhervorhebung.
+Neuer vollständiger Windows-Lauf weiterhin ausstehend; kein Paket zugesagt.
+GitHub-Push und E-Mail-Korrektur sind erfolgt; Remote-HEAD stimmte mit lokalem
+HEAD überein. Die vier korrigierten/neuen Foliq-Commits hatten jeweils
+leotrax3d@gmx.net als Author und Committer, Arbeitsbaum danach sauber.

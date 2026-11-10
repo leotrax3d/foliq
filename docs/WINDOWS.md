@@ -43,9 +43,9 @@ Paket noch nicht erwartet. Neue Features erst nach ROADMAP-Abnahme freigeben.
 
 ## Lokal bauen
 
-MSYS2 MINGW64 und dieselben Pakete wie in
+MSYS2 UCRT64 und dieselben Pakete wie in
 `.github/actions/install_deps_windows/action.yml` installieren (einschließlich
-des in BUILD.md beschriebenen deaktivierten Legacy-GTK-Downgrades). Im MINGW64-Terminal:
+des in BUILD.md beschriebenen deaktivierten Legacy-GTK-Downgrades). Im UCRT64-Terminal:
 
 ```sh
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo \
