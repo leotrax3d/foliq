@@ -225,3 +225,12 @@ Retry und Neustart mit gleichem Dokument und Stiftstrichen. Windows-Lauf
 der neuere Stand wird separat gebaut. Bei Prüfung des zweiten Instanzstarts
 wurde der Fehlerdialog vom noch nicht initialisierten Control-Fenster entkoppelt:
 Navigation erhält das bereits existierende GtkWindow direkt.
+
+Weitere echte GTK-Prüfungen bestanden: Notizbuch schließen → Neustart bleibt
+geschlossen → Öffnen stellt Dokument wieder her; zweite Instanz zeigt Sperrfehler,
+bleibt lauffähig und verändert den Katalog nicht; Schema 99 zeigt sichtbaren
+Startfehler ohne Crash/Überschreiben. Normaler GUI-Exit explizit mit Rückgabecode 0
+geprüft. Screenshot: validation/notebooks-navigation.png (synthetische Testnotiz).
+CMake-/DEB-Mindestanforderung auf GLib 2.66 angehoben, passend zur verwendeten
+atomaren/durablen API; keine zusätzliche Bibliothek. Historische Einstiegsangaben
+in README/WINDOWS/UPSTREAM an den implementierten Stand angepasst.

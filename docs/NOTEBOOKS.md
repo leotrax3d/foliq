@@ -14,7 +14,8 @@ wiederherstellen. Es gibt bewusst noch kein unwiderrufliches Leeren.
 Standard: GLib-Benutzerdatenverzeichnis / `foliq/library` (Windows typischerweise
 `%LOCALAPPDATA%/foliq/library`). Mit `FOLIQ_LIBRARY` lässt sich ein expliziter,
 lokaler Bibliotheksordner für Tests wählen. Keine SQLite-Datenbank, keine neue
-Bibliothek. GKeyFile kommt aus dem vorhandenen GLib (LGPL-2.1-or-later), zlib
+Bibliothek. GLib ≥ 2.66 ist für den atomaren, synchronisierten Schreibpfad
+erforderlich und wird von CMake geprüft. GKeyFile kommt aus dem vorhandenen GLib (LGPL-2.1-or-later), zlib
 und GTK sind bereits Build-/Laufzeitabhängigkeiten; Windows UCRT64 bietet sie an.
 
 ```text

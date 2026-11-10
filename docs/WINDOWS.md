@@ -2,9 +2,9 @@
 
 ## CI starten und herunterladen
 
-Dieses lokale Repository hat zunächst nur den Upstream-Remote. Keine Schreibrechte
-auf Upstream annehmen. In ein eigenes GitHub-Repository pushen; Actions aktivieren,
-`Foliq Windows test package` öffnen und gegebenenfalls `Run workflow` ausführen.
+Im Repository leotrax3d/foliq unter Actions `Foliq Windows test package`
+öffnen. Der Workflow läuft auf Push/PR und kann über `Run workflow` für einen
+gewählten Branch gestartet werden.
 Erst ein grüner Lauf mit sichtbarem Artefakt bestätigt Build und Packaging.
 
 Artefakt `foliq-windows-x64-test` herunterladen und vollständig entpacken.
@@ -16,8 +16,9 @@ DLLs und share-Verzeichnis müssen neben bin erhalten bleiben. Kein Installer
 oder Release-Signatur wird als Foliq-Release angeboten. Der Upstream-Installer
 wird intern erzeugt/geprüft, ist aber nicht Teil des Testdownloads.
 
-Nur in einer VM oder einem separaten Windows-Benutzerprofil ohne produktive
-Xournal++-Daten testen: Konfiguration und Dateitypen sind noch nicht isoliert.
+Foliq verwendet eigene Profilordner und eine eigene GTK-App-ID. Für den
+Entwicklungstest eine separate Bibliothek oder VM verwenden; der Binaryname und
+die XOPP-Dateiendung bleiben unverändert.
 Testversion ist unsigniert; keine Systemschutzfunktionen abschalten.
 
 ## Kurzer Testlauf (Windows 10/11 x64)
@@ -38,8 +39,8 @@ Testversion ist unsigniert; keine Systemschutzfunktionen abschalten.
 
 Ergebnis mit Windows-Version, Hardware, Stift/Grafiktreiber, Paket-Commit,
 Reproduktionsschritten und erwartetem/tatsächlichem Verhalten protokollieren.
-Notizbücher, Rich Text, OCR, Verschlüsselung und Auto-Grow werden in diesem
-Paket noch nicht erwartet. Neue Features erst nach ROADMAP-Abnahme freigeben.
+Notizbücher sind implementiert (Testablauf unten). Rich Text, OCR,
+Verschlüsselung und Auto-Grow werden in diesem Paket noch nicht erwartet. Neue Features erst nach ROADMAP-Abnahme freigeben.
 
 ## Lokal bauen
 

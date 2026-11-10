@@ -48,3 +48,7 @@ Windows-Testworkflow mit optional deaktiviertem veraltetem GTK-Downgrade sowie
 eine CMake-gesteuerte Foliq-Fensterkennung und README-Einstieg. Binaryname, Konfigurationspfade, Dateizuordnung und XOPP
 bleiben im ersten Schritt bei Xournal++. Deshalb nicht parallel mit einer
 produktiven Xournal++-Instanz im selben Benutzerprofil testen.
+
+Seit M1 kommen der lokale Katalog und die GTK-Navigation hinzu. Foliq nutzt
+eigene Profilordner/App-ID; XOPP und der Binaryname bleiben erhalten.
+Speicherpfad und neue Dateien siehe NOTEBOOKS.md und HANDOFF.md.
