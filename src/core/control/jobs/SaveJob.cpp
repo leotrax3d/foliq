@@ -123,8 +123,10 @@ auto SaveJob::save() -> bool {
         doc->unlock();
         foliq::atomicWrite(target, foliq::read(stage));
         foliq::acceptDocument(target);
+        doc->lock();
         doc->setFilepath(target);
         doc->setCreateBackupOnSave(true);
+        doc->unlock();
         fs::remove(stage);
     } catch (const std::exception& e) {
         this->lastError = std::string("Speichern fehlgeschlagen: ") + e.what();

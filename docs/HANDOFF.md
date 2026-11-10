@@ -205,3 +205,13 @@ läuft; neue GTests decken Roundtrip/Neustart, Hierarchie, Reihenfolge, Zyklen,
 Duplikate, Sidecars, Papierkorb, Position, Versionsablehnung, fehlenden/beschädigten
 Katalog, Locks, fremde Änderungen und simulierte Schreibfehler ab. Ergebnisse
 und tatsächlicher Windows-Artefaktlink werden nach Abschluss ergänzt.
+
+Linux-Gesamtbuild erfolgreich; erster vollständiger Testlauf **100/100 Tests aus
+21 Suites bestanden** (XML: validation/notebooks-linux-tests.xml). GTK unter
+Xvfb/DBus tatsächlich gestartet; echter UI-Durchlauf hat Anlegen der Hierarchie,
+Öffnen einer XOPP-Seite, Maus-Stiftstrich und persistierendes 5-s-Autosave bestätigt.
+Der anschließende Ablauf deckte verlorene Baumauswahl nach Refresh auf; Auswahl
+wird nun erst nach Expand wieder gesetzt. Zweispaltige Aktionsleiste schafft
+Platz für die eigentliche Navigation. Wiederholungsdurchlauf läuft.
+Zusätzlich neue Dokumentziele und explizit bestätigte Speichern-unter-Ziele mit
+Konflikt-Snapshot erfasst; unbekannte vorhandene Ziele werden nicht überschrieben.

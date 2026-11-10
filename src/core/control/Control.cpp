@@ -2235,6 +2235,10 @@ void Control::showSettings() {
 }
 
 auto Control::newFile(string pageTemplate, fs::path filepath) -> bool {
+    if (!filepath.empty()) {
+        try { foliq::watchDocument(filepath); }
+        catch (const std::exception& e) { XojMsgBox::showErrorToUser(getGtkWindow(), e.what()); return false; }
+    }
     if (!this->close(true)) {
         return false;
     }
@@ -2702,6 +2706,11 @@ auto Control::showSaveDialog() -> bool {
     settings->setLastSavePath(filename.parent_path());
     gtk_widget_destroy(dialog);
 
+    // The overwrite dialog authorizes this revision, not subsequent external changes.
+    fs::path target = filename;
+    Util::safeReplaceExtension(target, "xopp");
+    try { foliq::watchDocument(target); }
+    catch (const std::exception& e) { XojMsgBox::showErrorToUser(getGtkWindow(), e.what()); return false; }
     this->doc->lock();
 
     this->doc->setFilepath(filename);

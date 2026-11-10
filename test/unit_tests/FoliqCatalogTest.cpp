@@ -153,6 +153,7 @@ TEST_F(FoliqCatalogTest, InterruptedStageAndBackupFailureKeepLastCompleteRevisio
 TEST_F(FoliqCatalogTest, DocumentConflictDetection) {
     auto p = root / "document.xopp";
     atomicWrite(p, "old");
+    EXPECT_THROW(checkDocument(p), std::exception);
     watchDocument(p);
     checkDocument(p);
     atomicWrite(p, "other instance");
@@ -187,3 +188,30 @@ TEST_F(FoliqCatalogTest, WindowsLockedTargetKeepsOriginal) {
     EXPECT_EQ(read(p), "original");
 }
 #endif
+TEST_F(FoliqCatalogTest, CorruptRelationsAndMissingDocumentAreRejectedWithoutRewriting) {
+    std::string group, nested, page;
+    {
+        Catalog c(root);
+        auto book = c.add(Kind::Notebook, "", "B");
+        group = c.add(Kind::Group, book, "G");
+        nested = c.add(Kind::Group, group, "Nested");
+        auto section = c.add(Kind::Section, nested, "S");
+        page = c.add(Kind::Page, section, "P", pageBytes());
+    }
+    auto original = read(root / "catalog.ini");
+    auto* key = g_key_file_new();
+    ASSERT_TRUE(g_key_file_load_from_data(key, original.data(), original.size(), G_KEY_FILE_NONE, nullptr));
+    g_key_file_set_string(key, group.c_str(), "parent", nested.c_str());
+    gsize size;
+    auto* raw = g_key_file_to_data(key, &size, nullptr);
+    const std::string corrupt(raw, size);
+    g_free(raw);
+    g_key_file_unref(key);
+    atomicWrite(root / "catalog.ini", corrupt);
+    EXPECT_THROW(Catalog c(root), std::exception);
+    EXPECT_EQ(read(root / "catalog.ini"), corrupt);
+    atomicWrite(root / "catalog.ini", original);
+    fs::remove(root / "documents" / (page + ".xopp"));
+    EXPECT_THROW(Catalog c(root), std::exception);
+    EXPECT_EQ(read(root / "catalog.ini"), original);
+}

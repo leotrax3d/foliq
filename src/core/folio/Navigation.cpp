@@ -37,7 +37,8 @@ Navigation::Navigation(Control* control, GtkWidget* container): control(control)
     gtk_box_pack_start(GTK_BOX(panel), gtk_label_new("Foliq · Lokale Notizbücher"), false, false, 0);
     auto* commands = gtk_flow_box_new();
     gtk_flow_box_set_selection_mode(GTK_FLOW_BOX(commands), GTK_SELECTION_NONE);
-    gtk_flow_box_set_max_children_per_line(GTK_FLOW_BOX(commands), 3);
+    gtk_flow_box_set_min_children_per_line(GTK_FLOW_BOX(commands), 2);
+    gtk_flow_box_set_max_children_per_line(GTK_FLOW_BOX(commands), 2);
     gtk_box_pack_start(GTK_BOX(panel), commands, false, false, 0);
     for (const auto* label: {"Notizbuch", "Gruppe", "Abschnitt", "Seite", "Umbenennen", "Verschieben", "↑", "↓",
                              "Duplizieren", "Löschen", "Wiederherstellen", "Öffnen/Schließen", "Papierkorb"}) {
@@ -132,6 +133,8 @@ std::string Navigation::selected() const {
 }
 void Navigation::refresh() {
     auto selection = selected();
+    GtkTreeIter selectedIter{};
+    bool hasSelection = false;
     gtk_tree_store_clear(store);
     std::function<void(const std::string&, GtkTreeIter*)> append = [&](const std::string& parent, GtkTreeIter* row) {
         for (const auto& n: catalog->children(parent)) {
@@ -144,14 +147,18 @@ void Navigation::refresh() {
                         (n.kind == Kind::Notebook && !n.opened ? " [geschlossen]" : "");
             gtk_tree_store_append(store, &iter, row);
             gtk_tree_store_set(store, &iter, 0, name.c_str(), 1, n.id.c_str(), -1);
-            if (n.id == selection)
-                gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(tree)), &iter);
+            if (n.id == selection) {
+                selectedIter = iter;
+                hasSelection = true;
+            }
             if (trashView || n.kind != Kind::Notebook || n.opened)
                 append(n.id, &iter);
         }
     };
     append("", nullptr);
     gtk_tree_view_expand_all(GTK_TREE_VIEW(tree));
+    if (hasSelection)
+        gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(tree)), &selectedIter);
     gtk_label_set_text(GTK_LABEL(status), trashView ? "Papierkorbansicht (inklusive Elternpfade)" :
                                                       "Lokal gespeichert · Autosave alle 5 s");
 }

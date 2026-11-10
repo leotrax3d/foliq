@@ -85,7 +85,7 @@ void watchDocument(const fs::path& path) {
 void checkDocument(const fs::path& path) {
     std::lock_guard<std::mutex> guard(documentMutex);
     auto it = documents.find(fs::absolute(path).lexically_normal());
-    if (it != documents.end() && it->second != fingerprint(path))
+    if ((it == documents.end() && fs::exists(path)) || (it != documents.end() && it->second != fingerprint(path)))
         throw std::runtime_error("Speicherkonflikt: Datei wurde außerhalb dieser Instanz geändert. Änderungen mit "
                                  "Speichern unter sichern.");
 }
