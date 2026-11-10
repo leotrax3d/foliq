@@ -253,3 +253,43 @@ sich damit auf das ignorierte Build-Unterverzeichnis. Dieses Paket wird nicht
 als vollständiges Testpaket ausgeliefert. Workflow verwendet nun ausdrücklich
 `git -C .. archive` und prüft per tar, dass Katalog, SaveJob und LICENSE enthalten
 sind. Neuer Windows-Paketlauf erforderlich; Produktcode unverändert.
+
+## Abschluss: lokale Notizbuchverwaltung und verifiziertes Windows-Testpaket
+
+Fertiger Produktcode und korrigierter Buildweg auf `feat/local-notebooks`,
+Paketquellstand **c1e5c012e3289c0b202f7d23ea9aee3f2880c0b7**. Main unverändert.
+Der nachfolgende reine Dokumentationscommit enthält die abschließenden Belege;
+keine weitere Änderung an Produktcode oder Workflow.
+
+- Linux: vollständiger Editorbuild, **100/100 Unit-Tests**. GTK-Prüfskripte auf
+  finalem Produktcode erneut vollständig bestanden: echte Eingabe/Autosave,
+  Duplikat, Papierkorb/Wiederherstellung, Neustart, Buch schließen/öffnen,
+  zweite App-Instanz, unbekannte Version und beide realen Speicherfehlerpfade
+  (.bak und .saving) mit erfolgreichem Retry. Normaler Exit mit Code 0 geprüft.
+- Windows: [Run 42903859940](https://github.com/leotrax3d/foliq/actions/runs/42903859940)
+  vollständig erfolgreich, **101/101 Tests** inklusive Win32-Lockfall;
+  Upstream-Paketierung und portable --version-Prüfung erfolgreich.
+- [Windows-ZIP herunterladen](https://github.com/leotrax3d/foliq/actions/runs/42903859940/artifacts/13803863342),
+  entpacken, `dist/bin/xournalpp.exe` starten. Quellarchiv, Lizenzen, Toolchain-
+  und Paketmanifest sowie Prüfsummen enthalten. Artefakt bis 2026-11-24 verfügbar;
+  lokale Kopie `/workspace/artifacts/foliq-windows-c1e5c012.zip`.
+- ZIP vollständig heruntergeladen und geprüft: GitHub-Digest, alle ZIP-CRCs,
+  beide internen Manifest-Hashes, AMD64-PE, 1.476 Quellarchiv-Einträge und
+  Kernquellen bytegenau gegen Paketcommit. Details und Hashes in
+  validation/NOTEBOOK-VALIDATION.md und validation/notebooks-package.json.
+- Reproduzierbare GTK-Testabläufe: validation/notebooks-ui-{smoke,locks,stage}.py;
+  Resultate, Screenshot und Linux-/Windows-Test-XML daneben. Nur synthetische
+  Testdaten, keine Beispielnotizbücher im Programm.
+
+Offene Abnahme: physische Windows-GUI-/DPI-/Screenreader-/Stift-/Touch-/Audio-
+Tests nach WINDOWS.md. Große Dokumente können synchrones Autosave spürbar machen.
+Backup-Auswahl bei beschädigtem Katalog erfolgt bewusst manuell; kein GC für
+Backups/verwaiste Inhalte; externe Medien behalten ihre XOPP-Pfadsemantik.
+Kein verteilter Schreibschutz für Netzwerk-/Cloud-Sync-Ordner. Entwicklungs-
+paket bleibt unsigniert und ist kein M7-Release. Nächster überprüfbarer Schritt:
+ZIP auf Windows 10/11 entpacken und die Notizbuch-Testmatrix in WINDOWS.md mit
+Hardware-/OS-Angaben ausführen, anschließend M2-Navigation/Accessibility ausbauen.
+
+Alle neu erstellten Commits mit Author und Committer leotrax3d@gmx.net geprüft.
+`git diff --check` erfolgreich; keine neuen Laufzeitbibliotheken. GLib ≥ 2.66
+ist jetzt eine explizite Mindestversion für den atomaren/durablen Schreibpfad.

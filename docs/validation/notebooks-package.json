@@ -1,0 +1,29 @@
+{
+  "source_commit": "c1e5c012e3289c0b202f7d23ea9aee3f2880c0b7",
+  "zip_sha256": "67b2428772948fabad6d168615c7fdfbfc313bac24b640f79aad82a993133de6",
+  "zip_bytes": 97986430,
+  "zip_entries": 3914,
+  "source_archive_entries": 1476,
+  "manifest_hashes": {
+    "dist/bin/xournalpp.exe": "37877d15e0fd994157670e27630a763bdef2fb8a561139f5863d97ca0b58aab3",
+    "foliq-source.tar.gz": "87127cabba52f44e71651213c208abbbf51f5f848f9945fca761299b6ae58083"
+  },
+  "verified_source_files": [
+    "src/core/folio/Catalog.cpp",
+    "src/core/folio/Storage.cpp",
+    "src/core/control/jobs/SaveJob.cpp",
+    "LICENSE",
+    "AUTHORS"
+  ],
+  "windows_tests": {
+    "tests": "101",
+    "failures": "0",
+    "disabled": "0",
+    "errors": "0",
+    "time": "1.496",
+    "timestamp": "2026-11-10T21:26:27.722",
+    "name": "AllTests"
+  },
+  "architecture": "AMD64",
+  "zip_crc": "passed"
+}

@@ -1,0 +1,8 @@
+PASS: hierarchy UI, real XOPP open, pen input and autosave
+PASS: duplicate, trash and restore through GTK
+PASS: visible save failure keeps original; retry persists edit
+PASS: restart restores managed document and saved strokes
+PASS: notebook close persists and reopen restores document
+PASS: second instance shows lock error, remains alive and cannot overwrite catalog
+PASS: unsupported catalog version gives visible startup error without crash or overwrite
+PASS: blocked staging file gives visible error, preserves original and allows retry

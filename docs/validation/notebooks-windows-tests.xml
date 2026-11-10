@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="101" failures="0" disabled="0" errors="0" time="1.496" timestamp="2026-11-10T21:26:27.722" name="AllTests">
+  <testsuite name="UtilXojPreviewExtractor" tests="9" failures="0" disabled="0" skipped="0" errors="0" time="0.001" timestamp="2026-11-10T21:26:27.723">
+    <testcase name="testNonExistingFile" file="D:/a/foliq/foliq/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="25" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.723" classname="UtilXojPreviewExtractor" />
+    <testcase name="testExtensionCheck" file="D:/a/foliq/foliq/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="32" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.723" classname="UtilXojPreviewExtractor" />
+    <testcase name="testLoadGzipped" file="D:/a/foliq/foliq/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="39" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.723" classname="UtilXojPreviewExtractor" />
+    <testcase name="testLoadGzipped2" file="D:/a/foliq/foliq/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="50" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.723" classname="UtilXojPreviewExtractor" />
+    <testcase name="testLoad1Unzipped" file="D:/a/foliq/foliq/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="61" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.724" classname="UtilXojPreviewExtractor" />
+    <testcase name="testLoad1Zipped" file="D:/a/foliq/foliq/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="72" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.724" classname="UtilXojPreviewExtractor" />
+    <testcase name="testLoad2Zipped" file="D:/a/foliq/foliq/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="83" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.724" classname="UtilXojPreviewExtractor" />
+    <testcase name="testNoPreview" file="D:/a/foliq/foliq/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="94" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.724" classname="UtilXojPreviewExtractor" />
+    <testcase name="testInvalidFile" file="D:/a/foliq/foliq/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="101" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.724" classname="UtilXojPreviewExtractor" />
+  </testsuite>
+  <testsuite name="UtilsVectors" tests="3" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T21:26:27.724">
+    <testcase name="testTinyVector" file="D:/a/foliq/foliq/test/unit_tests/util/TinySmallVectorTest.cpp" line="42" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.724" classname="UtilsVectors" />
+    <testcase name="testSmallVectorPushPop" file="D:/a/foliq/foliq/test/unit_tests/util/TinySmallVectorTest.cpp" line="165" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.724" classname="UtilsVectors" />
+    <testcase name="testSmallVectorCopyMove" file="D:/a/foliq/foliq/test/unit_tests/util/TinySmallVectorTest.cpp" line="241" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.724" classname="UtilsVectors" />
+  </testsuite>
+  <testsuite name="UtilStringUtils" tests="6" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T21:26:27.725">
+    <testcase name="testStartWith" file="D:/a/foliq/foliq/test/unit_tests/util/StringUtilsTest.cpp" line="25" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.725" classname="UtilStringUtils" />
+    <testcase name="testSplit" file="D:/a/foliq/foliq/test/unit_tests/util/StringUtilsTest.cpp" line="33" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.725" classname="UtilStringUtils" />
+    <testcase name="testSplitEmpty" file="D:/a/foliq/foliq/test/unit_tests/util/StringUtilsTest.cpp" line="41" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.725" classname="UtilStringUtils" />
+    <testcase name="testSplitOne" file="D:/a/foliq/foliq/test/unit_tests/util/StringUtilsTest.cpp" line="47" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.725" classname="UtilStringUtils" />
+    <testcase name="testEndsWith" file="D:/a/foliq/foliq/test/unit_tests/util/StringUtilsTest.cpp" line="54" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.725" classname="UtilStringUtils" />
+    <testcase name="testCompare" file="D:/a/foliq/foliq/test/unit_tests/util/StringUtilsTest.cpp" line="62" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.725" classname="UtilStringUtils" />
+  </testsuite>
+  <testsuite name="SaveNameUtils" tests="1" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T21:26:27.725">
+    <testcase name="testWildcardExpansion" file="D:/a/foliq/foliq/test/unit_tests/util/SaveNameUtilsTest.cpp" line="17" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.725" classname="SaveNameUtils" />
+  </testsuite>
+  <testsuite name="UtilRange" tests="3" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T21:26:27.725">
+    <testcase name="testEmptyValid" file="D:/a/foliq/foliq/test/unit_tests/util/RangeTest.cpp" line="29" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.725" classname="UtilRange" />
+    <testcase name="testUnite" file="D:/a/foliq/foliq/test/unit_tests/util/RangeTest.cpp" line="36" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.725" classname="UtilRange" />
+    <testcase name="testIntersect" file="D:/a/foliq/foliq/test/unit_tests/util/RangeTest.cpp" line="50" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.725" classname="UtilRange" />
+  </testsuite>
+  <testsuite name="UtilsRAII" tests="6" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T21:26:27.725">
+    <testcase name="testCLibbrairiesSPtr_Constructors" file="D:/a/foliq/foliq/test/unit_tests/util/RAIIWrappersTest.cpp" line="39" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.725" classname="UtilsRAII" />
+    <testcase name="testCLibbrairiesSPtr_MoveAssignments" file="D:/a/foliq/foliq/test/unit_tests/util/RAIIWrappersTest.cpp" line="72" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.725" classname="UtilsRAII" />
+    <testcase name="testCLibbrairiesSPtr_CopyAssignments" file="D:/a/foliq/foliq/test/unit_tests/util/RAIIWrappersTest.cpp" line="137" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.725" classname="UtilsRAII" />
+    <testcase name="testCLibbrairiesSPtr_Reset" file="D:/a/foliq/foliq/test/unit_tests/util/RAIIWrappersTest.cpp" line="189" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.725" classname="UtilsRAII" />
+    <testcase name="testGObjectSPtrConstructors" file="D:/a/foliq/foliq/test/unit_tests/util/RAIIWrappersTest.cpp" line="260" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.725" classname="UtilsRAII" />
+    <testcase name="testGObjectSPtrReset" file="D:/a/foliq/foliq/test/unit_tests/util/RAIIWrappersTest.cpp" line="290" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.725" classname="UtilsRAII" />
+  </testsuite>
+  <testsuite name="UtilPath" tests="4" failures="0" disabled="0" skipped="0" errors="0" time="0.002" timestamp="2026-11-10T21:26:27.725">
+    <testcase name="testUnsupportedUri" file="D:/a/foliq/foliq/test/unit_tests/util/PathTest.cpp" line="22" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.725" classname="UtilPath" />
+    <testcase name="testPathFromUri" file="D:/a/foliq/foliq/test/unit_tests/util/PathTest.cpp" line="29" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.726" classname="UtilPath" />
+    <testcase name="testPathIsChildOf" file="D:/a/foliq/foliq/test/unit_tests/util/PathTest.cpp" line="35" status="run" result="completed" time="0.002" timestamp="2026-11-10T21:26:27.726" classname="UtilPath" />
+    <testcase name="testClearExtensions" file="D:/a/foliq/foliq/test/unit_tests/util/PathTest.cpp" line="53" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.728" classname="UtilPath" />
+  </testsuite>
+  <testsuite name="UtilObjectIOStream" tests="8" failures="0" disabled="0" skipped="0" errors="0" time="0.012" timestamp="2026-11-10T21:26:27.728">
+    <testcase name="testReadData" file="D:/a/foliq/foliq/test/unit_tests/util/ObjectIOStreamTest.cpp" line="95" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.728" classname="UtilObjectIOStream" />
+    <testcase name="testReadImage" file="D:/a/foliq/foliq/test/unit_tests/util/ObjectIOStreamTest.cpp" line="111" status="run" result="completed" time="0.011" timestamp="2026-11-10T21:26:27.728" classname="UtilObjectIOStream" />
+    <testcase name="testReadString" file="D:/a/foliq/foliq/test/unit_tests/util/ObjectIOStreamTest.cpp" line="150" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.740" classname="UtilObjectIOStream" />
+    <testcase name="testReadSizeT" file="D:/a/foliq/foliq/test/unit_tests/util/ObjectIOStreamTest.cpp" line="172" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.740" classname="UtilObjectIOStream" />
+    <testcase name="testReadInt" file="D:/a/foliq/foliq/test/unit_tests/util/ObjectIOStreamTest.cpp" line="191" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.740" classname="UtilObjectIOStream" />
+    <testcase name="testReadDouble" file="D:/a/foliq/foliq/test/unit_tests/util/ObjectIOStreamTest.cpp" line="211" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.740" classname="UtilObjectIOStream" />
+    <testcase name="testReadComplexObject" file="D:/a/foliq/foliq/test/unit_tests/util/ObjectIOStreamTest.cpp" line="230" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.740" classname="UtilObjectIOStream" />
+    <testcase name="testReadStroke" file="D:/a/foliq/foliq/test/unit_tests/util/ObjectIOStreamTest.cpp" line="319" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.740" classname="UtilObjectIOStream" />
+  </testsuite>
+  <testsuite name="UtilIntervals" tests="2" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T21:26:27.740">
+    <testcase name="testInterval" file="D:/a/foliq/foliq/test/unit_tests/util/IntervalTest.cpp" line="8" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.740" classname="UtilIntervals" />
+    <testcase name="testUnionOfIntervals" file="D:/a/foliq/foliq/test/unit_tests/util/IntervalTest.cpp" line="66" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.740" classname="UtilIntervals" />
+  </testsuite>
+  <testsuite name="UtilI18n" tests="7" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T21:26:27.740">
+    <testcase name="testNoPlaceholder" file="D:/a/foliq/foliq/test/unit_tests/util/I18nTest.cpp" line="25" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.740" classname="UtilI18n" />
+    <testcase name="testEscape" file="D:/a/foliq/foliq/test/unit_tests/util/I18nTest.cpp" line="31" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.740" classname="UtilI18n" />
+    <testcase name="testReplace" file="D:/a/foliq/foliq/test/unit_tests/util/I18nTest.cpp" line="37" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.740" classname="UtilI18n" />
+    <testcase name="testMissing" file="D:/a/foliq/foliq/test/unit_tests/util/I18nTest.cpp" line="43" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.740" classname="UtilI18n" />
+    <testcase name="testOrder" file="D:/a/foliq/foliq/test/unit_tests/util/I18nTest.cpp" line="49" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.740" classname="UtilI18n" />
+    <testcase name="testLatexString" file="D:/a/foliq/foliq/test/unit_tests/util/I18nTest.cpp" line="55" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.740" classname="UtilI18n" />
+    <testcase name="test3" file="D:/a/foliq/foliq/test/unit_tests/util/I18nTest.cpp" line="63" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.740" classname="UtilI18n" />
+  </testsuite>
+  <testsuite name="UtilElementRange" tests="3" failures="0" disabled="0" skipped="0" errors="0" time="0.001" timestamp="2026-11-10T21:26:27.740">
+    <testcase name="testParse" file="D:/a/foliq/foliq/test/unit_tests/util/ElementRangeTest.cpp" line="26" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.740" classname="UtilElementRange" />
+    <testcase name="testInvalid" file="D:/a/foliq/foliq/test/unit_tests/util/ElementRangeTest.cpp" line="39" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.741" classname="UtilElementRange" />
+    <testcase name="testPageCountIsZero" file="D:/a/foliq/foliq/test/unit_tests/util/ElementRangeTest.cpp" line="56" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.742" classname="UtilElementRange" />
+  </testsuite>
+  <testsuite name="UtilColor" tests="2" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T21:26:27.742">
+    <testcase name="testColorToRGB" file="D:/a/foliq/foliq/test/unit_tests/util/ColorTest.cpp" line="30" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.742" classname="UtilColor" />
+    <testcase name="testColorToRGBAndBack" file="D:/a/foliq/foliq/test/unit_tests/util/ColorTest.cpp" line="49" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.742" classname="UtilColor" />
+  </testsuite>
+  <testsuite name="StrokeStyle" tests="2" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T21:26:27.742">
+    <testcase name="testParseStyle" file="D:/a/foliq/foliq/test/unit_tests/model/StrokeStyleTest.cpp" line="24" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.742" classname="StrokeStyle" />
+    <testcase name="testFormatStyle" file="D:/a/foliq/foliq/test/unit_tests/model/StrokeStyleTest.cpp" line="34" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.742" classname="StrokeStyle" />
+  </testsuite>
+  <testsuite name="LineStyle" tests="1" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T21:26:27.742">
+    <testcase name="testLineStyle" file="D:/a/foliq/foliq/test/unit_tests/model/LineStyleTest.cpp" line="18" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.742" classname="LineStyle" />
+  </testsuite>
+  <testsuite name="Image" tests="1" failures="0" disabled="0" skipped="0" errors="0" time="0.008" timestamp="2026-11-10T21:26:27.742">
+    <testcase name="testGetImageApplyOrientation" file="D:/a/foliq/foliq/test/unit_tests/model/ImageTest.cpp" line="20" status="run" result="completed" time="0.008" timestamp="2026-11-10T21:26:27.742" classname="Image" />
+  </testsuite>
+  <testsuite name="ErasableStroke" tests="3" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T21:26:27.751">
+    <testcase name="testOverlapTree" file="D:/a/foliq/foliq/test/unit_tests/model/ErasableStrokeTest.cpp" line="22" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.751" classname="ErasableStroke" />
+    <testcase name="testGetStrokes" file="D:/a/foliq/foliq/test/unit_tests/model/ErasableStrokeTest.cpp" line="81" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.751" classname="ErasableStroke" />
+    <testcase name="testIntersectWithPaddedBox" file="D:/a/foliq/foliq/test/unit_tests/model/ErasableStrokeTest.cpp" line="175" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.751" classname="ErasableStroke" />
+  </testsuite>
+  <testsuite name="DocumentName" tests="1" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T21:26:27.752">
+    <testcase name="testUTF8" file="D:/a/foliq/foliq/test/unit_tests/model/DocumentNameTest.cpp" line="20" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.752" classname="DocumentName" />
+  </testsuite>
+  <testsuite name="ColorPalette" tests="8" failures="0" disabled="0" skipped="0" errors="0" time="0.001" timestamp="2026-11-10T21:26:27.752">
+    <testcase name="testDefaultWrite" file="D:/a/foliq/foliq/test/unit_tests/model/ColorPaletteTest.cpp" line="31" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.752" classname="ColorPalette" />
+    <testcase name="testDefaultLoad" file="D:/a/foliq/foliq/test/unit_tests/model/ColorPaletteTest.cpp" line="42" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.752" classname="ColorPalette" />
+    <testcase name="testRainbowLoad" file="D:/a/foliq/foliq/test/unit_tests/model/ColorPaletteTest.cpp" line="60" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.753" classname="ColorPalette" />
+    <testcase name="testNotExistLoad" file="D:/a/foliq/foliq/test/unit_tests/model/ColorPaletteTest.cpp" line="74" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.753" classname="ColorPalette" />
+    <testcase name="testEmptyLoad" file="D:/a/foliq/foliq/test/unit_tests/model/ColorPaletteTest.cpp" line="79" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.753" classname="ColorPalette" />
+    <testcase name="testWrongHeader" file="D:/a/foliq/foliq/test/unit_tests/model/ColorPaletteTest.cpp" line="84" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.753" classname="ColorPalette" />
+    <testcase name="testAttributesLoad" file="D:/a/foliq/foliq/test/unit_tests/model/ColorPaletteTest.cpp" line="89" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.753" classname="ColorPalette" />
+    <testcase name="testWrongColor" file="D:/a/foliq/foliq/test/unit_tests/model/ColorPaletteTest.cpp" line="98" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.753" classname="ColorPalette" />
+  </testsuite>
+  <testsuite name="ToolEnumsTest" tests="2" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T21:26:27.754">
+    <testcase name="testToolSizeSerialization" file="D:/a/foliq/foliq/test/unit_tests/control/ToolEnumsTest.cpp" line="24" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.754" classname="ToolEnumsTest" />
+    <testcase name="testToolTypeSerialization" file="D:/a/foliq/foliq/test/unit_tests/control/ToolEnumsTest.cpp" line="38" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.754" classname="ToolEnumsTest" />
+  </testsuite>
+  <testsuite name="ControlLoadHandler" tests="20" failures="0" disabled="0" skipped="0" errors="0" time="1.418" timestamp="2026-11-10T21:26:27.754">
+    <testcase name="testLoad" file="D:/a/foliq/foliq/test/unit_tests/control/LoadHandlerTest.cpp" line="162" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.754" classname="ControlLoadHandler" />
+    <testcase name="testLoadZipped" file="D:/a/foliq/foliq/test/unit_tests/control/LoadHandlerTest.cpp" line="180" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.754" classname="ControlLoadHandler" />
+    <testcase name="testLoadUnzipped" file="D:/a/foliq/foliq/test/unit_tests/control/LoadHandlerTest.cpp" line="198" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.755" classname="ControlLoadHandler" />
+    <testcase name="testPages" file="D:/a/foliq/foliq/test/unit_tests/control/LoadHandlerTest.cpp" line="216" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.755" classname="ControlLoadHandler" />
+    <testcase name="testPagesZipped" file="D:/a/foliq/foliq/test/unit_tests/control/LoadHandlerTest.cpp" line="223" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.755" classname="ControlLoadHandler" />
+    <testcase name="testPageType" file="D:/a/foliq/foliq/test/unit_tests/control/LoadHandlerTest.cpp" line="231" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.756" classname="ControlLoadHandler" />
+    <testcase name="testPageTypeZipped" file="D:/a/foliq/foliq/test/unit_tests/control/LoadHandlerTest.cpp" line="244" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.756" classname="ControlLoadHandler" />
+    <testcase name="testPageTypeFormatCopyFix" file="D:/a/foliq/foliq/test/unit_tests/control/LoadHandlerTest.cpp" line="257" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.756" classname="ControlLoadHandler" />
+    <testcase name="testLayer" file="D:/a/foliq/foliq/test/unit_tests/control/LoadHandlerTest.cpp" line="267" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.756" classname="ControlLoadHandler" />
+    <testcase name="testLayerZipped" file="D:/a/foliq/foliq/test/unit_tests/control/LoadHandlerTest.cpp" line="280" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.757" classname="ControlLoadHandler" />
+    <testcase name="testText" file="D:/a/foliq/foliq/test/unit_tests/control/LoadHandlerTest.cpp" line="293" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.757" classname="ControlLoadHandler" />
+    <testcase name="testTextZipped" file="D:/a/foliq/foliq/test/unit_tests/control/LoadHandlerTest.cpp" line="321" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:27.757" classname="ControlLoadHandler" />
+    <testcase name="testImageZipped" file="D:/a/foliq/foliq/test/unit_tests/control/LoadHandlerTest.cpp" line="349" status="run" result="completed" time="0.009" timestamp="2026-11-10T21:26:27.757" classname="ControlLoadHandler" />
+    <testcase name="imageLoadJpeg" file="D:/a/foliq/foliq/test/unit_tests/control/LoadHandlerTest.cpp" line="377" status="run" result="completed" time="0.005" timestamp="2026-11-10T21:26:27.767" classname="ControlLoadHandler" />
+    <testcase name="imageSaveJpegBackwardCompat" file="D:/a/foliq/foliq/test/unit_tests/control/LoadHandlerTest.cpp" line="395" status="run" result="completed" time="0.045" timestamp="2026-11-10T21:26:27.773" classname="ControlLoadHandler" />
+    <testcase name="linebreaksLatex" file="D:/a/foliq/foliq/test/unit_tests/control/LoadHandlerTest.cpp" line="428" status="run" result="completed" time="0.006" timestamp="2026-11-10T21:26:27.818" classname="ControlLoadHandler" />
+    <testcase name="testLoadStoreLoadDefault" file="D:/a/foliq/foliq/test/unit_tests/control/LoadHandlerTest.cpp" line="463" status="run" result="completed" time="1.337" timestamp="2026-11-10T21:26:27.824" classname="ControlLoadHandler" />
+    <testcase name="testLoadStoreLoadFloatBwCompat" file="D:/a/foliq/foliq/test/unit_tests/control/LoadHandlerTest.cpp" line="469" status="run" result="completed" time="0.006" timestamp="2026-11-10T21:26:29.162" classname="ControlLoadHandler" />
+    <testcase name="testStrokeWidthRecovery" file="D:/a/foliq/foliq/test/unit_tests/control/LoadHandlerTest.cpp" line="473" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:29.169" classname="ControlLoadHandler" />
+    <testcase name="testLoadStoreCJK" file="D:/a/foliq/foliq/test/unit_tests/control/LoadHandlerTest.cpp" line="527" status="run" result="completed" time="0.002" timestamp="2026-11-10T21:26:29.169" classname="ControlLoadHandler" />
+  </testsuite>
+  <testsuite name="FoliqCatalogTest" tests="9" failures="0" disabled="0" skipped="0" errors="0" time="0.046" timestamp="2026-11-10T21:26:29.172">
+    <testcase name="RestartMoveTrashAndPositionKeepDocumentIdentity" file="D:/a/foliq/foliq/test/unit_tests/FoliqCatalogTest.cpp" line="33" status="run" result="completed" time="0.012" timestamp="2026-11-10T21:26:29.172" classname="FoliqCatalogTest" />
+    <testcase name="OrderingDuplicateAndCycleRollback" file="D:/a/foliq/foliq/test/unit_tests/FoliqCatalogTest.cpp" line="70" status="run" result="completed" time="0.01" timestamp="2026-11-10T21:26:29.185" classname="FoliqCatalogTest" />
+    <testcase name="FailedMetadataWriteDoesNotPublishOrLoseContent" file="D:/a/foliq/foliq/test/unit_tests/FoliqCatalogTest.cpp" line="95" status="run" result="completed" time="0.005" timestamp="2026-11-10T21:26:29.196" classname="FoliqCatalogTest" />
+    <testcase name="LocksExternalEditsAndUnknownVersionsFailClosed" file="D:/a/foliq/foliq/test/unit_tests/FoliqCatalogTest.cpp" line="118" status="run" result="completed" time="0.003" timestamp="2026-11-10T21:26:29.201" classname="FoliqCatalogTest" />
+    <testcase name="InterruptedStageAndBackupFailureKeepLastCompleteRevision" file="D:/a/foliq/foliq/test/unit_tests/FoliqCatalogTest.cpp" line="140" status="run" result="completed" time="0.002" timestamp="2026-11-10T21:26:29.205" classname="FoliqCatalogTest" />
+    <testcase name="DocumentConflictDetection" file="D:/a/foliq/foliq/test/unit_tests/FoliqCatalogTest.cpp" line="153" status="run" result="completed" time="0.001" timestamp="2026-11-10T21:26:29.207" classname="FoliqCatalogTest" />
+    <testcase name="MissingOrCorruptCatalogNeverReinitializesBackup" file="D:/a/foliq/foliq/test/unit_tests/FoliqCatalogTest.cpp" line="166" status="run" result="completed" time="0.002" timestamp="2026-11-10T21:26:29.208" classname="FoliqCatalogTest" />
+    <testcase name="WindowsLockedTargetKeepsOriginal" file="D:/a/foliq/foliq/test/unit_tests/FoliqCatalogTest.cpp" line="181" status="run" result="completed" time="0." timestamp="2026-11-10T21:26:29.211" classname="FoliqCatalogTest" />
+    <testcase name="CorruptRelationsAndMissingDocumentAreRejectedWithoutRewriting" file="D:/a/foliq/foliq/test/unit_tests/FoliqCatalogTest.cpp" line="191" status="run" result="completed" time="0.006" timestamp="2026-11-10T21:26:29.212" classname="FoliqCatalogTest" />
+  </testsuite>
+</testsuites>
