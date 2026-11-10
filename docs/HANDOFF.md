@@ -143,3 +143,20 @@ Vollständige erreichbare Upstream-Historie mit git fetch --unshallow origin
 nachgeladen. Lokale Basis als d92cabd2 committed; UI-Upload-Historie mit
 5595b6a4 konfliktfrei zusammengeführt. Die Referenzdateien blieben unverändert.
 Push-Ergebnis und erster CI-Status werden nach dem Upload ergänzt.
+
+## Schritt 6: GitHub-Push und verbindliche E-Mail
+
+Vollständigen Projektstand inklusive Upstream-Historie und v1.2.8-Tag erfolgreich
+nach leotrax3d/foliq gepusht; Bilder und ihre bisherigen Commits erhalten.
+Der Windows-Workflow startete tatsächlich (Run 42897015289, zunächst laufend).
+Noch kein erfolgreicher Windows-Build oder Testpaket behauptet.
+
+Neue Nutzeranweisung: ausschließlich leotrax3d@gmx.net für Author/Committer aller
+neuen Foliq-Commits. Global und lokal konfiguriert und verbindlich in AGENTS,
+docs/CONTRIBUTING sowie README hinterlegt. Drei in diesem Schritt zunächst mit
+der vorherigen Umgebungsidentität angelegte lokale Commits werden vor Abschluss
+in beiden Identitätsfeldern korrigiert; Inhalt, ursprüngliche UI-Upload-Commits
+und Upstream-Historie bleiben erhalten. Dafür ist ein auf den zuvor selbst
+gepushten main-Stand begrenzter Force-with-lease-Push erforderlich.
+Prüfung: alle neu angelegten Commit-Identitäten kontrollieren, Remote-HEAD mit
+lokalem HEAD vergleichen und Arbeitsbaum auf ausstehende Änderungen prüfen.

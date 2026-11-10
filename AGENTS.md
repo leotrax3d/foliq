@@ -23,3 +23,13 @@ UPSTREAM.md und den aktuellen HANDOFF.md lesen.
   Ergebnissen, Problemen und nächstem überprüfbaren Schritt aktualisieren.
 - Keine Secrets oder private Notizen in Logs, Fixtures oder CI-Artefakte aufnehmen.
 - CI-Paket ist ein Entwicklungspaket, kein fertiggestelltes Foliq-Produkt.
+
+## Verbindliche Git-Identität
+
+Für alle neu erstellten Foliq-Commits und GitHub-Änderungen ausschließlich
+`leotrax3d@gmx.net` als Author- und Committer-E-Mail verwenden. Keine andere
+Adresse und keine noreply-Adresse einsetzen. Vor Commit und Push beide Felder
+prüfen; explizit konfigurieren statt Umgebungsstandards zu übernehmen.
+Auch API-, Merge- und Automatisierungswege müssen diese Identität gewährleisten;
+ist das nicht möglich, den Commit lokal mit korrekter Identität erstellen.
+Unveränderte historische Upstream-Autorenangaben erhalten.

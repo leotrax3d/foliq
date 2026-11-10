@@ -5,6 +5,8 @@
 > Einstieg: [Produkt](docs/PRODUCT.md), [Architektur](docs/ARCHITECTURE.md),
 > [Build](docs/BUILD.md), [Windows-Test](docs/WINDOWS.md),
 > [Herkunft und Lizenzen](docs/UPSTREAM.md), [aktueller Stand](docs/HANDOFF.md).
+> Git-Identität für neue Foliq-Commits: **leotrax3d@gmx.net**
+> ([verbindliche Vorgabe](docs/CONTRIBUTING.md)).
 > Upstream-Dokumentation und Hinweise folgen unverändert.
 
 # Xournal++
