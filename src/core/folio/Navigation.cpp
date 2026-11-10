@@ -229,8 +229,7 @@ void Navigation::activate() {
         if (control->openFile(catalog->document(id)))
             catalog->position(id, 0);
     } else if (n.kind == Kind::Notebook) {
-        catalog->open(id, !n.opened);
-        refresh();
+        action("Öffnen/Schließen");
     }
 }
 void Navigation::action(const std::string& action) {
@@ -292,6 +291,8 @@ void Navigation::action(const std::string& action) {
                 return;
             catalog->duplicate(id);
         } else if (action == "Löschen" || action == "Öffnen/Schließen") {
+            if (action == "Öffnen/Schließen" && catalog->get(id).kind != Kind::Notebook)
+                throw std::runtime_error("Zum Öffnen/Schließen ein Notizbuch auswählen.");
             if (!rememberPosition() || !flush())
                 return;
             // Close active managed editor first, so deleted/closed nodes cannot be autosaved accidentally.
@@ -314,8 +315,16 @@ void Navigation::action(const std::string& action) {
                 return;
             if (action == "Löschen")
                 catalog->trash(id, true);
-            else
+            else {
                 catalog->open(id, !catalog->get(id).opened);
+                auto last = catalog->last();
+                if (catalog->get(id).opened && !last.empty() && !catalog->trashed(last)) {
+                    auto ancestor = catalog->get(last);
+                    while (!ancestor.parent.empty()) ancestor = catalog->get(ancestor.parent);
+                    if (ancestor.id == id)
+                        control->openFile(catalog->document(last), catalog->lastPage());
+                }
+            }
         } else if (action == "Wiederherstellen")
             catalog->trash(id, false);
     }

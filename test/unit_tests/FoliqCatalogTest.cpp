@@ -65,7 +65,6 @@ TEST_F(FoliqCatalogTest, RestartMoveTrashAndPositionKeepDocumentIdentity) {
         auto* doc = load.loadDocument(c.document(page));
         ASSERT_NE(doc, nullptr);
         EXPECT_EQ(doc->getPageCount(), 1);
-        delete doc;
     }
 }
 TEST_F(FoliqCatalogTest, OrderingDuplicateAndCycleRollback) {
