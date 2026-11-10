@@ -2739,7 +2739,9 @@ void Control::updateWindowTitle() {
     }
     this->doc->unlock();
 
-    title += " - Xournal++";
+    // Foliq change, 2026-11-10: identify the development fork.
+    title += " - ";
+    title += FOLIQ_WINDOW_NAME;
 
     gtk_window_set_title(getGtkWindow(), title.c_str());
 }

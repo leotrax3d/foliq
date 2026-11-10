@@ -18,6 +18,9 @@
  */
 constexpr auto PROJECT_NAME = "@PROJECT_NAME@";
 
+// Foliq change, 2026-11-10: display identity only; does not change file or configuration compatibility.
+constexpr auto FOLIQ_WINDOW_NAME = "@FOLIQ_WINDOW_NAME@";
+
 /**
  * Project version number
  */

@@ -33,6 +33,14 @@ set(xournalpp_VERSION ${PROJECT_VERSION})
 set(CMAKE_PROJECT_VERSION ${PROJECT_VERSION})
 set(PROJECT_CONTACT "core.xournalpp@github.com")
 
+# Foliq change, 2026-11-10: development identity; keep upstream binary, resources and file format stable.
+option(FOLIQ_BUILD "Identify this build as the Foliq development fork" ON)
+if(FOLIQ_BUILD)
+    set(FOLIQ_WINDOW_NAME "Foliq (development, based on Xournal++)")
+else()
+    set(FOLIQ_WINDOW_NAME "Xournal++")
+endif()
+
 ## CMAKE_Variables
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/find" "${PROJECT_SOURCE_DIR}/cmake/include")
 set(CMAKE_CXX_STANDARD 17)

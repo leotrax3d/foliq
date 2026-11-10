@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="92" failures="0" disabled="0" errors="0" time="0.176" timestamp="2026-11-10T20:28:55.421" name="AllTests">
+  <testsuite name="ControlLoadHandler" tests="20" failures="0" disabled="0" skipped="0" errors="0" time="0.136" timestamp="2026-11-10T20:28:55.421">
+    <testcase name="testLoad" file="/tmp/xournalpp-upstream/test/unit_tests/control/LoadHandlerTest.cpp" line="162" status="run" result="completed" time="0.001" timestamp="2026-11-10T20:28:55.421" classname="ControlLoadHandler" />
+    <testcase name="testLoadZipped" file="/tmp/xournalpp-upstream/test/unit_tests/control/LoadHandlerTest.cpp" line="180" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.423" classname="ControlLoadHandler" />
+    <testcase name="testLoadUnzipped" file="/tmp/xournalpp-upstream/test/unit_tests/control/LoadHandlerTest.cpp" line="198" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.424" classname="ControlLoadHandler" />
+    <testcase name="testPages" file="/tmp/xournalpp-upstream/test/unit_tests/control/LoadHandlerTest.cpp" line="216" status="run" result="completed" time="0.001" timestamp="2026-11-10T20:28:55.424" classname="ControlLoadHandler" />
+    <testcase name="testPagesZipped" file="/tmp/xournalpp-upstream/test/unit_tests/control/LoadHandlerTest.cpp" line="223" status="run" result="completed" time="0.002" timestamp="2026-11-10T20:28:55.425" classname="ControlLoadHandler" />
+    <testcase name="testPageType" file="/tmp/xournalpp-upstream/test/unit_tests/control/LoadHandlerTest.cpp" line="231" status="run" result="completed" time="0.003" timestamp="2026-11-10T20:28:55.428" classname="ControlLoadHandler" />
+    <testcase name="testPageTypeZipped" file="/tmp/xournalpp-upstream/test/unit_tests/control/LoadHandlerTest.cpp" line="244" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.432" classname="ControlLoadHandler" />
+    <testcase name="testPageTypeFormatCopyFix" file="/tmp/xournalpp-upstream/test/unit_tests/control/LoadHandlerTest.cpp" line="257" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.432" classname="ControlLoadHandler" />
+    <testcase name="testLayer" file="/tmp/xournalpp-upstream/test/unit_tests/control/LoadHandlerTest.cpp" line="267" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.432" classname="ControlLoadHandler" />
+    <testcase name="testLayerZipped" file="/tmp/xournalpp-upstream/test/unit_tests/control/LoadHandlerTest.cpp" line="280" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.432" classname="ControlLoadHandler" />
+    <testcase name="testText" file="/tmp/xournalpp-upstream/test/unit_tests/control/LoadHandlerTest.cpp" line="293" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.432" classname="ControlLoadHandler" />
+    <testcase name="testTextZipped" file="/tmp/xournalpp-upstream/test/unit_tests/control/LoadHandlerTest.cpp" line="321" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.432" classname="ControlLoadHandler" />
+    <testcase name="testImageZipped" file="/tmp/xournalpp-upstream/test/unit_tests/control/LoadHandlerTest.cpp" line="349" status="run" result="completed" time="0.021" timestamp="2026-11-10T20:28:55.433" classname="ControlLoadHandler" />
+    <testcase name="imageLoadJpeg" file="/tmp/xournalpp-upstream/test/unit_tests/control/LoadHandlerTest.cpp" line="377" status="run" result="completed" time="0.007" timestamp="2026-11-10T20:28:55.454" classname="ControlLoadHandler" />
+    <testcase name="imageSaveJpegBackwardCompat" file="/tmp/xournalpp-upstream/test/unit_tests/control/LoadHandlerTest.cpp" line="395" status="run" result="completed" time="0.064" timestamp="2026-11-10T20:28:55.462" classname="ControlLoadHandler" />
+    <testcase name="linebreaksLatex" file="/tmp/xournalpp-upstream/test/unit_tests/control/LoadHandlerTest.cpp" line="428" status="run" result="completed" time="0.003" timestamp="2026-11-10T20:28:55.526" classname="ControlLoadHandler" />
+    <testcase name="testLoadStoreLoadDefault" file="/tmp/xournalpp-upstream/test/unit_tests/control/LoadHandlerTest.cpp" line="463" status="run" result="completed" time="0.019" timestamp="2026-11-10T20:28:55.530" classname="ControlLoadHandler" />
+    <testcase name="testLoadStoreLoadFloatBwCompat" file="/tmp/xournalpp-upstream/test/unit_tests/control/LoadHandlerTest.cpp" line="469" status="run" result="completed" time="0.006" timestamp="2026-11-10T20:28:55.550" classname="ControlLoadHandler" />
+    <testcase name="testStrokeWidthRecovery" file="/tmp/xournalpp-upstream/test/unit_tests/control/LoadHandlerTest.cpp" line="473" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.556" classname="ControlLoadHandler" />
+    <testcase name="testLoadStoreCJK" file="/tmp/xournalpp-upstream/test/unit_tests/control/LoadHandlerTest.cpp" line="527" status="run" result="completed" time="0.001" timestamp="2026-11-10T20:28:55.557" classname="ControlLoadHandler" />
+  </testsuite>
+  <testsuite name="ToolEnumsTest" tests="2" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T20:28:55.558">
+    <testcase name="testToolSizeSerialization" file="/tmp/xournalpp-upstream/test/unit_tests/control/ToolEnumsTest.cpp" line="24" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.558" classname="ToolEnumsTest" />
+    <testcase name="testToolTypeSerialization" file="/tmp/xournalpp-upstream/test/unit_tests/control/ToolEnumsTest.cpp" line="38" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.558" classname="ToolEnumsTest" />
+  </testsuite>
+  <testsuite name="ColorPalette" tests="8" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T20:28:55.558">
+    <testcase name="testDefaultWrite" file="/tmp/xournalpp-upstream/test/unit_tests/model/ColorPaletteTest.cpp" line="31" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.558" classname="ColorPalette" />
+    <testcase name="testDefaultLoad" file="/tmp/xournalpp-upstream/test/unit_tests/model/ColorPaletteTest.cpp" line="42" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.558" classname="ColorPalette" />
+    <testcase name="testRainbowLoad" file="/tmp/xournalpp-upstream/test/unit_tests/model/ColorPaletteTest.cpp" line="60" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.559" classname="ColorPalette" />
+    <testcase name="testNotExistLoad" file="/tmp/xournalpp-upstream/test/unit_tests/model/ColorPaletteTest.cpp" line="74" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.559" classname="ColorPalette" />
+    <testcase name="testEmptyLoad" file="/tmp/xournalpp-upstream/test/unit_tests/model/ColorPaletteTest.cpp" line="79" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.559" classname="ColorPalette" />
+    <testcase name="testWrongHeader" file="/tmp/xournalpp-upstream/test/unit_tests/model/ColorPaletteTest.cpp" line="84" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.559" classname="ColorPalette" />
+    <testcase name="testAttributesLoad" file="/tmp/xournalpp-upstream/test/unit_tests/model/ColorPaletteTest.cpp" line="89" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.559" classname="ColorPalette" />
+    <testcase name="testWrongColor" file="/tmp/xournalpp-upstream/test/unit_tests/model/ColorPaletteTest.cpp" line="98" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.559" classname="ColorPalette" />
+  </testsuite>
+  <testsuite name="DocumentName" tests="1" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T20:28:55.559">
+    <testcase name="testUTF8" file="/tmp/xournalpp-upstream/test/unit_tests/model/DocumentNameTest.cpp" line="20" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.559" classname="DocumentName" />
+  </testsuite>
+  <testsuite name="ErasableStroke" tests="3" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T20:28:55.559">
+    <testcase name="testOverlapTree" file="/tmp/xournalpp-upstream/test/unit_tests/model/ErasableStrokeTest.cpp" line="22" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.559" classname="ErasableStroke" />
+    <testcase name="testGetStrokes" file="/tmp/xournalpp-upstream/test/unit_tests/model/ErasableStrokeTest.cpp" line="81" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.559" classname="ErasableStroke" />
+    <testcase name="testIntersectWithPaddedBox" file="/tmp/xournalpp-upstream/test/unit_tests/model/ErasableStrokeTest.cpp" line="175" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.559" classname="ErasableStroke" />
+  </testsuite>
+  <testsuite name="Image" tests="1" failures="0" disabled="0" skipped="0" errors="0" time="0.008" timestamp="2026-11-10T20:28:55.559">
+    <testcase name="testGetImageApplyOrientation" file="/tmp/xournalpp-upstream/test/unit_tests/model/ImageTest.cpp" line="20" status="run" result="completed" time="0.008" timestamp="2026-11-10T20:28:55.559" classname="Image" />
+  </testsuite>
+  <testsuite name="LineStyle" tests="1" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T20:28:55.568">
+    <testcase name="testLineStyle" file="/tmp/xournalpp-upstream/test/unit_tests/model/LineStyleTest.cpp" line="18" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.568" classname="LineStyle" />
+  </testsuite>
+  <testsuite name="StrokeStyle" tests="2" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T20:28:55.568">
+    <testcase name="testParseStyle" file="/tmp/xournalpp-upstream/test/unit_tests/model/StrokeStyleTest.cpp" line="24" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.568" classname="StrokeStyle" />
+    <testcase name="testFormatStyle" file="/tmp/xournalpp-upstream/test/unit_tests/model/StrokeStyleTest.cpp" line="34" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.568" classname="StrokeStyle" />
+  </testsuite>
+  <testsuite name="UtilColor" tests="2" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T20:28:55.568">
+    <testcase name="testColorToRGB" file="/tmp/xournalpp-upstream/test/unit_tests/util/ColorTest.cpp" line="30" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.568" classname="UtilColor" />
+    <testcase name="testColorToRGBAndBack" file="/tmp/xournalpp-upstream/test/unit_tests/util/ColorTest.cpp" line="49" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.568" classname="UtilColor" />
+  </testsuite>
+  <testsuite name="UtilElementRange" tests="3" failures="0" disabled="0" skipped="0" errors="0" time="0.005" timestamp="2026-11-10T20:28:55.568">
+    <testcase name="testParse" file="/tmp/xournalpp-upstream/test/unit_tests/util/ElementRangeTest.cpp" line="26" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.568" classname="UtilElementRange" />
+    <testcase name="testInvalid" file="/tmp/xournalpp-upstream/test/unit_tests/util/ElementRangeTest.cpp" line="39" status="run" result="completed" time="0.004" timestamp="2026-11-10T20:28:55.569" classname="UtilElementRange" />
+    <testcase name="testPageCountIsZero" file="/tmp/xournalpp-upstream/test/unit_tests/util/ElementRangeTest.cpp" line="56" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.573" classname="UtilElementRange" />
+  </testsuite>
+  <testsuite name="UtilI18n" tests="7" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T20:28:55.573">
+    <testcase name="testNoPlaceholder" file="/tmp/xournalpp-upstream/test/unit_tests/util/I18nTest.cpp" line="25" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.573" classname="UtilI18n" />
+    <testcase name="testEscape" file="/tmp/xournalpp-upstream/test/unit_tests/util/I18nTest.cpp" line="31" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.573" classname="UtilI18n" />
+    <testcase name="testReplace" file="/tmp/xournalpp-upstream/test/unit_tests/util/I18nTest.cpp" line="37" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.573" classname="UtilI18n" />
+    <testcase name="testMissing" file="/tmp/xournalpp-upstream/test/unit_tests/util/I18nTest.cpp" line="43" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.573" classname="UtilI18n" />
+    <testcase name="testOrder" file="/tmp/xournalpp-upstream/test/unit_tests/util/I18nTest.cpp" line="49" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.573" classname="UtilI18n" />
+    <testcase name="testLatexString" file="/tmp/xournalpp-upstream/test/unit_tests/util/I18nTest.cpp" line="55" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.573" classname="UtilI18n" />
+    <testcase name="test3" file="/tmp/xournalpp-upstream/test/unit_tests/util/I18nTest.cpp" line="63" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.573" classname="UtilI18n" />
+  </testsuite>
+  <testsuite name="UtilIntervals" tests="2" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T20:28:55.573">
+    <testcase name="testInterval" file="/tmp/xournalpp-upstream/test/unit_tests/util/IntervalTest.cpp" line="8" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.573" classname="UtilIntervals" />
+    <testcase name="testUnionOfIntervals" file="/tmp/xournalpp-upstream/test/unit_tests/util/IntervalTest.cpp" line="66" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.573" classname="UtilIntervals" />
+  </testsuite>
+  <testsuite name="UtilObjectIOStream" tests="8" failures="0" disabled="0" skipped="0" errors="0" time="0.022" timestamp="2026-11-10T20:28:55.573">
+    <testcase name="testReadData" file="/tmp/xournalpp-upstream/test/unit_tests/util/ObjectIOStreamTest.cpp" line="95" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.573" classname="UtilObjectIOStream" />
+    <testcase name="testReadImage" file="/tmp/xournalpp-upstream/test/unit_tests/util/ObjectIOStreamTest.cpp" line="111" status="run" result="completed" time="0.022" timestamp="2026-11-10T20:28:55.573" classname="UtilObjectIOStream" />
+    <testcase name="testReadString" file="/tmp/xournalpp-upstream/test/unit_tests/util/ObjectIOStreamTest.cpp" line="150" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.596" classname="UtilObjectIOStream" />
+    <testcase name="testReadSizeT" file="/tmp/xournalpp-upstream/test/unit_tests/util/ObjectIOStreamTest.cpp" line="172" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.596" classname="UtilObjectIOStream" />
+    <testcase name="testReadInt" file="/tmp/xournalpp-upstream/test/unit_tests/util/ObjectIOStreamTest.cpp" line="191" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.596" classname="UtilObjectIOStream" />
+    <testcase name="testReadDouble" file="/tmp/xournalpp-upstream/test/unit_tests/util/ObjectIOStreamTest.cpp" line="211" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.596" classname="UtilObjectIOStream" />
+    <testcase name="testReadComplexObject" file="/tmp/xournalpp-upstream/test/unit_tests/util/ObjectIOStreamTest.cpp" line="230" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.596" classname="UtilObjectIOStream" />
+    <testcase name="testReadStroke" file="/tmp/xournalpp-upstream/test/unit_tests/util/ObjectIOStreamTest.cpp" line="319" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.596" classname="UtilObjectIOStream" />
+  </testsuite>
+  <testsuite name="UtilPath" tests="4" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T20:28:55.596">
+    <testcase name="testUnsupportedUri" file="/tmp/xournalpp-upstream/test/unit_tests/util/PathTest.cpp" line="22" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.596" classname="UtilPath" />
+    <testcase name="testPathFromUri" file="/tmp/xournalpp-upstream/test/unit_tests/util/PathTest.cpp" line="29" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.596" classname="UtilPath" />
+    <testcase name="testPathIsChildOf" file="/tmp/xournalpp-upstream/test/unit_tests/util/PathTest.cpp" line="35" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.596" classname="UtilPath" />
+    <testcase name="testClearExtensions" file="/tmp/xournalpp-upstream/test/unit_tests/util/PathTest.cpp" line="53" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.596" classname="UtilPath" />
+  </testsuite>
+  <testsuite name="UtilsRAII" tests="6" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T20:28:55.596">
+    <testcase name="testCLibbrairiesSPtr_Constructors" file="/tmp/xournalpp-upstream/test/unit_tests/util/RAIIWrappersTest.cpp" line="39" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.596" classname="UtilsRAII" />
+    <testcase name="testCLibbrairiesSPtr_MoveAssignments" file="/tmp/xournalpp-upstream/test/unit_tests/util/RAIIWrappersTest.cpp" line="72" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilsRAII" />
+    <testcase name="testCLibbrairiesSPtr_CopyAssignments" file="/tmp/xournalpp-upstream/test/unit_tests/util/RAIIWrappersTest.cpp" line="137" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilsRAII" />
+    <testcase name="testCLibbrairiesSPtr_Reset" file="/tmp/xournalpp-upstream/test/unit_tests/util/RAIIWrappersTest.cpp" line="189" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilsRAII" />
+    <testcase name="testGObjectSPtrConstructors" file="/tmp/xournalpp-upstream/test/unit_tests/util/RAIIWrappersTest.cpp" line="260" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilsRAII" />
+    <testcase name="testGObjectSPtrReset" file="/tmp/xournalpp-upstream/test/unit_tests/util/RAIIWrappersTest.cpp" line="290" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilsRAII" />
+  </testsuite>
+  <testsuite name="UtilRange" tests="3" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T20:28:55.597">
+    <testcase name="testEmptyValid" file="/tmp/xournalpp-upstream/test/unit_tests/util/RangeTest.cpp" line="29" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilRange" />
+    <testcase name="testUnite" file="/tmp/xournalpp-upstream/test/unit_tests/util/RangeTest.cpp" line="36" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilRange" />
+    <testcase name="testIntersect" file="/tmp/xournalpp-upstream/test/unit_tests/util/RangeTest.cpp" line="50" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilRange" />
+  </testsuite>
+  <testsuite name="SaveNameUtils" tests="1" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T20:28:55.597">
+    <testcase name="testWildcardExpansion" file="/tmp/xournalpp-upstream/test/unit_tests/util/SaveNameUtilsTest.cpp" line="17" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="SaveNameUtils" />
+  </testsuite>
+  <testsuite name="UtilStringUtils" tests="6" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T20:28:55.597">
+    <testcase name="testStartWith" file="/tmp/xournalpp-upstream/test/unit_tests/util/StringUtilsTest.cpp" line="25" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilStringUtils" />
+    <testcase name="testSplit" file="/tmp/xournalpp-upstream/test/unit_tests/util/StringUtilsTest.cpp" line="33" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilStringUtils" />
+    <testcase name="testSplitEmpty" file="/tmp/xournalpp-upstream/test/unit_tests/util/StringUtilsTest.cpp" line="41" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilStringUtils" />
+    <testcase name="testSplitOne" file="/tmp/xournalpp-upstream/test/unit_tests/util/StringUtilsTest.cpp" line="47" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilStringUtils" />
+    <testcase name="testEndsWith" file="/tmp/xournalpp-upstream/test/unit_tests/util/StringUtilsTest.cpp" line="54" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilStringUtils" />
+    <testcase name="testCompare" file="/tmp/xournalpp-upstream/test/unit_tests/util/StringUtilsTest.cpp" line="62" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilStringUtils" />
+  </testsuite>
+  <testsuite name="UtilsVectors" tests="3" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T20:28:55.597">
+    <testcase name="testTinyVector" file="/tmp/xournalpp-upstream/test/unit_tests/util/TinySmallVectorTest.cpp" line="42" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilsVectors" />
+    <testcase name="testSmallVectorPushPop" file="/tmp/xournalpp-upstream/test/unit_tests/util/TinySmallVectorTest.cpp" line="165" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilsVectors" />
+    <testcase name="testSmallVectorCopyMove" file="/tmp/xournalpp-upstream/test/unit_tests/util/TinySmallVectorTest.cpp" line="241" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilsVectors" />
+  </testsuite>
+  <testsuite name="UtilXojPreviewExtractor" tests="9" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-10T20:28:55.597">
+    <testcase name="testNonExistingFile" file="/tmp/xournalpp-upstream/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="25" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilXojPreviewExtractor" />
+    <testcase name="testExtensionCheck" file="/tmp/xournalpp-upstream/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="32" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilXojPreviewExtractor" />
+    <testcase name="testLoadGzipped" file="/tmp/xournalpp-upstream/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="39" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilXojPreviewExtractor" />
+    <testcase name="testLoadGzipped2" file="/tmp/xournalpp-upstream/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="50" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilXojPreviewExtractor" />
+    <testcase name="testLoad1Unzipped" file="/tmp/xournalpp-upstream/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="61" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilXojPreviewExtractor" />
+    <testcase name="testLoad1Zipped" file="/tmp/xournalpp-upstream/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="72" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilXojPreviewExtractor" />
+    <testcase name="testLoad2Zipped" file="/tmp/xournalpp-upstream/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="83" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilXojPreviewExtractor" />
+    <testcase name="testNoPreview" file="/tmp/xournalpp-upstream/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="94" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilXojPreviewExtractor" />
+    <testcase name="testInvalidFile" file="/tmp/xournalpp-upstream/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="101" status="run" result="completed" time="0." timestamp="2026-11-10T20:28:55.597" classname="UtilXojPreviewExtractor" />
+  </testsuite>
+</testsuites>

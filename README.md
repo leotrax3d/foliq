@@ -1,3 +1,12 @@
+> **Foliq – Entwicklungsbasis / development fork**
+>
+> Lokale Windows-Notiz-App auf Xournal++ v1.2.8. Der bestehende Editor ist
+> enthalten; das erweiterte Foliq-Zielbild ist noch nicht implementiert.
+> Einstieg: [Produkt](docs/PRODUCT.md), [Architektur](docs/ARCHITECTURE.md),
+> [Build](docs/BUILD.md), [Windows-Test](docs/WINDOWS.md),
+> [Herkunft und Lizenzen](docs/UPSTREAM.md), [aktueller Stand](docs/HANDOFF.md).
+> Upstream-Dokumentation und Hinweise folgen unverändert.
+
 # Xournal++
 
 [![Build Status](https://dev.azure.com/xournalpp/xournalpp/_apis/build/status/CI?branchName=master)](https://dev.azure.com/xournalpp/xournalpp/_build/latest?definitionId=1&branchName=master)

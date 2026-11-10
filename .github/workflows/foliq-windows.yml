@@ -1,0 +1,69 @@
+name: Foliq Windows test package
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/install_deps_windows
+        with:
+          msystem: mingw64
+          msys_package_env: x86_64
+          gtk_compatibility_downgrade: 'false'
+      - uses: ./.github/actions/build
+        with:
+          build_type: RelWithDebInfo
+          shell: msys2 {0}
+          cmake_flags: -DFOLIQ_BUILD=ON -DENABLE_GTEST=ON -DDOWNLOAD_GTEST=ON
+      - name: Build and run upstream tests
+        run: |
+          set -euo pipefail
+          cmake --build build --target test-units
+          CI=true build/test/test-units.exe --gtest_output=xml:build/test-results.xml
+      - name: Package using upstream Windows procedure
+        run: |
+          set -euo pipefail
+          cd build
+          bash ../windows-setup/package.sh
+          test -s xournalpp-setup.exe
+          test -s dist/bin/xournalpp.exe
+          ./dist/bin/xournalpp.exe --version
+          mkdir -p dist/share/foliq/legal dist/share/foliq/build
+          cp ../LICENSE ../AUTHORS ../copyright.txt dist/share/foliq/legal/
+          cp -r ../docs/licenses dist/share/foliq/legal/project-licenses
+          cp ../docs/UPSTREAM.md ../docs/WINDOWS.md dist/share/foliq/
+          cp -r /mingw64/share/licenses dist/share/foliq/legal/dependencies
+          pacman -Q > dist/share/foliq/build/msys2-packages.txt
+          cmake --version > dist/share/foliq/build/toolchain.txt
+          g++ --version >> dist/share/foliq/build/toolchain.txt
+          git rev-parse HEAD > dist/share/foliq/build/source-commit.txt
+          cp CMakeCache.txt dist/share/foliq/build/
+          git archive --format=tar.gz -o foliq-source.tar.gz HEAD
+          sha256sum dist/bin/xournalpp.exe foliq-source.tar.gz > SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: foliq-windows-x64-test
+          path: |
+            build/dist/
+            build/foliq-source.tar.gz
+            build/SHA256SUMS
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: foliq-windows-diagnostics
+          path: |
+            build/test-results.xml
+            build/CMakeCache.txt
+            build/CMakeFiles/CMakeConfigureLog.yaml
+          if-no-files-found: warn

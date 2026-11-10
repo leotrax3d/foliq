@@ -9,6 +9,11 @@ inputs:
     required: true
     type: string
 
+  gtk_compatibility_downgrade:
+    description: Use the legacy GTK workaround (requires an available old package)
+    required: false
+    default: 'true'
+
 runs:
   using: composite
   steps:
@@ -30,7 +35,8 @@ runs:
           mingw-w64-${{inputs.msys_package_env}}-lua
           mingw-w64-${{inputs.msys_package_env}}-gtksourceview4
           mingw-w64-${{inputs.msys_package_env}}-imagemagick
-    - shell: msys2 {0}
+    - if: inputs.gtk_compatibility_downgrade == 'true'
+      shell: msys2 {0}
       run: |
         # Downgrade gtk to avoid https://github.com/xournalpp/xournalpp/issues/6315
         wget -q https://repo.msys2.org/mingw/${{inputs.msystem}}/mingw-w64-${{inputs.msys_package_env}}-gtk3-3.24.43-1-any.pkg.tar.zst
