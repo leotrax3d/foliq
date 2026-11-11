@@ -858,6 +858,16 @@ void Navigation::chrome(GtkWidget* container) {
 #endif
                      }),
                      this);
+    fullscreenButton = gtk_button_new();
+    prepare(fullscreenButton, "Vollbild (F11)", "xopp-fullscreen", false);
+    gtk_box_pack_start(GTK_BOX(commandBar), fullscreenButton, false, false, 0);
+    g_signal_connect(fullscreenButton, "clicked", G_CALLBACK(+[](GtkButton*, gpointer p) {
+                         auto* self = static_cast<Navigation*>(p);
+                         bool on = !self->fullscreen;
+                         self->control->actionPerformed(ACTION_FULLSCREEN, GROUP_FULLSCREEN, nullptr, on);
+                         self->applyFullscreen(on);  // also without a window manager state event
+                     }),
+                     this);
     ribbonPinButton = gtk_toggle_button_new();
     prepare(ribbonPinButton, "Menüband anheften", "foliq-chevron-up", false);
     gtk_widget_set_tooltip_text(ribbonPinButton, "Menüband anheften oder einklappen (Strg+F1)");
@@ -940,6 +950,39 @@ void Navigation::chrome(GtkWidget* container) {
     separator(draw);
     button(draw, "Lasso", "xopp-select-lasso", ACTION_TOOL_SELECT_REGION, false);
     button(draw, "Hand", "xopp-hand", ACTION_TOOL_HAND);
+    separator(draw);
+    // Shape assistance (existing Xournal++ drawing types): one active at a time, click again = freehand.
+    struct ShapeEntry {
+        const char* label;
+        const char* icon;
+        ActionType action;
+        DrawingType type;
+    };
+    for (const auto& e: {ShapeEntry{"Formerkennung: Freihand wird zu Linie, Rechteck, Dreieck, Kreis oder Pfeil",
+                                    "xopp-shape-recognizer", ACTION_SHAPE_RECOGNIZER, DRAWING_TYPE_STROKE_RECOGNIZER},
+                         ShapeEntry{"Gerade Linie", "xopp-draw-line", ACTION_RULER, DRAWING_TYPE_LINE},
+                         ShapeEntry{"Rechteck", "xopp-draw-rect", ACTION_TOOL_DRAW_RECT, DRAWING_TYPE_RECTANGLE},
+                         ShapeEntry{"Ellipse", "xopp-draw-ellipse", ACTION_TOOL_DRAW_ELLIPSE, DRAWING_TYPE_ELLIPSE},
+                         ShapeEntry{"Pfeil", "xopp-draw-arrow", ACTION_TOOL_DRAW_ARROW, DRAWING_TYPE_ARROW}}) {
+        auto* b = prepare(gtk_toggle_button_new(), e.label, e.icon, false);
+        g_object_set_data(G_OBJECT(b), "action", GINT_TO_POINTER(e.action));
+        shapeButtons.emplace_back(b, e.type);
+        gtk_box_pack_start(GTK_BOX(draw), b, false, false, 0);
+        g_signal_connect(b, "toggled", G_CALLBACK(+[](GtkToggleButton* b, gpointer p) {
+                             auto* self = static_cast<Navigation*>(p);
+                             if (self->updatingToolButtons)
+                                 return;
+                             auto a = static_cast<ActionType>(GPOINTER_TO_INT(g_object_get_data(G_OBJECT(b), "action")));
+                             self->control->actionPerformed(a, GROUP_RULER, nullptr, gtk_toggle_button_get_active(b));
+                             self->hideTemporary();
+                             self->updateStatus();
+                         }),
+                         this);
+    }
+    separator(draw);
+    // Measuring tools: existing geometry tools; clicking again removes them from the page.
+    button(draw, "Geodreieck / Lineal (erneut klicken zum Entfernen)", "xopp-setsquare", ACTION_SETSQUARE);
+    button(draw, "Zirkel (erneut klicken zum Entfernen)", "xopp-compass", ACTION_COMPASS);
     separator(draw);
     drawOptions = gtk_toggle_button_new();
     prepare(drawOptions, "Farben und Stärken", "foliq-sliders", false);
@@ -1061,6 +1104,51 @@ void Navigation::chrome(GtkWidget* container) {
                      }),
                      this);
 
+    // Fullscreen pill: floating, top centre; the same commands as the ribbon (no new tool logic).
+    fullscreenPill = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+    gtk_widget_set_name(fullscreenPill, "foliq-fullscreen-pill");
+    gtk_widget_set_halign(fullscreenPill, GTK_ALIGN_CENTER);
+    gtk_widget_set_valign(fullscreenPill, GTK_ALIGN_START);
+    gtk_widget_set_margin_top(fullscreenPill, 10);
+    atk_object_set_name(gtk_widget_get_accessible(fullscreenPill), "Vollbild-Werkzeuge");
+    button(fullscreenPill, "Stift", "xopp-tool-pencil", ACTION_TOOL_PEN);
+    button(fullscreenPill, "Textmarker", "xopp-tool-highlighter", ACTION_TOOL_HIGHLIGHTER);
+    button(fullscreenPill, "Radierer", "xopp-tool-eraser", ACTION_TOOL_ERASER);
+    button(fullscreenPill, "Lasso", "xopp-select-lasso", ACTION_TOOL_SELECT_REGION);
+    gtk_box_pack_start(GTK_BOX(fullscreenPill), gtk_separator_new(GTK_ORIENTATION_VERTICAL), false, false, 2);
+    button(fullscreenPill, "Rückgängig (Strg+Z)", "xopp-edit-undo", ACTION_UNDO);
+    auto* showRibbon = gtk_toggle_button_new();
+    prepare(showRibbon, "Menüband im Vollbild ein-/ausblenden", "foliq-chevron-down", false);
+    gtk_box_pack_start(GTK_BOX(fullscreenPill), showRibbon, false, false, 0);
+    g_signal_connect(showRibbon, "toggled", G_CALLBACK(+[](GtkToggleButton* b, gpointer p) {
+                         auto* self = static_cast<Navigation*>(p);
+                         gtk_widget_set_visible(self->ribbon, gtk_toggle_button_get_active(b));
+                     }),
+                     this);
+    g_object_set_data(G_OBJECT(fullscreenPill), "ribbonToggle", showRibbon);
+    auto* leave = gtk_button_new();
+    prepare(leave, "Vollbild beenden (Esc)", "foliq-focus", false);
+    gtk_box_pack_start(GTK_BOX(fullscreenPill), leave, false, false, 0);
+    g_signal_connect(leave, "clicked", G_CALLBACK(+[](GtkButton*, gpointer p) {
+                         auto* self = static_cast<Navigation*>(p);
+                         self->control->actionPerformed(ACTION_FULLSCREEN, GROUP_FULLSCREEN, nullptr, false);
+                         self->applyFullscreen(false);
+                     }),
+                     this);
+    gtk_overlay_add_overlay(GTK_OVERLAY(overlay), fullscreenPill);
+    gtk_widget_show_all(fullscreenPill);
+    gtk_widget_set_no_show_all(fullscreenPill, true);
+    gtk_widget_hide(fullscreenPill);
+    // F11, menu and icon all end up in GTK's window state: follow it, whatever triggered it.
+    g_signal_connect(window, "window-state-event",
+                     G_CALLBACK(+[](GtkWidget*, GdkEventWindowState* e, gpointer p) -> gboolean {
+                         if (e->changed_mask & GDK_WINDOW_STATE_FULLSCREEN)
+                             static_cast<Navigation*>(p)->applyFullscreen(e->new_window_state &
+                                                                          GDK_WINDOW_STATE_FULLSCREEN);
+                         return false;
+                     }),
+                     this);
+
     // Shell-wide keyboard handling, capture-phase presses for light dismiss, menubar relocation.
     g_signal_connect(window, "key-press-event", G_CALLBACK(+[](GtkWidget*, GdkEventKey* e, gpointer p) -> gboolean {
                          return static_cast<Navigation*>(p)->onKey(e);
@@ -1091,6 +1179,29 @@ void Navigation::chrome(GtkWidget* container) {
     applyPalette();
 }
 
+void Navigation::applyFullscreen(bool on) {
+    if (on == fullscreen)
+        return;
+    fullscreen = on;
+    hideTemporary();
+    auto* ribbonToggle = GTK_WIDGET(g_object_get_data(G_OBJECT(fullscreenPill), "ribbonToggle"));
+    if (on) {
+        focusBeforeFullscreen = focus;
+        setFocusMode(true);  // hides navigation, collapses ribbon (preferences untouched)
+        gtk_widget_hide(ribbon);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(ribbonToggle), false);
+        gtk_widget_set_no_show_all(fullscreenPill, false);
+        gtk_widget_show_all(fullscreenPill);
+    } else {
+        gtk_widget_hide(fullscreenPill);
+        gtk_widget_set_no_show_all(fullscreenPill, true);
+        gtk_widget_show(ribbon);
+        setFocusMode(focusBeforeFullscreen);
+    }
+    auto* image = gtk_button_get_image(GTK_BUTTON(fullscreenButton));
+    gtk_image_set_from_icon_name(GTK_IMAGE(image), on ? "foliq-focus" : "xopp-fullscreen", GTK_ICON_SIZE_BUTTON);
+    atk_object_set_name(gtk_widget_get_accessible(fullscreenButton), on ? "Vollbild beenden" : "Vollbild (F11)");
+}
 void Navigation::moveMenubar() {
     // All upstream menus remain available (and keep their accelerators) in one "⋯" menu.
     // The menu is attached to the visible button, so GTK still activates the accelerators.
@@ -1462,6 +1573,11 @@ bool Navigation::onKey(GdkEventKey* e) {
             setNavVisible(false);
         return true;
     }
+    if (e->keyval == GDK_KEY_Escape && fullscreen && mods == 0 && !control->getTextEditor()) {
+        control->actionPerformed(ACTION_FULLSCREEN, GROUP_FULLSCREEN, nullptr, false);
+        applyFullscreen(false);
+        return true;
+    }
     if (e->keyval == GDK_KEY_F1 && mods == GDK_CONTROL_MASK) {
         setRibbonPinned(!options.ribbonPinned);
         return true;
@@ -1520,6 +1636,9 @@ void Navigation::updateStatus() {
     for (const auto& entry: toolButtons)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry.first),
                                      control->getToolHandler()->getToolType() == entry.second);
+    auto drawing = control->getToolHandler()->getDrawingType();
+    for (const auto& entry: shapeButtons)
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry.first), drawing == entry.second);
     updatingToolButtons = false;
     auto* undo = control->getUndoRedoHandler();
     auto* textEditor = control->getTextEditor();

@@ -194,6 +194,23 @@ try:
             screen('dialog-settings', 1100, 760)
             xdo('key', 'Escape')
             time.sleep(.5)
+        elif step == 'fullscreen':
+            click('Vollbild (F11)', None)
+            time.sleep(1.5)
+            shot('fullscreen')
+            xdo('key', 'Escape')
+            time.sleep(1)
+            shot('fullscreen-left')
+        elif step == 'shapes':
+            click('Zeichnen', None)
+            click('Rechteck', None)
+            shot('draw-shapes')
+            xdo('mousemove', 700, 300, 'mousedown', 1, 'mousemove', 820, 380, 'mouseup', 1)
+            time.sleep(.6)
+            click('Geodreieck / Lineal (erneut klicken zum Entfernen)', None)
+            shot('draw-setsquare')
+            click('Geodreieck / Lineal (erneut klicken zum Entfernen)', None)
+            click('Rechteck', None)
         elif step == 'search':
             xdo('key', 'ctrl+f')
             shot('search')

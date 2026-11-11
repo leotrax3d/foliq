@@ -24,6 +24,7 @@ private:
     std::string section, dragId, pendingSelection;
     std::vector<std::string> savedExpanded;
     std::vector<std::pair<GtkWidget*, int>> toolButtons;
+    std::vector<std::pair<GtkWidget*, int>> shapeButtons;  // toggle -> DrawingType
     std::vector<std::pair<GtkWidget*, const char*>> mirroredButtons;
     bool viewWritable = false;
     bool updatingToolButtons = false;
@@ -51,6 +52,10 @@ private:
     bool onKey(GdkEventKey* event);
     void onPress(double x, double y);
     void cycleFocus(bool backwards);
+    // Real fullscreen: chrome hidden, only a small floating tool pill remains.
+    GtkWidget *fullscreenPill = nullptr, *fullscreenButton = nullptr;
+    bool fullscreen = false, focusBeforeFullscreen = false;
+    void applyFullscreen(bool on);
     void selectTree(GtkWidget* view);
     void setupTree(GtkWidget* view);
     void chrome(GtkWidget* container);

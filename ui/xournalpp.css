@@ -551,3 +551,10 @@ window.foliq paned > separator, window.foliq paned.horizontal > separator {
 /* Icon-first ribbon: square targets; labels live in tooltips and accessible names. */
 #foliq-ribbon-panel button { min-width: 24px; padding: 6px; }
 window.foliq.foliq-touch #foliq-ribbon-panel button { min-width: 36px; padding: 9px; }
+/* Fullscreen: one small floating pill, nothing else. */
+#foliq-fullscreen-pill {
+    background-color: @foliq_card; border: 1px solid @foliq_stroke_strong; border-radius: 12px;
+    padding: 4px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.14);
+}
+#foliq-fullscreen-pill separator { background-color: @foliq_stroke_strong; min-width: 1px; margin: 6px 4px; }
+window.foliq.foliq-touch #foliq-fullscreen-pill button { min-width: 40px; min-height: 40px; }

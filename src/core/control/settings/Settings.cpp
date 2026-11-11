@@ -177,6 +177,9 @@ void Settings::loadDefault() {
     if (FOLIQ_BUILD) {
         this->viewModes.at(VIEW_MODE_DEFAULT).showSidebar = false;
         this->viewModes.at(VIEW_MODE_DEFAULT).showToolbar = false;
+        // Foliq fullscreen: only the floating tool pill (Navigation::applyFullscreen), no legacy bars.
+        this->viewModes.at(VIEW_MODE_FULLSCREEN).showSidebar = false;
+        this->viewModes.at(VIEW_MODE_FULLSCREEN).showToolbar = false;
     }
 
     this->touchZoomStartThreshold = 0.0;
