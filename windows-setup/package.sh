@@ -11,7 +11,7 @@ else
     build_dir="$(cd $1; pwd)"
 fi
 setup_dir_name="dist"  # Same as in xournalpp.nsis
-installer_name="xournalpp-setup.exe"  # Same as in xournalpp.nsis
+installer_name="${INSTALLER_NAME:-xournalpp-setup.exe}"  # Foliq: INSTALLER_NAME/NSI_SCRIPT/APP_ICON overrides
 setup_dir="$build_dir/$setup_dir_name"
 script_dir=$(dirname $(readlink -f "$0"))
 echo "Installing to $setup_dir and making installer $build_dir/$installer_name"
@@ -85,7 +85,8 @@ version=$(cat "$build_dir/VERSION" | sed '1!d')
     -DSETUP_DIR="$setup_dir"                               \
     -DOUTPUT_INSTALLER_FILE="$build_dir/$installer_name"   \
     -DSCRIPT_DIR="$script_dir"                             \
-    "$script_dir/xournalpp.nsi"
+    ${APP_ICON:+-DAPP_ICON="$APP_ICON"}                    \
+    "$script_dir/${NSI_SCRIPT:-xournalpp.nsi}"
 
 echo "finished"
 

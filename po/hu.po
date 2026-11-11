@@ -68,8 +68,8 @@ msgid "Error opening file \"{1}\""
 msgstr "Hiba történt a fájl megnyitása közben: {1}"
 
 #: ../src/core/control/Control.cpp:2312
-msgid "The file being loaded has a file format version newer than the one currently supported by this version of Xournal++, so it may not load properly. Open anyways?"
-msgstr "A betöltendő fájl fájlformátumának verziója újabb, mint a Xournal++ jelen verziója által jelenleg támogatott, ezért előfordulhat, hogy nem töltődik be megfelelően. Megnyitás mégis?"
+msgid "The file being loaded has a file format version newer than the one currently supported by this version of Foliq, so it may not load properly. Open anyways?"
+msgstr "A betöltendő fájl fájlformátumának verziója újabb, mint a Foliq jelen verziója által jelenleg támogatott, ezért előfordulhat, hogy nem töltődik be megfelelően. Megnyitás mégis?"
 
 #: ../src/core/control/Control.cpp:2439
 msgid "The attached background file could not be found. It might have been moved, renamed or deleted."
@@ -132,8 +132,8 @@ msgstr "M_entés"
 
 #: ../src/core/control/Control.cpp:2664
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:62
-msgid "Xournal++ files"
-msgstr "Xournal++ fájlok"
+msgid "Foliq files"
+msgstr "Foliq fájlok"
 
 #: ../src/core/control/Control.cpp:2715
 msgid "Unsaved Document"
@@ -273,12 +273,12 @@ msgid "Please delete the file manually"
 msgstr "Kérjük, kézzel törölje a fájlt"
 
 #: ../src/core/control/XournalMain.cpp:161
-msgid "There is a recent errorlogfile from Xournal++. Please file a Bugreport, so the bug may be fixed."
-msgstr "Van egy nemrégiben készült hibanaplófájl a Xournal++-tól. Kérjük, küldjön egy hibajelentést, hogy a hiba kijavítható legyen."
+msgid "There is a recent errorlogfile from Foliq. Please file a Bugreport, so the bug may be fixed."
+msgstr "Van egy nemrégiben készült hibanaplófájl a Foliq-tól. Kérjük, küldjön egy hibajelentést, hogy a hiba kijavítható legyen."
 
 #: ../src/core/control/XournalMain.cpp:163
-msgid "There are recent errorlogfiles from Xournal++. Please file a Bugreport, so the bug may be fixed."
-msgstr "A Xournal++ legújabb hibanaplófájljai vannak. Kérjük, küldjön egy hibajelentést, hogy a hiba kijavítható legyen."
+msgid "There are recent errorlogfiles from Foliq. Please file a Bugreport, so the bug may be fixed."
+msgstr "A Foliq legújabb hibanaplófájljai vannak. Kérjük, küldjön egy hibajelentést, hogy a hiba kijavítható legyen."
 
 #: ../src/core/control/XournalMain.cpp:166
 msgid "The most recent log file name: {1}"
@@ -305,8 +305,8 @@ msgid "Delete Logfile"
 msgstr "Eseménynapló fájl törlése"
 
 #: ../src/core/control/XournalMain.cpp:203
-msgid "Xournal++ crashed last time. Would you like to restore the last edited file?"
-msgstr "A Xournal++ legutóbb összeomlott. Szeretné visszaállítani az utoljára szerkesztett fájlt?"
+msgid "Foliq crashed last time. Would you like to restore the last edited file?"
+msgstr "A Foliq legutóbb összeomlott. Szeretné visszaállítani az utoljára szerkesztett fájlt?"
 
 #: ../src/core/control/XournalMain.cpp:208
 msgid "Delete file"
@@ -342,9 +342,9 @@ msgstr "\n\n"
 
 #: ../src/core/control/XournalMain.cpp:426
 #: ../src/core/control/XournalMain.cpp:482
-msgid "Sorry, Xournal++ can only open one file at once.\n"
+msgid "Sorry, Foliq can only open one file at once.\n"
 "Others are ignored."
-msgstr "Elnézést, a Xournal++ egyszerre csak egy fájlt tud megnyitni.\n"
+msgstr "Elnézést, a Foliq egyszerre csak egy fájlt tud megnyitni.\n"
 "A további fájlok figyelmen kívül hagyva."
 
 #: ../src/core/control/XournalMain.cpp:437
@@ -354,10 +354,10 @@ msgstr "A(z) {1} fájl nem létezik."
 #: ../src/core/control/XournalMain.cpp:441
 #: ../src/core/control/XournalMain.cpp:499
 msgid "Filesystem error: {1}\n"
-"Sorry, Xournal++ cannot open the file: {2}\n"
+"Sorry, Foliq cannot open the file: {2}\n"
 "Consider copying the file to a local directory."
 msgstr "Fájlrendszer hiba: {1}\n"
-"Sajnáljuk, a Xournal++ nem tudja megnyitni a következő fájlt: {2}\n"
+"Sajnáljuk, a Foliq nem tudja megnyitni a következő fájlt: {2}\n"
 "Fontolja meg a fájl másolását egy helyi könyvtárba."
 
 #: ../src/core/control/XournalMain.cpp:643
@@ -669,8 +669,8 @@ msgstr "Xournal fájlok"
 
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:69
 #: ../src/core/gui/dialog/PageTemplateDialog.cpp:91
-msgid "Xournal++ template"
-msgstr "Xournal++ sablon"
+msgid "Foliq template"
+msgstr "Foliq sablon"
 
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:97
 msgid "Supported files"
@@ -1090,8 +1090,8 @@ msgid "LaTeX editor theme:"
 msgstr "LaTeX-szerkesztő téma:"
 
 #: ../src/core/gui/dialog/LatexSettingsPanel.cpp:55
-msgid "GtkSourceView was disabled when building Xournal++! Some options will not be available."
-msgstr "A GtkSourceView le volt tiltva a Xournal++ készítésekor! Egyes kapcsolók nem lesznek elérhetők."
+msgid "GtkSourceView was disabled when building Foliq! Some options will not be available."
+msgstr "A GtkSourceView le volt tiltva a Foliq készítésekor! Egyes kapcsolók nem lesznek elérhetők."
 
 #: ../src/core/gui/dialog/LatexSettingsPanel.cpp:144
 msgid "Unable to open global template file at {1}. Does it exist?"
@@ -1941,13 +1941,13 @@ msgid "xoj-preview-extractor: successfully extracted"
 msgstr "xoj-preview-extractor: sikeresen kibontva"
 
 #: ../ui/about.glade:9
-msgid "About Xournal++"
-msgstr "A Xournal++ névjegye"
+msgid "About Foliq"
+msgstr "A Foliq névjegye"
 
 #: ../ui/about.glade:117
-msgid "<span size=\"xx-large\" weight=\"bold\">Xournal++</span>\n"
+msgid "<span size=\"xx-large\" weight=\"bold\">Foliq</span>\n"
 "<i>The next generation</i>"
-msgstr "<span size=\"xx-large\" weight=\"bold\">Xournal++</span>\n"
+msgstr "<span size=\"xx-large\" weight=\"bold\">Foliq</span>\n"
 "<i>Következő létrehozás</i>"
 
 #: ../ui/about.glade:157
@@ -2749,8 +2749,8 @@ msgid "Plugin Manager"
 msgstr "Beépülő modulkezelő"
 
 #: ../ui/plugin.glade:122
-msgid "Plugin changes are only applied after Xournal++ is restarted"
-msgstr "A beépülő modulok módosításai csak a Xournal++ újraindítása után kerülnek alkalmazásra"
+msgid "Plugin changes are only applied after Foliq is restarted"
+msgstr "A beépülő modulok módosításai csak a Foliq újraindítása után kerülnek alkalmazásra"
 
 #: ../ui/pluginEntry.glade:58
 msgid "Author: "
@@ -2793,8 +2793,8 @@ msgid "Inertia"
 msgstr "Tehetetlenség"
 
 #: ../ui/settings.glade:255
-msgid "Xournal++ Preferences"
-msgstr "Xournal++ beállításai"
+msgid "Foliq Preferences"
+msgstr "Foliq beállításai"
 
 #: ../ui/settings.glade:363
 msgid "<i>If the document already was saved you can find it in the same folder with the extension .autosave.xoj\n"
@@ -2957,8 +2957,8 @@ msgid "Enable autoloading of most recent file on application startup"
 msgstr "Legutóbbi fájl automatikus betöltésének bekapcsolása az alkalmazás indításakor"
 
 #: ../ui/settings.glade:859
-msgid "If enabled Xournal++ will open the most recent document automatically that you can continue editing your last saved document."
-msgstr "Ha be van kapcsolva, a(z) Xournal++ automatikusan megnyitja a legutóbbi naplót, így folytathatja az utoljára mentett napló szerkesztését."
+msgid "If enabled Foliq will open the most recent document automatically that you can continue editing your last saved document."
+msgstr "Ha be van kapcsolva, a(z) Foliq automatikusan megnyitja a legutóbbi naplót, így folytathatja az utoljára mentett napló szerkesztését."
 
 #: ../ui/settings.glade:877
 msgid "Autoloading"
@@ -3228,8 +3228,8 @@ msgid "Touchscreen"
 msgstr "Érintőképernyő"
 
 #: ../ui/settings.glade:2344
-msgid "<i>If your hardware does not support hand recognition, Xournal++ can disable your touchscreen when your pen is near the screen.</i>"
-msgstr "<i>Ha hardvere nem támogatja a kézfelismerést, a Xournal++ letilthatja az érintőképernyőt, ha a toll a képernyő közelében van.</i>"
+msgid "<i>If your hardware does not support hand recognition, Foliq can disable your touchscreen when your pen is near the screen.</i>"
+msgstr "<i>Ha hardvere nem támogatja a kézfelismerést, a Foliq letilthatja az érintőképernyőt, ha a toll a képernyő közelében van.</i>"
 
 #: ../ui/settings.glade:2358
 msgid "Enable internal Hand Recognition"

@@ -68,8 +68,8 @@ msgid "Error opening file \"{1}\""
 msgstr "Помилка відкриття файлу \"{1}\""
 
 #: ../src/core/control/Control.cpp:2312
-msgid "The file being loaded has a file format version newer than the one currently supported by this version of Xournal++, so it may not load properly. Open anyways?"
-msgstr "Файл, який завантажується, має новішу версію формату ніж та, що наразі підтримується цією версією Xournal++, так що він може не завантажитись належним чином. Все одно відкрити?"
+msgid "The file being loaded has a file format version newer than the one currently supported by this version of Foliq, so it may not load properly. Open anyways?"
+msgstr "Файл, який завантажується, має новішу версію формату ніж та, що наразі підтримується цією версією Foliq, так що він може не завантажитись належним чином. Все одно відкрити?"
 
 #: ../src/core/control/Control.cpp:2439
 msgid "The attached background file could not be found. It might have been moved, renamed or deleted."
@@ -132,8 +132,8 @@ msgstr "_Зберегти"
 
 #: ../src/core/control/Control.cpp:2664
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:62
-msgid "Xournal++ files"
-msgstr "Xournal++ файли"
+msgid "Foliq files"
+msgstr "Foliq файли"
 
 #: ../src/core/control/Control.cpp:2715
 msgid "Unsaved Document"
@@ -273,12 +273,12 @@ msgid "Please delete the file manually"
 msgstr "Будь ласка, видаліть файл вручну"
 
 #: ../src/core/control/XournalMain.cpp:161
-msgid "There is a recent errorlogfile from Xournal++. Please file a Bugreport, so the bug may be fixed."
-msgstr "Недавній файл помилок Xournal++. Будь ласка, заповніть Bugreport, щоб помилку можна було виправити."
+msgid "There is a recent errorlogfile from Foliq. Please file a Bugreport, so the bug may be fixed."
+msgstr "Недавній файл помилок Foliq. Будь ласка, заповніть Bugreport, щоб помилку можна було виправити."
 
 #: ../src/core/control/XournalMain.cpp:163
-msgid "There are recent errorlogfiles from Xournal++. Please file a Bugreport, so the bug may be fixed."
-msgstr "Недавні файли помилок Xournal++. Будь ласка, заповніть Bugreport, щоб помилку можна було виправити."
+msgid "There are recent errorlogfiles from Foliq. Please file a Bugreport, so the bug may be fixed."
+msgstr "Недавні файли помилок Foliq. Будь ласка, заповніть Bugreport, щоб помилку можна було виправити."
 
 #: ../src/core/control/XournalMain.cpp:166
 msgid "The most recent log file name: {1}"
@@ -305,8 +305,8 @@ msgid "Delete Logfile"
 msgstr "Видалити файл логів"
 
 #: ../src/core/control/XournalMain.cpp:203
-msgid "Xournal++ crashed last time. Would you like to restore the last edited file?"
-msgstr "Під час останнього сеансу Xournal++ аварійно завершила роботу. Бажаєте відновити файл, що редагувався останнім?"
+msgid "Foliq crashed last time. Would you like to restore the last edited file?"
+msgstr "Під час останнього сеансу Foliq аварійно завершила роботу. Бажаєте відновити файл, що редагувався останнім?"
 
 #: ../src/core/control/XournalMain.cpp:208
 msgid "Delete file"
@@ -342,9 +342,9 @@ msgstr "\n\n"
 
 #: ../src/core/control/XournalMain.cpp:426
 #: ../src/core/control/XournalMain.cpp:482
-msgid "Sorry, Xournal++ can only open one file at once.\n"
+msgid "Sorry, Foliq can only open one file at once.\n"
 "Others are ignored."
-msgstr "На жаль, Xournal++ може відкрити не більше одного файлу одночасно. Усі інші ігноруються."
+msgstr "На жаль, Foliq може відкрити не більше одного файлу одночасно. Усі інші ігноруються."
 
 #: ../src/core/control/XournalMain.cpp:437
 msgid "File {1} does not exist."
@@ -353,10 +353,10 @@ msgstr "Файл {1} не знайдено."
 #: ../src/core/control/XournalMain.cpp:441
 #: ../src/core/control/XournalMain.cpp:499
 msgid "Filesystem error: {1}\n"
-"Sorry, Xournal++ cannot open the file: {2}\n"
+"Sorry, Foliq cannot open the file: {2}\n"
 "Consider copying the file to a local directory."
 msgstr "Помилка файлової системи: {1}\n"
-"Вибачте, Xournal++ не може відкрити файл: {2}\n"
+"Вибачте, Foliq не може відкрити файл: {2}\n"
 "Спробуйте скопіювати файл до локальної директорії."
 
 #: ../src/core/control/XournalMain.cpp:643
@@ -669,8 +669,8 @@ msgstr "Xournal файли"
 
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:69
 #: ../src/core/gui/dialog/PageTemplateDialog.cpp:91
-msgid "Xournal++ template"
-msgstr "Xournal++ шаблон"
+msgid "Foliq template"
+msgstr "Foliq шаблон"
 
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:97
 msgid "Supported files"
@@ -1090,8 +1090,8 @@ msgid "LaTeX editor theme:"
 msgstr "Тема редактора LaTeX:"
 
 #: ../src/core/gui/dialog/LatexSettingsPanel.cpp:55
-msgid "GtkSourceView was disabled when building Xournal++! Some options will not be available."
-msgstr "GtkSourceView був вимкнений під час збирання Xournal++! Деякі опції не будуть доступні."
+msgid "GtkSourceView was disabled when building Foliq! Some options will not be available."
+msgstr "GtkSourceView був вимкнений під час збирання Foliq! Деякі опції не будуть доступні."
 
 #: ../src/core/gui/dialog/LatexSettingsPanel.cpp:144
 msgid "Unable to open global template file at {1}. Does it exist?"
@@ -1941,13 +1941,13 @@ msgid "xoj-preview-extractor: successfully extracted"
 msgstr "xoj-preview-extractor: успішно видобутий"
 
 #: ../ui/about.glade:9
-msgid "About Xournal++"
-msgstr "Про Xournal++"
+msgid "About Foliq"
+msgstr "Про Foliq"
 
 #: ../ui/about.glade:117
-msgid "<span size=\"xx-large\" weight=\"bold\">Xournal++</span>\n"
+msgid "<span size=\"xx-large\" weight=\"bold\">Foliq</span>\n"
 "<i>The next generation</i>"
-msgstr "<span size=\"xx-large\" weight=\"bold\">Xournal++</span>\n"
+msgstr "<span size=\"xx-large\" weight=\"bold\">Foliq</span>\n"
 "<i>Наступне покоління</i>"
 
 #: ../ui/about.glade:157
@@ -2749,8 +2749,8 @@ msgid "Plugin Manager"
 msgstr "Менеджер доповнень"
 
 #: ../ui/plugin.glade:122
-msgid "Plugin changes are only applied after Xournal++ is restarted"
-msgstr "Зміни доповнень будуть застосовані після перезапуску Xournal++"
+msgid "Plugin changes are only applied after Foliq is restarted"
+msgstr "Зміни доповнень будуть застосовані після перезапуску Foliq"
 
 #: ../ui/pluginEntry.glade:58
 msgid "Author: "
@@ -2793,8 +2793,8 @@ msgid "Inertia"
 msgstr "Інерція"
 
 #: ../ui/settings.glade:255
-msgid "Xournal++ Preferences"
-msgstr "Налаштування Xournal++"
+msgid "Foliq Preferences"
+msgstr "Налаштування Foliq"
 
 #: ../ui/settings.glade:363
 msgid "<i>If the document already was saved you can find it in the same folder with the extension .autosave.xoj\n"
@@ -2957,8 +2957,8 @@ msgid "Enable autoloading of most recent file on application startup"
 msgstr "Ввімкнути автозавантаження останнього файлу при запуску програми"
 
 #: ../ui/settings.glade:859
-msgid "If enabled Xournal++ will open the most recent document automatically that you can continue editing your last saved document."
-msgstr "Якщо ввімкнуто Xournal++ автоматично відкриє останній документ, щоб ви змогли продовжити редагування останнього збереженого документа."
+msgid "If enabled Foliq will open the most recent document automatically that you can continue editing your last saved document."
+msgstr "Якщо ввімкнуто Foliq автоматично відкриє останній документ, щоб ви змогли продовжити редагування останнього збереженого документа."
 
 #: ../ui/settings.glade:877
 msgid "Autoloading"
@@ -3224,8 +3224,8 @@ msgid "Touchscreen"
 msgstr "Сенсорний екран"
 
 #: ../ui/settings.glade:2344
-msgid "<i>If your hardware does not support hand recognition, Xournal++ can disable your touchscreen when your pen is near the screen.</i>"
-msgstr "<i>Якщо ваше обладнання не підтримує розпізнавання рук, Xournal++ може вимкнути сенсорний екран, коли перо знаходиться біля екрану.</i>"
+msgid "<i>If your hardware does not support hand recognition, Foliq can disable your touchscreen when your pen is near the screen.</i>"
+msgstr "<i>Якщо ваше обладнання не підтримує розпізнавання рук, Foliq може вимкнути сенсорний екран, коли перо знаходиться біля екрану.</i>"
 
 #: ../ui/settings.glade:2358
 msgid "Enable internal Hand Recognition"

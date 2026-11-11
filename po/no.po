@@ -65,7 +65,7 @@ msgid "Error opening file \"{1}\""
 msgstr ""
 
 #: ../src/core/control/Control.cpp:2312
-msgid "The file being loaded has a file format version newer than the one currently supported by this version of Xournal++, so it may not load properly. Open anyways?"
+msgid "The file being loaded has a file format version newer than the one currently supported by this version of Foliq, so it may not load properly. Open anyways?"
 msgstr ""
 
 #: ../src/core/control/Control.cpp:2439
@@ -127,8 +127,8 @@ msgstr ""
 
 #: ../src/core/control/Control.cpp:2664
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:62
-msgid "Xournal++ files"
-msgstr "Xournal++ filer"
+msgid "Foliq files"
+msgstr "Foliq filer"
 
 #: ../src/core/control/Control.cpp:2715
 msgid "Unsaved Document"
@@ -267,11 +267,11 @@ msgid "Please delete the file manually"
 msgstr ""
 
 #: ../src/core/control/XournalMain.cpp:161
-msgid "There is a recent errorlogfile from Xournal++. Please file a Bugreport, so the bug may be fixed."
+msgid "There is a recent errorlogfile from Foliq. Please file a Bugreport, so the bug may be fixed."
 msgstr ""
 
 #: ../src/core/control/XournalMain.cpp:163
-msgid "There are recent errorlogfiles from Xournal++. Please file a Bugreport, so the bug may be fixed."
+msgid "There are recent errorlogfiles from Foliq. Please file a Bugreport, so the bug may be fixed."
 msgstr ""
 
 #: ../src/core/control/XournalMain.cpp:166
@@ -299,8 +299,8 @@ msgid "Delete Logfile"
 msgstr "Slett loggfil"
 
 #: ../src/core/control/XournalMain.cpp:203
-msgid "Xournal++ crashed last time. Would you like to restore the last edited file?"
-msgstr "Xournal++ kræsjet forrige gang. Vil du gjenopprette den sist redigerte filen?"
+msgid "Foliq crashed last time. Would you like to restore the last edited file?"
+msgstr "Foliq kræsjet forrige gang. Vil du gjenopprette den sist redigerte filen?"
 
 #: ../src/core/control/XournalMain.cpp:208
 msgid "Delete file"
@@ -331,7 +331,7 @@ msgstr "\n\n"
 
 #: ../src/core/control/XournalMain.cpp:426
 #: ../src/core/control/XournalMain.cpp:482
-msgid "Sorry, Xournal++ can only open one file at once.\n"
+msgid "Sorry, Foliq can only open one file at once.\n"
 "Others are ignored."
 msgstr ""
 
@@ -342,7 +342,7 @@ msgstr ""
 #: ../src/core/control/XournalMain.cpp:441
 #: ../src/core/control/XournalMain.cpp:499
 msgid "Filesystem error: {1}\n"
-"Sorry, Xournal++ cannot open the file: {2}\n"
+"Sorry, Foliq cannot open the file: {2}\n"
 "Consider copying the file to a local directory."
 msgstr ""
 
@@ -639,8 +639,8 @@ msgstr "Xournal filer"
 
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:69
 #: ../src/core/gui/dialog/PageTemplateDialog.cpp:91
-msgid "Xournal++ template"
-msgstr "Xournal++ mal"
+msgid "Foliq template"
+msgstr "Foliq mal"
 
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:97
 msgid "Supported files"
@@ -1060,7 +1060,7 @@ msgid "LaTeX editor theme:"
 msgstr ""
 
 #: ../src/core/gui/dialog/LatexSettingsPanel.cpp:55
-msgid "GtkSourceView was disabled when building Xournal++! Some options will not be available."
+msgid "GtkSourceView was disabled when building Foliq! Some options will not be available."
 msgstr ""
 
 #: ../src/core/gui/dialog/LatexSettingsPanel.cpp:144
@@ -1905,11 +1905,11 @@ msgid "xoj-preview-extractor: successfully extracted"
 msgstr ""
 
 #: ../ui/about.glade:9
-msgid "About Xournal++"
-msgstr "Om Xournal++"
+msgid "About Foliq"
+msgstr "Om Foliq"
 
 #: ../ui/about.glade:117
-msgid "<span size=\"xx-large\" weight=\"bold\">Xournal++</span>\n"
+msgid "<span size=\"xx-large\" weight=\"bold\">Foliq</span>\n"
 "<i>The next generation</i>"
 msgstr ""
 
@@ -2708,7 +2708,7 @@ msgid "Plugin Manager"
 msgstr ""
 
 #: ../ui/plugin.glade:122
-msgid "Plugin changes are only applied after Xournal++ is restarted"
+msgid "Plugin changes are only applied after Foliq is restarted"
 msgstr ""
 
 #: ../ui/pluginEntry.glade:58
@@ -2752,7 +2752,7 @@ msgid "Inertia"
 msgstr ""
 
 #: ../ui/settings.glade:255
-msgid "Xournal++ Preferences"
+msgid "Foliq Preferences"
 msgstr ""
 
 #: ../ui/settings.glade:363
@@ -2869,7 +2869,7 @@ msgid "Enable autoloading of most recent file on application startup"
 msgstr ""
 
 #: ../ui/settings.glade:859
-msgid "If enabled Xournal++ will open the most recent document automatically that you can continue editing your last saved document."
+msgid "If enabled Foliq will open the most recent document automatically that you can continue editing your last saved document."
 msgstr ""
 
 #: ../ui/settings.glade:877
@@ -3135,7 +3135,7 @@ msgid "Touchscreen"
 msgstr ""
 
 #: ../ui/settings.glade:2344
-msgid "<i>If your hardware does not support hand recognition, Xournal++ can disable your touchscreen when your pen is near the screen.</i>"
+msgid "<i>If your hardware does not support hand recognition, Foliq can disable your touchscreen when your pen is near the screen.</i>"
 msgstr ""
 
 #: ../ui/settings.glade:2358

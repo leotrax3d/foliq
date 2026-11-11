@@ -68,8 +68,8 @@ msgid "Error opening file \"{1}\""
 msgstr "S'ha produït un error a l'obrir el fitxer «{1}»."
 
 #: ../src/core/control/Control.cpp:2312
-msgid "The file being loaded has a file format version newer than the one currently supported by this version of Xournal++, so it may not load properly. Open anyways?"
-msgstr "El fitxer que s'ha carregat té un format de fitxer amb una versió posterior a la que suporta aquesta versió del Xournal++ i potser no es pugui carregar bé. Voleu obrir-lo igualment?"
+msgid "The file being loaded has a file format version newer than the one currently supported by this version of Foliq, so it may not load properly. Open anyways?"
+msgstr "El fitxer que s'ha carregat té un format de fitxer amb una versió posterior a la que suporta aquesta versió del Foliq i potser no es pugui carregar bé. Voleu obrir-lo igualment?"
 
 #: ../src/core/control/Control.cpp:2439
 msgid "The attached background file could not be found. It might have been moved, renamed or deleted."
@@ -131,8 +131,8 @@ msgstr "_Desa"
 
 #: ../src/core/control/Control.cpp:2664
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:62
-msgid "Xournal++ files"
-msgstr "Fitxers Xournal++"
+msgid "Foliq files"
+msgstr "Fitxers Foliq"
 
 #: ../src/core/control/Control.cpp:2715
 msgid "Unsaved Document"
@@ -272,12 +272,12 @@ msgid "Please delete the file manually"
 msgstr "Esborreu el fitxer a mà."
 
 #: ../src/core/control/XournalMain.cpp:161
-msgid "There is a recent errorlogfile from Xournal++. Please file a Bugreport, so the bug may be fixed."
-msgstr "Hi ha un fitxer de registre d'error del Xournal++. Si us plau, envieu un informe d'error per tal d'arreglar-ho."
+msgid "There is a recent errorlogfile from Foliq. Please file a Bugreport, so the bug may be fixed."
+msgstr "Hi ha un fitxer de registre d'error del Foliq. Si us plau, envieu un informe d'error per tal d'arreglar-ho."
 
 #: ../src/core/control/XournalMain.cpp:163
-msgid "There are recent errorlogfiles from Xournal++. Please file a Bugreport, so the bug may be fixed."
-msgstr "Hi ha fitxers de registre d'error del Xournal++. Si us plau, envieu un informe d'error per tal d'arreglar-ho."
+msgid "There are recent errorlogfiles from Foliq. Please file a Bugreport, so the bug may be fixed."
+msgstr "Hi ha fitxers de registre d'error del Foliq. Si us plau, envieu un informe d'error per tal d'arreglar-ho."
 
 #: ../src/core/control/XournalMain.cpp:166
 msgid "The most recent log file name: {1}"
@@ -304,8 +304,8 @@ msgid "Delete Logfile"
 msgstr "Elimina el fitxer de registre"
 
 #: ../src/core/control/XournalMain.cpp:203
-msgid "Xournal++ crashed last time. Would you like to restore the last edited file?"
-msgstr "El Xournal++ es va tancar de sobte l'última vegada que es va executar. Voleu restaurar l'últim fitxer editat?"
+msgid "Foliq crashed last time. Would you like to restore the last edited file?"
+msgstr "El Foliq es va tancar de sobte l'última vegada que es va executar. Voleu restaurar l'últim fitxer editat?"
 
 #: ../src/core/control/XournalMain.cpp:208
 msgid "Delete file"
@@ -341,9 +341,9 @@ msgstr "\n\n"
 
 #: ../src/core/control/XournalMain.cpp:426
 #: ../src/core/control/XournalMain.cpp:482
-msgid "Sorry, Xournal++ can only open one file at once.\n"
+msgid "Sorry, Foliq can only open one file at once.\n"
 "Others are ignored."
-msgstr "El Xournal++ només pot tenir un fitxer obert.\n"
+msgstr "El Foliq només pot tenir un fitxer obert.\n"
 "Els altres s'ignoraran."
 
 #: ../src/core/control/XournalMain.cpp:437
@@ -353,10 +353,10 @@ msgstr "El fitxer {1} no existeix."
 #: ../src/core/control/XournalMain.cpp:441
 #: ../src/core/control/XournalMain.cpp:499
 msgid "Filesystem error: {1}\n"
-"Sorry, Xournal++ cannot open the file: {2}\n"
+"Sorry, Foliq cannot open the file: {2}\n"
 "Consider copying the file to a local directory."
 msgstr "Error del sistema de fitxers: {1}\n"
-"El Xournal++ no pot obrir el fitxer: {2}\n"
+"El Foliq no pot obrir el fitxer: {2}\n"
 "Potser ho podrà fer si copieu el fitxer a una carpeta local."
 
 #: ../src/core/control/XournalMain.cpp:643
@@ -669,8 +669,8 @@ msgstr "Fitxers Xournal"
 
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:69
 #: ../src/core/gui/dialog/PageTemplateDialog.cpp:91
-msgid "Xournal++ template"
-msgstr "Plantilla Xournal++"
+msgid "Foliq template"
+msgstr "Plantilla Foliq"
 
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:97
 msgid "Supported files"
@@ -1090,8 +1090,8 @@ msgid "LaTeX editor theme:"
 msgstr "Tema d'editor LaTeX:"
 
 #: ../src/core/gui/dialog/LatexSettingsPanel.cpp:55
-msgid "GtkSourceView was disabled when building Xournal++! Some options will not be available."
-msgstr "GtkSourceView no estava activat quan es va compilar aquesta versió del Xournal++! Algunes opcions no estaran disponibles."
+msgid "GtkSourceView was disabled when building Foliq! Some options will not be available."
+msgstr "GtkSourceView no estava activat quan es va compilar aquesta versió del Foliq! Algunes opcions no estaran disponibles."
 
 #: ../src/core/gui/dialog/LatexSettingsPanel.cpp:144
 msgid "Unable to open global template file at {1}. Does it exist?"
@@ -1941,13 +1941,13 @@ msgid "xoj-preview-extractor: successfully extracted"
 msgstr "xoj-preview-extractor: extracció correcta"
 
 #: ../ui/about.glade:9
-msgid "About Xournal++"
-msgstr "Quant al Xournal++"
+msgid "About Foliq"
+msgstr "Quant al Foliq"
 
 #: ../ui/about.glade:117
-msgid "<span size=\"xx-large\" weight=\"bold\">Xournal++</span>\n"
+msgid "<span size=\"xx-large\" weight=\"bold\">Foliq</span>\n"
 "<i>The next generation</i>"
-msgstr "<span size=\"xx-large\" weight=\"bold\">Xournal++</span>\n"
+msgstr "<span size=\"xx-large\" weight=\"bold\">Foliq</span>\n"
 "La propera generació"
 
 #: ../ui/about.glade:157
@@ -2749,8 +2749,8 @@ msgid "Plugin Manager"
 msgstr "Gestor de complements"
 
 #: ../ui/plugin.glade:122
-msgid "Plugin changes are only applied after Xournal++ is restarted"
-msgstr "Els canvis dels complements s'apliquen quan es reiniciï el Xournal++."
+msgid "Plugin changes are only applied after Foliq is restarted"
+msgstr "Els canvis dels complements s'apliquen quan es reiniciï el Foliq."
 
 #: ../ui/pluginEntry.glade:58
 msgid "Author: "
@@ -2793,8 +2793,8 @@ msgid "Inertia"
 msgstr "Inèrcia"
 
 #: ../ui/settings.glade:255
-msgid "Xournal++ Preferences"
-msgstr "Configuració de Xournal++"
+msgid "Foliq Preferences"
+msgstr "Configuració de Foliq"
 
 #: ../ui/settings.glade:363
 msgid "<i>If the document already was saved you can find it in the same folder with the extension .autosave.xoj\n"
@@ -2957,8 +2957,8 @@ msgid "Enable autoloading of most recent file on application startup"
 msgstr "Activa la càrrega automàtica del fitxer més recent quan s'inicia l'aplicació"
 
 #: ../ui/settings.glade:859
-msgid "If enabled Xournal++ will open the most recent document automatically that you can continue editing your last saved document."
-msgstr "Si s'activa, el Xournal++ obrirà el document que s'hagi desat més recentment de manera automàtica i el podreu continuar editant."
+msgid "If enabled Foliq will open the most recent document automatically that you can continue editing your last saved document."
+msgstr "Si s'activa, el Foliq obrirà el document que s'hagi desat més recentment de manera automàtica i el podreu continuar editant."
 
 #: ../ui/settings.glade:877
 msgid "Autoloading"
@@ -3228,8 +3228,8 @@ msgid "Touchscreen"
 msgstr "Pantalla tàctil"
 
 #: ../ui/settings.glade:2344
-msgid "<i>If your hardware does not support hand recognition, Xournal++ can disable your touchscreen when your pen is near the screen.</i>"
-msgstr "<i>Si el vostre programari no suporta el reconeixement de mà, el Xournal++ pot desactivar la vostra pantalla tàctil quan el llapis estigui a prop de la pantalla.</i>"
+msgid "<i>If your hardware does not support hand recognition, Foliq can disable your touchscreen when your pen is near the screen.</i>"
+msgstr "<i>Si el vostre programari no suporta el reconeixement de mà, el Foliq pot desactivar la vostra pantalla tàctil quan el llapis estigui a prop de la pantalla.</i>"
 
 #: ../ui/settings.glade:2358
 msgid "Enable internal Hand Recognition"

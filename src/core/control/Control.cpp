@@ -2328,7 +2328,7 @@ auto Control::openFile(fs::path filepath, int scrollToPage, bool forceOpen) -> b
         GtkWidget* dialog = gtk_message_dialog_new(
                 getGtkWindow(), GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_YES_NO, "%s",
                 _("The file being loaded has a file format version newer than the one currently supported by this "
-                  "version of Xournal++, so it may not load properly. Open anyways?"));
+                  "version of Foliq, so it may not load properly. Open anyways?"));
         int response = gtk_dialog_run(GTK_DIALOG(dialog));
         gtk_widget_destroy(dialog);
         if (response != GTK_RESPONSE_YES) {
@@ -2682,7 +2682,7 @@ auto Control::showSaveDialog() -> bool {
     gtk_file_chooser_set_local_only(GTK_FILE_CHOOSER(dialog), true);
 
     GtkFileFilter* filterXoj = gtk_file_filter_new();
-    gtk_file_filter_set_name(filterXoj, _("Xournal++ files"));
+    gtk_file_filter_set_name(filterXoj, _("Foliq files"));
     gtk_file_filter_add_pattern(filterXoj, "*.xopp");
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filterXoj);
 

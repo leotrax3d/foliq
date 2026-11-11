@@ -68,8 +68,8 @@ msgid "Error opening file \"{1}\""
 msgstr "Σφάλμα κατά το άνοιγμα αρχείου \"{1}\""
 
 #: ../src/core/control/Control.cpp:2312
-msgid "The file being loaded has a file format version newer than the one currently supported by this version of Xournal++, so it may not load properly. Open anyways?"
-msgstr "Το αρχείο προς φόρτωση έχει μια έκδοση τύπου αρχείου νεότερη από αυτή που υποστηρίζεται από την τρέχουσα έκδοση του Xournal++, όποτε μπορεί να μη φορτωθεί ορθά. Άνοιγμα παρ'όλα αυτά;"
+msgid "The file being loaded has a file format version newer than the one currently supported by this version of Foliq, so it may not load properly. Open anyways?"
+msgstr "Το αρχείο προς φόρτωση έχει μια έκδοση τύπου αρχείου νεότερη από αυτή που υποστηρίζεται από την τρέχουσα έκδοση του Foliq, όποτε μπορεί να μη φορτωθεί ορθά. Άνοιγμα παρ'όλα αυτά;"
 
 #: ../src/core/control/Control.cpp:2439
 msgid "The attached background file could not be found. It might have been moved, renamed or deleted."
@@ -131,8 +131,8 @@ msgstr "_Αποθήκευση"
 
 #: ../src/core/control/Control.cpp:2664
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:62
-msgid "Xournal++ files"
-msgstr "Αρχεία Xournal++"
+msgid "Foliq files"
+msgstr "Αρχεία Foliq"
 
 #: ../src/core/control/Control.cpp:2715
 msgid "Unsaved Document"
@@ -272,12 +272,12 @@ msgid "Please delete the file manually"
 msgstr "Παρακαλώ σβήσε το αρχείο χειροκίνητα"
 
 #: ../src/core/control/XournalMain.cpp:161
-msgid "There is a recent errorlogfile from Xournal++. Please file a Bugreport, so the bug may be fixed."
-msgstr "Υπάρχει ένα πρόσφατο αρχείο σφάλματος από το Xournal++. Παρακαλώ δώστε ένα αρχείο Bugreport, έτσι ώστε το σφάλμα να διορθωθεί."
+msgid "There is a recent errorlogfile from Foliq. Please file a Bugreport, so the bug may be fixed."
+msgstr "Υπάρχει ένα πρόσφατο αρχείο σφάλματος από το Foliq. Παρακαλώ δώστε ένα αρχείο Bugreport, έτσι ώστε το σφάλμα να διορθωθεί."
 
 #: ../src/core/control/XournalMain.cpp:163
-msgid "There are recent errorlogfiles from Xournal++. Please file a Bugreport, so the bug may be fixed."
-msgstr "Υπάρχουν πρόσφατα αρχεία καταγραφής σφαλμάτων από το Xournal++. Παρακαλώ δώστε ένα αρχείο Bugreport, ώστε να διορθωθεί το σφάλμα."
+msgid "There are recent errorlogfiles from Foliq. Please file a Bugreport, so the bug may be fixed."
+msgstr "Υπάρχουν πρόσφατα αρχεία καταγραφής σφαλμάτων από το Foliq. Παρακαλώ δώστε ένα αρχείο Bugreport, ώστε να διορθωθεί το σφάλμα."
 
 #: ../src/core/control/XournalMain.cpp:166
 msgid "The most recent log file name: {1}"
@@ -304,8 +304,8 @@ msgid "Delete Logfile"
 msgstr "Διαγραφή αρχείου καταγραφής"
 
 #: ../src/core/control/XournalMain.cpp:203
-msgid "Xournal++ crashed last time. Would you like to restore the last edited file?"
-msgstr "Το Xournal++ κατέρρευσε την προηγούμενη φορά. Θα θέλατε να επαναφέρετε το τελευταίο αρχείο που επεξεργαστήκατε;"
+msgid "Foliq crashed last time. Would you like to restore the last edited file?"
+msgstr "Το Foliq κατέρρευσε την προηγούμενη φορά. Θα θέλατε να επαναφέρετε το τελευταίο αρχείο που επεξεργαστήκατε;"
 
 #: ../src/core/control/XournalMain.cpp:208
 msgid "Delete file"
@@ -341,9 +341,9 @@ msgstr "\n\n"
 
 #: ../src/core/control/XournalMain.cpp:426
 #: ../src/core/control/XournalMain.cpp:482
-msgid "Sorry, Xournal++ can only open one file at once.\n"
+msgid "Sorry, Foliq can only open one file at once.\n"
 "Others are ignored."
-msgstr "Συγγνώμη το Xournal++ μπορεί να ανοίξει μόνο ένα αρχείο την φορά.\n"
+msgstr "Συγγνώμη το Foliq μπορεί να ανοίξει μόνο ένα αρχείο την φορά.\n"
 "Τα υπόλοιπα θα αγνοηθούν."
 
 #: ../src/core/control/XournalMain.cpp:437
@@ -353,10 +353,10 @@ msgstr "Το αρχείο {1} δεν υπάρχει."
 #: ../src/core/control/XournalMain.cpp:441
 #: ../src/core/control/XournalMain.cpp:499
 msgid "Filesystem error: {1}\n"
-"Sorry, Xournal++ cannot open the file: {2}\n"
+"Sorry, Foliq cannot open the file: {2}\n"
 "Consider copying the file to a local directory."
 msgstr "Σφάλμα συστήματος αρχείων: {1}\n"
-"Λυπούμαστε, το Xournal++ δεν μπορεί να ανοίξει το αρχείο: {2}\n"
+"Λυπούμαστε, το Foliq δεν μπορεί να ανοίξει το αρχείο: {2}\n"
 "Εξετάζει την αντιγραφή του αρχείου σε τοπικό κατάλογο."
 
 #: ../src/core/control/XournalMain.cpp:643
@@ -664,8 +664,8 @@ msgstr "Αρχεία Xournal"
 
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:69
 #: ../src/core/gui/dialog/PageTemplateDialog.cpp:91
-msgid "Xournal++ template"
-msgstr "Πρότυπο Xournal++"
+msgid "Foliq template"
+msgstr "Πρότυπο Foliq"
 
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:97
 msgid "Supported files"
@@ -1085,8 +1085,8 @@ msgid "LaTeX editor theme:"
 msgstr "Θέμα επεξεργαστή LaTeX:"
 
 #: ../src/core/gui/dialog/LatexSettingsPanel.cpp:55
-msgid "GtkSourceView was disabled when building Xournal++! Some options will not be available."
-msgstr "Το GtkSourceView απενεργοποιήθηκε κατά την οικοδόμηση του Xournal++! Ορισμένες επιλογές δεν θα είναι διαθέσιμες."
+msgid "GtkSourceView was disabled when building Foliq! Some options will not be available."
+msgstr "Το GtkSourceView απενεργοποιήθηκε κατά την οικοδόμηση του Foliq! Ορισμένες επιλογές δεν θα είναι διαθέσιμες."
 
 #: ../src/core/gui/dialog/LatexSettingsPanel.cpp:144
 msgid "Unable to open global template file at {1}. Does it exist?"
@@ -1934,13 +1934,13 @@ msgid "xoj-preview-extractor: successfully extracted"
 msgstr "xoj-preview-extractor: εξαγάγαμε επιτυχώς"
 
 #: ../ui/about.glade:9
-msgid "About Xournal++"
-msgstr "Σχετικά με το Xournal++"
+msgid "About Foliq"
+msgstr "Σχετικά με το Foliq"
 
 #: ../ui/about.glade:117
-msgid "<span size=\"xx-large\" weight=\"bold\">Xournal++</span>\n"
+msgid "<span size=\"xx-large\" weight=\"bold\">Foliq</span>\n"
 "<i>The next generation</i>"
-msgstr "<span size=\"xx-large\" weight=\"bold\">Xournal++</span>\n"
+msgstr "<span size=\"xx-large\" weight=\"bold\">Foliq</span>\n"
 "<i>Η επόμενη γενιά</i>"
 
 #: ../ui/about.glade:157
@@ -2740,7 +2740,7 @@ msgid "Plugin Manager"
 msgstr ""
 
 #: ../ui/plugin.glade:122
-msgid "Plugin changes are only applied after Xournal++ is restarted"
+msgid "Plugin changes are only applied after Foliq is restarted"
 msgstr ""
 
 #: ../ui/pluginEntry.glade:58
@@ -2784,8 +2784,8 @@ msgid "Inertia"
 msgstr ""
 
 #: ../ui/settings.glade:255
-msgid "Xournal++ Preferences"
-msgstr "Προτιμήσεις του Xournal++"
+msgid "Foliq Preferences"
+msgstr "Προτιμήσεις του Foliq"
 
 #: ../ui/settings.glade:363
 msgid "<i>If the document already was saved you can find it in the same folder with the extension .autosave.xoj\n"
@@ -2901,7 +2901,7 @@ msgid "Enable autoloading of most recent file on application startup"
 msgstr ""
 
 #: ../ui/settings.glade:859
-msgid "If enabled Xournal++ will open the most recent document automatically that you can continue editing your last saved document."
+msgid "If enabled Foliq will open the most recent document automatically that you can continue editing your last saved document."
 msgstr ""
 
 #: ../ui/settings.glade:877
@@ -3167,8 +3167,8 @@ msgid "Touchscreen"
 msgstr "Οθόνη Αφής"
 
 #: ../ui/settings.glade:2344
-msgid "<i>If your hardware does not support hand recognition, Xournal++ can disable your touchscreen when your pen is near the screen.</i>"
-msgstr "<i>Αν οι συσκευές σας δεν υποστηρίζουν αναγνώριση γραφής, το Xournal++ μπορεί να απενεργοποιήσει την οθόνη αφής σας όταν η γραφίδα σας είναι κοντά στην οθόνη.</i>"
+msgid "<i>If your hardware does not support hand recognition, Foliq can disable your touchscreen when your pen is near the screen.</i>"
+msgstr "<i>Αν οι συσκευές σας δεν υποστηρίζουν αναγνώριση γραφής, το Foliq μπορεί να απενεργοποιήσει την οθόνη αφής σας όταν η γραφίδα σας είναι κοντά στην οθόνη.</i>"
 
 #: ../ui/settings.glade:2358
 msgid "Enable internal Hand Recognition"

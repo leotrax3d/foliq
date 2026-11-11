@@ -68,8 +68,8 @@ msgid "Error opening file \"{1}\""
 msgstr "Eraro malfermante la dosieron «{1}»"
 
 #: ../src/core/control/Control.cpp:2312
-msgid "The file being loaded has a file format version newer than the one currently supported by this version of Xournal++, so it may not load properly. Open anyways?"
-msgstr "La versio de la ŝargata dosiero estas pli nova ol tiuj, kiuj estas subtenataj de ĉi tiu versio de Xournal++; tial, la dosiero eble misŝargiĝos. Ĉu malfermi malgraŭ tio?"
+msgid "The file being loaded has a file format version newer than the one currently supported by this version of Foliq, so it may not load properly. Open anyways?"
+msgstr "La versio de la ŝargata dosiero estas pli nova ol tiuj, kiuj estas subtenataj de ĉi tiu versio de Foliq; tial, la dosiero eble misŝargiĝos. Ĉu malfermi malgraŭ tio?"
 
 #: ../src/core/control/Control.cpp:2439
 msgid "The attached background file could not be found. It might have been moved, renamed or deleted."
@@ -131,8 +131,8 @@ msgstr "Kon_servi"
 
 #: ../src/core/control/Control.cpp:2664
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:62
-msgid "Xournal++ files"
-msgstr "Xournal++-dosieroj"
+msgid "Foliq files"
+msgstr "Foliq-dosieroj"
 
 #: ../src/core/control/Control.cpp:2715
 msgid "Unsaved Document"
@@ -272,11 +272,11 @@ msgid "Please delete the file manually"
 msgstr ""
 
 #: ../src/core/control/XournalMain.cpp:161
-msgid "There is a recent errorlogfile from Xournal++. Please file a Bugreport, so the bug may be fixed."
+msgid "There is a recent errorlogfile from Foliq. Please file a Bugreport, so the bug may be fixed."
 msgstr ""
 
 #: ../src/core/control/XournalMain.cpp:163
-msgid "There are recent errorlogfiles from Xournal++. Please file a Bugreport, so the bug may be fixed."
+msgid "There are recent errorlogfiles from Foliq. Please file a Bugreport, so the bug may be fixed."
 msgstr ""
 
 #: ../src/core/control/XournalMain.cpp:166
@@ -304,8 +304,8 @@ msgid "Delete Logfile"
 msgstr "Forviŝi protokolon"
 
 #: ../src/core/control/XournalMain.cpp:203
-msgid "Xournal++ crashed last time. Would you like to restore the last edited file?"
-msgstr "Xournal++ kolapsis lastatempe. Ĉu restaŭri la laste redaktitan dosieron?"
+msgid "Foliq crashed last time. Would you like to restore the last edited file?"
+msgstr "Foliq kolapsis lastatempe. Ĉu restaŭri la laste redaktitan dosieron?"
 
 #: ../src/core/control/XournalMain.cpp:208
 msgid "Delete file"
@@ -341,9 +341,9 @@ msgstr "\n\n"
 
 #: ../src/core/control/XournalMain.cpp:426
 #: ../src/core/control/XournalMain.cpp:482
-msgid "Sorry, Xournal++ can only open one file at once.\n"
+msgid "Sorry, Foliq can only open one file at once.\n"
 "Others are ignored."
-msgstr "Bedaŭrinde, Xournal++ povas malfermi nur unu dosieron samtempe.\n"
+msgstr "Bedaŭrinde, Foliq povas malfermi nur unu dosieron samtempe.\n"
 "Aliaj estas ignorataj."
 
 #: ../src/core/control/XournalMain.cpp:437
@@ -353,7 +353,7 @@ msgstr ""
 #: ../src/core/control/XournalMain.cpp:441
 #: ../src/core/control/XournalMain.cpp:499
 msgid "Filesystem error: {1}\n"
-"Sorry, Xournal++ cannot open the file: {2}\n"
+"Sorry, Foliq cannot open the file: {2}\n"
 "Consider copying the file to a local directory."
 msgstr ""
 
@@ -664,8 +664,8 @@ msgstr "Xournal-dosieroj"
 
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:69
 #: ../src/core/gui/dialog/PageTemplateDialog.cpp:91
-msgid "Xournal++ template"
-msgstr "Xournal++-ŝablono"
+msgid "Foliq template"
+msgstr "Foliq-ŝablono"
 
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:97
 msgid "Supported files"
@@ -1086,8 +1086,8 @@ msgid "LaTeX editor theme:"
 msgstr "Etoso de LaTeX-redaktilo:"
 
 #: ../src/core/gui/dialog/LatexSettingsPanel.cpp:55
-msgid "GtkSourceView was disabled when building Xournal++! Some options will not be available."
-msgstr "GtkSourceView estis malŝaltita dum tradukado de Xournal++! Kelkaj opcioj ne disponeblas."
+msgid "GtkSourceView was disabled when building Foliq! Some options will not be available."
+msgstr "GtkSourceView estis malŝaltita dum tradukado de Foliq! Kelkaj opcioj ne disponeblas."
 
 #: ../src/core/gui/dialog/LatexSettingsPanel.cpp:144
 msgid "Unable to open global template file at {1}. Does it exist?"
@@ -1935,13 +1935,13 @@ msgid "xoj-preview-extractor: successfully extracted"
 msgstr "xoj-preview-extractor: sukcese eltirita"
 
 #: ../ui/about.glade:9
-msgid "About Xournal++"
-msgstr "Pri Xournal++"
+msgid "About Foliq"
+msgstr "Pri Foliq"
 
 #: ../ui/about.glade:117
-msgid "<span size=\"xx-large\" weight=\"bold\">Xournal++</span>\n"
+msgid "<span size=\"xx-large\" weight=\"bold\">Foliq</span>\n"
 "<i>The next generation</i>"
-msgstr "<span size=\"xx-large\" weight=\"bold\">Xournal++</span>\n"
+msgstr "<span size=\"xx-large\" weight=\"bold\">Foliq</span>\n"
 "<i>La sekva generacio</i>"
 
 #: ../ui/about.glade:157
@@ -2082,7 +2082,7 @@ msgstr "Ĉiam kontroli LaTeX-dependaĵojn antaŭ rulado"
 
 #: ../ui/latexSettings.glade:49
 msgid "If enabled, check that required LaTeX packages are installed and that the LaTeX commands are available before running the LaTeX tool."
-msgstr "Se tio estas ŝaltita, antaŭ ol ruli la ilon LaTeX, Xournal++ kontrolos, ĉu postulataj LaTeX-pakoj estas instalitaj kaj ĉu la LaTeX-komandoj estas haveblaj."
+msgstr "Se tio estas ŝaltita, antaŭ ol ruli la ilon LaTeX, Foliq kontrolos, ĉu postulataj LaTeX-pakoj estas instalitaj kaj ĉu la LaTeX-komandoj estas haveblaj."
 
 #: ../ui/latexSettings.glade:87
 msgid "General LaTeX tool settings"
@@ -2743,8 +2743,8 @@ msgid "Plugin Manager"
 msgstr ""
 
 #: ../ui/plugin.glade:122
-msgid "Plugin changes are only applied after Xournal++ is restarted"
-msgstr "Ŝanĝoj pri kromprogramoj nur efektiviĝos post relanĉo de Xournal++"
+msgid "Plugin changes are only applied after Foliq is restarted"
+msgstr "Ŝanĝoj pri kromprogramoj nur efektiviĝos post relanĉo de Foliq"
 
 #: ../ui/pluginEntry.glade:58
 msgid "Author: "
@@ -2787,8 +2787,8 @@ msgid "Inertia"
 msgstr "Inercio"
 
 #: ../ui/settings.glade:255
-msgid "Xournal++ Preferences"
-msgstr "Agordoj pri Xournal++"
+msgid "Foliq Preferences"
+msgstr "Agordoj pri Foliq"
 
 #: ../ui/settings.glade:363
 msgid "<i>If the document already was saved you can find it in the same folder with the extension .autosave.xoj\n"
@@ -2897,15 +2897,15 @@ msgstr "Ŝalti aŭtomatan ŝargadon de ĵurnaloj"
 
 #: ../ui/settings.glade:842
 msgid "If you open a PDF and there is a Xournal file with the same name it will open the xoj file."
-msgstr "Se vi malfermas PDF-dosieron kaj ekzistas .xoj-dosiero de la sama nomo, Xournal++ anstataŭe malfermos la .xoj-dosieron."
+msgstr "Se vi malfermas PDF-dosieron kaj ekzistas .xoj-dosiero de la sama nomo, Foliq anstataŭe malfermos la .xoj-dosieron."
 
 #: ../ui/settings.glade:854
 msgid "Enable autoloading of most recent file on application startup"
 msgstr "Aŭtomate ŝargi la lastan dosieron post lanĉo de la programo"
 
 #: ../ui/settings.glade:859
-msgid "If enabled Xournal++ will open the most recent document automatically that you can continue editing your last saved document."
-msgstr "Se tio estas ŝaltita, Xournal++ aŭtomate malfermos la laste redaktitan dokumenton, kiun vi povas daŭre redakti."
+msgid "If enabled Foliq will open the most recent document automatically that you can continue editing your last saved document."
+msgstr "Se tio estas ŝaltita, Foliq aŭtomate malfermos la laste redaktitan dokumenton, kiun vi povas daŭre redakti."
 
 #: ../ui/settings.glade:877
 msgid "Autoloading"
@@ -3175,8 +3175,8 @@ msgid "Touchscreen"
 msgstr "Tuŝekrano"
 
 #: ../ui/settings.glade:2344
-msgid "<i>If your hardware does not support hand recognition, Xournal++ can disable your touchscreen when your pen is near the screen.</i>"
-msgstr "<i>Se via aparato ne subtenas manrekonadon, Xournal++ povas malŝalti vian tuŝekranon, kiam via plumo estas proksima al la ekrano.</i>"
+msgid "<i>If your hardware does not support hand recognition, Foliq can disable your touchscreen when your pen is near the screen.</i>"
+msgstr "<i>Se via aparato ne subtenas manrekonadon, Foliq povas malŝalti vian tuŝekranon, kiam via plumo estas proksima al la ekrano.</i>"
 
 #: ../ui/settings.glade:2358
 msgid "Enable internal Hand Recognition"

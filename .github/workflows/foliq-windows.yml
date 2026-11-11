@@ -1,6 +1,8 @@
 name: Foliq Windows test package
 on:
   push:
+    branches: ['**']
+    tags: ['v*']
   pull_request:
   workflow_dispatch:
 permissions:
@@ -33,8 +35,9 @@ jobs:
         run: |
           set -euo pipefail
           cd build
-          bash ../windows-setup/package.sh
-          test -s xournalpp-setup.exe
+          INSTALLER_NAME=foliq-setup.exe NSI_SCRIPT=foliq.nsi APP_ICON="$PWD/src/win32/xournalpp.ico" \
+            bash ../windows-setup/package.sh
+          test -s foliq-setup.exe
           test -s dist/bin/xournalpp.exe
           ./dist/bin/xournalpp.exe --version
           mkdir -p dist/share/foliq/legal dist/share/foliq/build
@@ -52,12 +55,14 @@ jobs:
           tar -xOf foliq-source.tar.gz src/core/folio/Catalog.cpp > /dev/null
           tar -xOf foliq-source.tar.gz src/core/control/jobs/SaveJob.cpp > /dev/null
           tar -xOf foliq-source.tar.gz LICENSE > /dev/null
-          sha256sum dist/bin/xournalpp.exe foliq-source.tar.gz > SHA256SUMS
+          powershell -NoProfile -Command "Compress-Archive -Path dist\\* -DestinationPath foliq-windows-x64-portable.zip"
+          sha256sum foliq-setup.exe foliq-windows-x64-portable.zip dist/bin/xournalpp.exe foliq-source.tar.gz > SHA256SUMS
       - uses: actions/upload-artifact@v4
         with:
           name: foliq-windows-x64-test
           path: |
-            build/dist/
+            build/foliq-setup.exe
+            build/foliq-windows-x64-portable.zip
             build/foliq-source.tar.gz
             build/SHA256SUMS
           if-no-files-found: error
@@ -71,3 +76,41 @@ jobs:
             build/CMakeCache.txt
             build/CMakeFiles/CMakeConfigureLog.yaml
           if-no-files-found: warn
+
+  # Tag v* -> GitHub release with installer, portable ZIP, matching source and checksums.
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: windows
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: foliq-windows-x64-test
+          path: release
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cd release
+          cat > notes.md <<'NOTES'
+          Foliq Entwicklungs-Release für Windows 10/11 (x64).
+
+          - **foliq-setup.exe**: Installer (Startmenü „Foliq“, Deinstallation über Windows-Einstellungen).
+            Wird neben einem vorhandenen Xournal++ installiert und entfernt es nicht.
+          - **foliq-windows-x64-portable.zip**: ohne Installation, `bin/xournalpp.exe` starten.
+          - **foliq-source.tar.gz**: vollständiger Quellcode dieses Builds (GPL-2.0-or-later).
+          - **SHA256SUMS**: Prüfsummen.
+
+          Basiert auf Xournal++ (© The Xournal++ Team und Mitwirkende). Lizenz- und
+          Abhängigkeitshinweise liegen im Paket unter `share/foliq/legal`.
+          Der Installer ist nicht signiert; Windows SmartScreen kann warnen
+          („Weitere Informationen“ → „Trotzdem ausführen“).
+          Vorabversion: Stift-, Touch- und DPI-Abnahme unter Windows steht noch aus.
+          NOTES
+          sed -i 's/^          //' notes.md
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --prerelease \
+            --title "Foliq ${GITHUB_REF_NAME#v}" --notes-file notes.md \
+            foliq-setup.exe foliq-windows-x64-portable.zip foliq-source.tar.gz SHA256SUMS

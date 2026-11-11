@@ -101,12 +101,12 @@ auto migrateSettings() -> MigrateResult {
             Util::ensureFolderExists(newConfigPath.parent_path());
             try {
                 fs::copy(oldPath, newConfigPath, fs::copy_options::recursive);
-                constexpr auto msg = "Due to a recent update, Xournal++ has changed where its configuration files are "
+                constexpr auto msg = "Due to a recent update, Foliq has changed where its configuration files are "
                                      "stored.\nThey have been automatically copied from\n\t{1}\nto\n\t{2}";
                 return {MigrateStatus::Success, FS(_F(msg) % oldPath.u8string() % newConfigPath.u8string())};
             } catch (const fs::filesystem_error& e) {
                 constexpr auto msg =
-                        "Due to a recent update, Xournal++ has changed where its configuration files are "
+                        "Due to a recent update, Foliq has changed where its configuration files are "
                         "stored.\nHowever, when attempting to copy\n\t{1}\nto\n\t{2}\nmigration failed:\n{3}";
                 g_message("Migration failed: %s", e.what());
                 return {MigrateStatus::Failure, FS(_F(msg) % oldPath.u8string() % newConfigPath.u8string() % e.what())};
@@ -158,9 +158,9 @@ void checkForErrorlog() {
     }
 
     std::sort(errorList.begin(), errorList.end());
-    std::string msg = errorList.size() == 1 ? _("There is a recent errorlogfile from Xournal++. Please file a "
+    std::string msg = errorList.size() == 1 ? _("There is a recent errorlogfile from Foliq. Please file a "
                                                 "Bugreport, so the bug may be fixed.") :
-                                              _("There are recent errorlogfiles from Xournal++. Please file a "
+                                              _("There are recent errorlogfiles from Foliq. Please file a "
                                                 "Bugreport, so the bug may be fixed.");
     msg += "\n";
     msg += FS(_F("The most recent log file name: {1}") % errorList[0].string());
@@ -200,7 +200,7 @@ void checkForEmergencySave(Control* control) {
         return;
     }
 
-    const std::string msg = _("Xournal++ crashed last time. Would you like to restore the last edited file?");
+    const std::string msg = _("Foliq crashed last time. Would you like to restore the last edited file?");
 
     GtkWidget* dialog = gtk_message_dialog_new(nullptr, GTK_DIALOG_MODAL, GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE, "%s",
                                                msg.c_str());
@@ -423,7 +423,7 @@ void on_open_files(GApplication* application, gpointer f, gint numFiles, gchar* 
     }
     auto* files = (GFile**)f;
     if (numFiles != 1) {
-        const std::string msg = _("Sorry, Xournal++ can only open one file at once.\n"
+        const std::string msg = _("Sorry, Foliq can only open one file at once.\n"
                                   "Others are ignored.");
         XojMsgBox::showErrorToUser(GTK_WINDOW(app_data->win->getWindow()), msg);
     }
@@ -439,7 +439,7 @@ void on_open_files(GApplication* application, gpointer f, gint numFiles, gchar* 
         }
     } catch (const fs::filesystem_error& e) {
         const std::string msg = FS(_F("Filesystem error: {1}\n"
-                                      "Sorry, Xournal++ cannot open the file: {2}\n"
+                                      "Sorry, Foliq cannot open the file: {2}\n"
                                       "Consider copying the file to a local directory.") %
                                    e.what() % p.u8string());
         XojMsgBox::showErrorToUser(GTK_WINDOW(app_data->win->getWindow()), msg);
@@ -479,7 +479,7 @@ void on_startup(GApplication* application, XMPtr app_data) {
     bool opened = false;
     if (app_data->optFilename) {
         if (g_strv_length(app_data->optFilename) != 1) {
-            const std::string msg = _("Sorry, Xournal++ can only open one file at once.\n"
+            const std::string msg = _("Sorry, Foliq can only open one file at once.\n"
                                       "Others are ignored.");
             XojMsgBox::showErrorToUser(GTK_WINDOW(app_data->win->getWindow()), msg);
         }
@@ -497,7 +497,7 @@ void on_startup(GApplication* application, XMPtr app_data) {
             }
         } catch (const fs::filesystem_error& e) {
             const std::string msg = FS(_F("Filesystem error: {1}\n"
-                                          "Sorry, Xournal++ cannot open the file: {2}\n"
+                                          "Sorry, Foliq cannot open the file: {2}\n"
                                           "Consider copying the file to a local directory.") %
                                        e.what() % p.u8string());
             XojMsgBox::showErrorToUser(GTK_WINDOW(app_data->win->getWindow()), msg);

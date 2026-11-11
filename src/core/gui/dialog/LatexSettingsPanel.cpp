@@ -52,7 +52,7 @@ LatexSettingsPanel::LatexSettingsPanel(GladeSearchpath* gladeSearchPath):
     this->sourceViewThemeSelector = nullptr;
 
     gtk_label_set_text(GTK_LABEL(this->get("lbSourceviewSettingsDescription")),
-                       _("GtkSourceView was disabled when building Xournal++! "
+                       _("GtkSourceView was disabled when building Foliq! "
                          "Some options will not be available."));
 #endif
 

@@ -36,7 +36,7 @@ set(PROJECT_CONTACT "core.xournalpp@github.com")
 # Foliq change, 2026-11-10: development identity; keep upstream binary, resources and file format stable.
 option(FOLIQ_BUILD "Identify this build as the Foliq development fork" ON)
 if(FOLIQ_BUILD)
-    set(FOLIQ_WINDOW_NAME "Foliq (development, based on Xournal++)")
+    set(FOLIQ_WINDOW_NAME "Foliq")
 else()
     set(FOLIQ_WINDOW_NAME "Xournal++")
 endif()

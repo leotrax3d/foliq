@@ -68,8 +68,8 @@ msgid "Error opening file \"{1}\""
 msgstr "打开文件\"{1}\"出错"
 
 #: ../src/core/control/Control.cpp:2312
-msgid "The file being loaded has a file format version newer than the one currently supported by this version of Xournal++, so it may not load properly. Open anyways?"
-msgstr "正在加载的文件格式版本比当前版本 Xournal++ 支持的文件格式版本更新，可能无法正确加载，仍要打开？"
+msgid "The file being loaded has a file format version newer than the one currently supported by this version of Foliq, so it may not load properly. Open anyways?"
+msgstr "正在加载的文件格式版本比当前版本 Foliq 支持的文件格式版本更新，可能无法正确加载，仍要打开？"
 
 #: ../src/core/control/Control.cpp:2439
 msgid "The attached background file could not be found. It might have been moved, renamed or deleted."
@@ -132,8 +132,8 @@ msgstr "保存(_S)"
 
 #: ../src/core/control/Control.cpp:2664
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:62
-msgid "Xournal++ files"
-msgstr "Xournal++ 文件"
+msgid "Foliq files"
+msgstr "Foliq 文件"
 
 #: ../src/core/control/Control.cpp:2715
 msgid "Unsaved Document"
@@ -273,12 +273,12 @@ msgid "Please delete the file manually"
 msgstr "请手动删除文件"
 
 #: ../src/core/control/XournalMain.cpp:161
-msgid "There is a recent errorlogfile from Xournal++. Please file a Bugreport, so the bug may be fixed."
-msgstr "Xournal++ 有一个最近的错误日志文件。 请提交错误报告，以便修复该错误。"
+msgid "There is a recent errorlogfile from Foliq. Please file a Bugreport, so the bug may be fixed."
+msgstr "Foliq 有一个最近的错误日志文件。 请提交错误报告，以便修复该错误。"
 
 #: ../src/core/control/XournalMain.cpp:163
-msgid "There are recent errorlogfiles from Xournal++. Please file a Bugreport, so the bug may be fixed."
-msgstr "有来自 Xournal++ 的最新错误日志文件。 请提交错误报告，以便修复该错误。"
+msgid "There are recent errorlogfiles from Foliq. Please file a Bugreport, so the bug may be fixed."
+msgstr "有来自 Foliq 的最新错误日志文件。 请提交错误报告，以便修复该错误。"
 
 #: ../src/core/control/XournalMain.cpp:166
 msgid "The most recent log file name: {1}"
@@ -305,8 +305,8 @@ msgid "Delete Logfile"
 msgstr "删除日志文件"
 
 #: ../src/core/control/XournalMain.cpp:203
-msgid "Xournal++ crashed last time. Would you like to restore the last edited file?"
-msgstr "Xournal++ 上次崩溃了。是否恢复最后一次编辑的文件？"
+msgid "Foliq crashed last time. Would you like to restore the last edited file?"
+msgstr "Foliq 上次崩溃了。是否恢复最后一次编辑的文件？"
 
 #: ../src/core/control/XournalMain.cpp:208
 msgid "Delete file"
@@ -342,9 +342,9 @@ msgstr "\n\n"
 
 #: ../src/core/control/XournalMain.cpp:426
 #: ../src/core/control/XournalMain.cpp:482
-msgid "Sorry, Xournal++ can only open one file at once.\n"
+msgid "Sorry, Foliq can only open one file at once.\n"
 "Others are ignored."
-msgstr "对不起，Xournal++ 只能一次打开一个文件。\n"
+msgstr "对不起，Foliq 只能一次打开一个文件。\n"
 "其他文件已被忽略。"
 
 #: ../src/core/control/XournalMain.cpp:437
@@ -354,10 +354,10 @@ msgstr "文件 {1} 不存在。"
 #: ../src/core/control/XournalMain.cpp:441
 #: ../src/core/control/XournalMain.cpp:499
 msgid "Filesystem error: {1}\n"
-"Sorry, Xournal++ cannot open the file: {2}\n"
+"Sorry, Foliq cannot open the file: {2}\n"
 "Consider copying the file to a local directory."
 msgstr "文件系统错误： {1}\n"
-"抱歉，Xournal++ 无法打开文件： {2}\n"
+"抱歉，Foliq 无法打开文件： {2}\n"
 "考虑将文件复制到本地目录。"
 
 #: ../src/core/control/XournalMain.cpp:643
@@ -669,8 +669,8 @@ msgstr "Xournal文件"
 
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:69
 #: ../src/core/gui/dialog/PageTemplateDialog.cpp:91
-msgid "Xournal++ template"
-msgstr "Xournal++ 模板"
+msgid "Foliq template"
+msgstr "Foliq 模板"
 
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:97
 msgid "Supported files"
@@ -1090,8 +1090,8 @@ msgid "LaTeX editor theme:"
 msgstr "LaTeX 编辑器主题："
 
 #: ../src/core/gui/dialog/LatexSettingsPanel.cpp:55
-msgid "GtkSourceView was disabled when building Xournal++! Some options will not be available."
-msgstr "在构建 Xournal++ 时禁用了 GtkSourceView！一些选项将不可用。"
+msgid "GtkSourceView was disabled when building Foliq! Some options will not be available."
+msgstr "在构建 Foliq 时禁用了 GtkSourceView！一些选项将不可用。"
 
 #: ../src/core/gui/dialog/LatexSettingsPanel.cpp:144
 msgid "Unable to open global template file at {1}. Does it exist?"
@@ -1941,13 +1941,13 @@ msgid "xoj-preview-extractor: successfully extracted"
 msgstr "xoj-preview-extractor: 成功提取"
 
 #: ../ui/about.glade:9
-msgid "About Xournal++"
-msgstr "关于Xournal++"
+msgid "About Foliq"
+msgstr "关于Foliq"
 
 #: ../ui/about.glade:117
-msgid "<span size=\"xx-large\" weight=\"bold\">Xournal++</span>\n"
+msgid "<span size=\"xx-large\" weight=\"bold\">Foliq</span>\n"
 "<i>The next generation</i>"
-msgstr "<span size=\"xx-large\" weight=\"bold\">Xournal++</span>\n"
+msgstr "<span size=\"xx-large\" weight=\"bold\">Foliq</span>\n"
 "<i>浴火重生</i>"
 
 #: ../ui/about.glade:157
@@ -2748,8 +2748,8 @@ msgid "Plugin Manager"
 msgstr "插件管理器"
 
 #: ../ui/plugin.glade:122
-msgid "Plugin changes are only applied after Xournal++ is restarted"
-msgstr "插件改变仅在Xournal++重启后应用"
+msgid "Plugin changes are only applied after Foliq is restarted"
+msgstr "插件改变仅在Foliq重启后应用"
 
 #: ../ui/pluginEntry.glade:58
 msgid "Author: "
@@ -2792,8 +2792,8 @@ msgid "Inertia"
 msgstr "惯性"
 
 #: ../ui/settings.glade:255
-msgid "Xournal++ Preferences"
-msgstr "Xournal++偏好设置"
+msgid "Foliq Preferences"
+msgstr "Foliq偏好设置"
 
 #: ../ui/settings.glade:363
 msgid "<i>If the document already was saved you can find it in the same folder with the extension .autosave.xoj\n"
@@ -2956,8 +2956,8 @@ msgid "Enable autoloading of most recent file on application startup"
 msgstr "启动时自动加载上次打开的文件"
 
 #: ../ui/settings.glade:859
-msgid "If enabled Xournal++ will open the most recent document automatically that you can continue editing your last saved document."
-msgstr "启用后，Xournal++将自动打开上次打开的文档供您继续编辑。"
+msgid "If enabled Foliq will open the most recent document automatically that you can continue editing your last saved document."
+msgstr "启用后，Foliq将自动打开上次打开的文档供您继续编辑。"
 
 #: ../ui/settings.glade:877
 msgid "Autoloading"
@@ -3227,8 +3227,8 @@ msgid "Touchscreen"
 msgstr "触摸屏"
 
 #: ../ui/settings.glade:2344
-msgid "<i>If your hardware does not support hand recognition, Xournal++ can disable your touchscreen when your pen is near the screen.</i>"
-msgstr "<i>如果您的硬件不支持手动识别，Xournal++ 可以在您的笔靠近屏幕时禁用您的触摸屏。</i>"
+msgid "<i>If your hardware does not support hand recognition, Foliq can disable your touchscreen when your pen is near the screen.</i>"
+msgstr "<i>如果您的硬件不支持手动识别，Foliq 可以在您的笔靠近屏幕时禁用您的触摸屏。</i>"
 
 #: ../ui/settings.glade:2358
 msgid "Enable internal Hand Recognition"

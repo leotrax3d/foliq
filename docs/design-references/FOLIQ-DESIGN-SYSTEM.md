@@ -88,3 +88,10 @@ regulären Speichern als v2 geschrieben (atomar, `.bak` wie bisher). Unbekannte
 Versionen oder ungültige Werte: sichtbare Fehlermeldung, Datei unverändert.
 Abschnittsfarben gelöschter Knoten werden beim Speichern entfernt. Katalog-
 und XOPP-Format unverändert.
+
+## App-Icon (2026-11-11, vom Nutzer bestätigt)
+
+`ui/pixmaps/org.foliq.Foliq.svg` (+ PNG 256 px, Vorschau `foliq-icon-preview.png`):
+flache abgerundete Kachel (Radius 56/256) in Akzentblau #005fb8, Glyphe Lucide
+„notebook-pen" (ISC) in Weiß, Stift in #ffd166. Keine Verläufe, keine Schatten.
+Fenster-, Dialog-, EXE- (über `FOLIQ_APP_ICON` → .ico) und Installer-Icon.

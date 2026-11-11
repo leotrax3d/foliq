@@ -68,14 +68,19 @@ if (APPLE)
 endif()
 
 if (WIN32)
-  # generate .ico from .png
+  # generate .ico from .png (Foliq build: own icon, see docs/design-references/FOLIQ-DESIGN-SYSTEM.md)
+  if (FOLIQ_BUILD)
+    set(FOLIQ_APP_ICON ${PROJECT_SOURCE_DIR}/ui/pixmaps/org.foliq.Foliq.svg)
+  else()
+    set(FOLIQ_APP_ICON ${PROJECT_SOURCE_DIR}/ui/pixmaps/com.github.xournalpp.xournalpp.svg)
+  endif()
   find_package(ImageMagick REQUIRED COMPONENTS magick)
   set (ICON_SIZES 16 32 48 256)
   foreach (SIZE IN LISTS ICON_SIZES)
     set (RESIZED_ICON ${PROJECT_BINARY_DIR}/xournalpp-icon-${SIZE}.png)
     add_custom_command (
                 OUTPUT ${RESIZED_ICON}
-                COMMAND rsvg-convert ${PROJECT_SOURCE_DIR}/ui/pixmaps/com.github.xournalpp.xournalpp.svg --width=${SIZE} --height=${SIZE} -o ${RESIZED_ICON}
+                COMMAND rsvg-convert ${FOLIQ_APP_ICON} --width=${SIZE} --height=${SIZE} -o ${RESIZED_ICON}
 	)
   set (ICON_DEPS ${ICON_DEPS} ${RESIZED_ICON})
   unset (RESIZED_ICON)

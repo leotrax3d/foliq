@@ -45,7 +45,7 @@ void XojMsgBox::showErrorToUser(GtkWindow* win, const string& msg) {
 
 auto XojMsgBox::showPluginMessage(const string& pluginName, const string& msg, const map<int, string>& button,
                                   bool error) -> int {
-    string header = string("Xournal++ Plugin «") + pluginName + "»";
+    string header = string("Foliq Plugin «") + pluginName + "»";
 
     if (error) {
         header = "<b>Error in </b>" + header;

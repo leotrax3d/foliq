@@ -252,9 +252,9 @@
     <property name="name">settingsDialog</property>
     <property name="can-focus">False</property>
     <property name="border-width">5</property>
-    <property name="title" translatable="yes">Xournal++ Preferences</property>
+    <property name="title" translatable="yes">Foliq Preferences</property>
     <property name="window-position">center</property>
-    <property name="icon">pixmaps/com.github.xournalpp.xournalpp.svg</property>
+    <property name="icon">pixmaps/org.foliq.Foliq.svg</property>
     <property name="type-hint">normal</property>
     <property name="gravity">center</property>
     <signal name="close" handler="gtk_widget_hide" swapped="no"/>
@@ -856,7 +856,7 @@ Illegal characters are replaced with "_"</property>
                                             <property name="visible">True</property>
                                             <property name="can-focus">True</property>
                                             <property name="receives-default">False</property>
-                                            <property name="tooltip-text" translatable="yes">If enabled Xournal++ will open the most recent document automatically that you can continue editing your last saved document.</property>
+                                            <property name="tooltip-text" translatable="yes">If enabled Foliq will open the most recent document automatically that you can continue editing your last saved document.</property>
                                             <property name="xalign">0</property>
                                             <property name="draw-indicator">True</property>
                                           </object>
@@ -2341,7 +2341,7 @@ Illegal characters are replaced with "_"</property>
                                           <object class="GtkLabel" id="sid63">
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
-                                            <property name="label" translatable="yes">&lt;i&gt;If your hardware does not support hand recognition, Xournal++ can disable your touchscreen when your pen is near the screen.&lt;/i&gt;</property>
+                                            <property name="label" translatable="yes">&lt;i&gt;If your hardware does not support hand recognition, Foliq can disable your touchscreen when your pen is near the screen.&lt;/i&gt;</property>
                                             <property name="use-markup">True</property>
                                             <property name="wrap">True</property>
                                             <property name="max-width-chars">85</property>

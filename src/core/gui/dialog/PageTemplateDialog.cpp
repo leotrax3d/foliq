@@ -88,7 +88,7 @@ void PageTemplateDialog::saveToFile() {
     gtk_file_chooser_set_local_only(GTK_FILE_CHOOSER(dialog), true);
 
     GtkFileFilter* filterXoj = gtk_file_filter_new();
-    gtk_file_filter_set_name(filterXoj, _("Xournal++ template"));
+    gtk_file_filter_set_name(filterXoj, _("Foliq template"));
     gtk_file_filter_add_pattern(filterXoj, "*.xopt");
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filterXoj);
 

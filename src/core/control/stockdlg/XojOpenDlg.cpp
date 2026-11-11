@@ -59,14 +59,14 @@ void XojOpenDlg::addFilterXoj() {
 
 void XojOpenDlg::addFilterXopp() {
     GtkFileFilter* filterXopp = gtk_file_filter_new();
-    gtk_file_filter_set_name(filterXopp, _("Xournal++ files"));
+    gtk_file_filter_set_name(filterXopp, _("Foliq files"));
     gtk_file_filter_add_pattern(filterXopp, "*.xopp");
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filterXopp);
 }
 
 void XojOpenDlg::addFilterXopt() {
     GtkFileFilter* filterXopt = gtk_file_filter_new();
-    gtk_file_filter_set_name(filterXopt, _("Xournal++ template"));
+    gtk_file_filter_set_name(filterXopt, _("Foliq template"));
     gtk_file_filter_add_pattern(filterXopt, "*.xopt");
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filterXopt);
 }

@@ -736,3 +736,24 @@ englische Upstream-Texte in Dialogen ohne installierte Übersetzung.
 
 Nächster überprüfbarer Schritt: Windows-CI-Paket dieses Branches bauen und
 WINDOWS-PEN-TEST-FLUENT.md auf dem Stiftrechner abarbeiten.
+
+## Umbenennung, App-Icon, Installer und Release – 2026-11-11
+
+- Sichtbare „Xournal++"-Texte → „Foliq": Glade-Dialoge, übersetzbare Meldungen im
+  Code, alle `po/*.po` (msgid und msgstr synchron, `msgfmt -c` ohne Fehler),
+  Fenstertitel nur „Foliq", EXE-Metadaten, Druckauftragsname, Plugin-Meldungen.
+  Bewusst unverändert: Herkunftshinweis im Über-Dialog („Basiert auf Xournal++ ·
+  © The Xournal++ Team"), Lizenz-/Copyright-Dateien, XOPP-Dateiinhalt (`<title>`),
+  Settings-/Toolbar-Dateikommentare, Logmeldungen, Kompatibilitätshinweise,
+  interne Namen (`xournalpp.exe`, `share/xournalpp`, Konfigurationspfade).
+- App-Icon `ui/pixmaps/org.foliq.Foliq.svg` (Lucide notebook-pen, flach).
+- Installer `windows-setup/foliq.nsi` (abgeleitet vom Upstream-Skript): eigenes
+  Installationsverzeichnis/Registry `Foliq`, ProgIDs `Foliq.*`; entfernt keine
+  Xournal++-Installation mehr und schreibt keine an `xournalpp.exe` gebundenen
+  Schlüssel. `package.sh` akzeptiert INSTALLER_NAME/NSI_SCRIPT/APP_ICON.
+- `foliq-windows.yml`: Installer, portables ZIP, Quellarchiv, SHA256SUMS; Tag `v*`
+  erzeugt ein GitHub-Vorab-Release.
+- Linux: Build, 132/132 Tests, main-ui-smoke alle PASS. NSIS/Installer nur auf
+  Windows-CI prüfbar.
+- Bekannt: Installer-„DisplayVersion" zeigt die Upstream-Version aus `VERSION`;
+  Konfigurationsordner ist noch nicht von Xournal++ getrennt (ARCHITECTURE.md).

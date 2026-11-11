@@ -119,7 +119,7 @@
                 <property name="margin_top">5</property>
                 <property name="margin_bottom">5</property>
                 <property name="wrap">true</property>
-                <property name="label" translatable="yes">Plugin changes are only applied after Xournal++ is restarted</property>
+                <property name="label" translatable="yes">Plugin changes are only applied after Foliq is restarted</property>
               </object>
               <packing>
                 <property name="expand">False</property>

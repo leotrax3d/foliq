@@ -67,8 +67,8 @@ msgid "Error opening file \"{1}\""
 msgstr "Lỗi khi mở tập tin \"{1}\""
 
 #: ../src/core/control/Control.cpp:2312
-msgid "The file being loaded has a file format version newer than the one currently supported by this version of Xournal++, so it may not load properly. Open anyways?"
-msgstr "Tệp tin đang được tải có định dạng tệp mới hơn định dạng tệp đang được hỗ trợ bởi phiên bản Xournal++ này, vì vậy nó có thể không được tải đúng cách. Vẫn mở?"
+msgid "The file being loaded has a file format version newer than the one currently supported by this version of Foliq, so it may not load properly. Open anyways?"
+msgstr "Tệp tin đang được tải có định dạng tệp mới hơn định dạng tệp đang được hỗ trợ bởi phiên bản Foliq này, vì vậy nó có thể không được tải đúng cách. Vẫn mở?"
 
 #: ../src/core/control/Control.cpp:2439
 msgid "The attached background file could not be found. It might have been moved, renamed or deleted."
@@ -131,7 +131,7 @@ msgstr "_Lưu"
 
 #: ../src/core/control/Control.cpp:2664
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:62
-msgid "Xournal++ files"
+msgid "Foliq files"
 msgstr "Tập tin xournal++"
 
 #: ../src/core/control/Control.cpp:2715
@@ -272,12 +272,12 @@ msgid "Please delete the file manually"
 msgstr "Vui lòng xóa tệp tin thủ công"
 
 #: ../src/core/control/XournalMain.cpp:161
-msgid "There is a recent errorlogfile from Xournal++. Please file a Bugreport, so the bug may be fixed."
-msgstr "Có một nhật ký lỗi gần đây từ Xournal++. Vui lòng gửi một báo cáo lỗi, để có thể sửa được lỗi."
+msgid "There is a recent errorlogfile from Foliq. Please file a Bugreport, so the bug may be fixed."
+msgstr "Có một nhật ký lỗi gần đây từ Foliq. Vui lòng gửi một báo cáo lỗi, để có thể sửa được lỗi."
 
 #: ../src/core/control/XournalMain.cpp:163
-msgid "There are recent errorlogfiles from Xournal++. Please file a Bugreport, so the bug may be fixed."
-msgstr "Có một số nhật ký lỗi gần đây từ Xournal++. Vui lòng gửi một báo cáo lỗi, để có thể sửa được lỗi."
+msgid "There are recent errorlogfiles from Foliq. Please file a Bugreport, so the bug may be fixed."
+msgstr "Có một số nhật ký lỗi gần đây từ Foliq. Vui lòng gửi một báo cáo lỗi, để có thể sửa được lỗi."
 
 #: ../src/core/control/XournalMain.cpp:166
 msgid "The most recent log file name: {1}"
@@ -304,8 +304,8 @@ msgid "Delete Logfile"
 msgstr "Xoá Tệp nhật ký"
 
 #: ../src/core/control/XournalMain.cpp:203
-msgid "Xournal++ crashed last time. Would you like to restore the last edited file?"
-msgstr "Xournal++ lần trước đã bị sự cố. Bạn có muốn khôi phục tệp tin đã được chỉnh sửa lần trước?"
+msgid "Foliq crashed last time. Would you like to restore the last edited file?"
+msgstr "Foliq lần trước đã bị sự cố. Bạn có muốn khôi phục tệp tin đã được chỉnh sửa lần trước?"
 
 #: ../src/core/control/XournalMain.cpp:208
 msgid "Delete file"
@@ -341,9 +341,9 @@ msgstr "\n\n"
 
 #: ../src/core/control/XournalMain.cpp:426
 #: ../src/core/control/XournalMain.cpp:482
-msgid "Sorry, Xournal++ can only open one file at once.\n"
+msgid "Sorry, Foliq can only open one file at once.\n"
 "Others are ignored."
-msgstr "Xin lỗi, Xournal++ chỉ có thể mở một tập tin một lúc.\n"
+msgstr "Xin lỗi, Foliq chỉ có thể mở một tập tin một lúc.\n"
 "Các tập tin khác sẽ bị loại bỏ."
 
 #: ../src/core/control/XournalMain.cpp:437
@@ -353,10 +353,10 @@ msgstr "Tệp tin {1} không tồn tại."
 #: ../src/core/control/XournalMain.cpp:441
 #: ../src/core/control/XournalMain.cpp:499
 msgid "Filesystem error: {1}\n"
-"Sorry, Xournal++ cannot open the file: {2}\n"
+"Sorry, Foliq cannot open the file: {2}\n"
 "Consider copying the file to a local directory."
 msgstr "Lỗi tệp tin hệ thống: {1}\n"
-"Xin lỗi, Xournal++ không thể mở tệp tin: {2}\n"
+"Xin lỗi, Foliq không thể mở tệp tin: {2}\n"
 "Hãy cân nhắc việc sao chép tệp tin vào một thư mục cục bộ."
 
 #: ../src/core/control/XournalMain.cpp:643
@@ -668,8 +668,8 @@ msgstr "Tập tin xournal"
 
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:69
 #: ../src/core/gui/dialog/PageTemplateDialog.cpp:91
-msgid "Xournal++ template"
-msgstr "Mẫu Xournal++"
+msgid "Foliq template"
+msgstr "Mẫu Foliq"
 
 #: ../src/core/control/stockdlg/XojOpenDlg.cpp:97
 msgid "Supported files"
@@ -1089,8 +1089,8 @@ msgid "LaTeX editor theme:"
 msgstr "Chủ đề trình chỉnh sửa LaTeX:"
 
 #: ../src/core/gui/dialog/LatexSettingsPanel.cpp:55
-msgid "GtkSourceView was disabled when building Xournal++! Some options will not be available."
-msgstr "GtkSourceView đã bị vô hiệu hóa khi build Xournal++! Một số tùy chọn sẽ không khả dụng."
+msgid "GtkSourceView was disabled when building Foliq! Some options will not be available."
+msgstr "GtkSourceView đã bị vô hiệu hóa khi build Foliq! Một số tùy chọn sẽ không khả dụng."
 
 #: ../src/core/gui/dialog/LatexSettingsPanel.cpp:144
 msgid "Unable to open global template file at {1}. Does it exist?"
@@ -1938,11 +1938,11 @@ msgid "xoj-preview-extractor: successfully extracted"
 msgstr ""
 
 #: ../ui/about.glade:9
-msgid "About Xournal++"
-msgstr "Thông tin về Xournal++"
+msgid "About Foliq"
+msgstr "Thông tin về Foliq"
 
 #: ../ui/about.glade:117
-msgid "<span size=\"xx-large\" weight=\"bold\">Xournal++</span>\n"
+msgid "<span size=\"xx-large\" weight=\"bold\">Foliq</span>\n"
 "<i>The next generation</i>"
 msgstr ""
 
@@ -2741,7 +2741,7 @@ msgid "Plugin Manager"
 msgstr "Trình quản lý tiện ích mở rộng"
 
 #: ../ui/plugin.glade:122
-msgid "Plugin changes are only applied after Xournal++ is restarted"
+msgid "Plugin changes are only applied after Foliq is restarted"
 msgstr ""
 
 #: ../ui/pluginEntry.glade:58
@@ -2785,8 +2785,8 @@ msgid "Inertia"
 msgstr ""
 
 #: ../ui/settings.glade:255
-msgid "Xournal++ Preferences"
-msgstr "Cài đặt Xournal++"
+msgid "Foliq Preferences"
+msgstr "Cài đặt Foliq"
 
 #: ../ui/settings.glade:363
 msgid "<i>If the document already was saved you can find it in the same folder with the extension .autosave.xoj\n"
@@ -2926,7 +2926,7 @@ msgid "Enable autoloading of most recent file on application startup"
 msgstr ""
 
 #: ../ui/settings.glade:859
-msgid "If enabled Xournal++ will open the most recent document automatically that you can continue editing your last saved document."
+msgid "If enabled Foliq will open the most recent document automatically that you can continue editing your last saved document."
 msgstr ""
 
 #: ../ui/settings.glade:877
@@ -3192,7 +3192,7 @@ msgid "Touchscreen"
 msgstr "Màn hình cảm ứng"
 
 #: ../ui/settings.glade:2344
-msgid "<i>If your hardware does not support hand recognition, Xournal++ can disable your touchscreen when your pen is near the screen.</i>"
+msgid "<i>If your hardware does not support hand recognition, Foliq can disable your touchscreen when your pen is near the screen.</i>"
 msgstr ""
 
 #: ../ui/settings.glade:2358
