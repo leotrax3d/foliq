@@ -146,3 +146,26 @@ Keine neue Bibliothek: GTK3/Pango/Cairo bleiben offline und im vorhandenen
 Windows-UCRT64-Buildpfad. TeX ist weiterhin eine optionale lokale externe
 Abhängigkeit zum Bearbeiten, nicht zum Lesen/Exportieren gespeicherter Formeln.
 Linux-Tests ersetzen keine Windows-IME-, DPI- oder physische Stiftabnahme.
+
+## ADR-006: Fluent-Oberfläche im bestehenden GTK3-Stack (angenommen, 2026-11-11)
+
+Geprüft: Austausch des UI-Frameworks (WinUI 3/Windows App SDK, Qt 6, GTK4/
+libadwaita) gegenüber Weiterentwicklung von GTK3-CSS und Shell-Code.
+Entscheidung: **kein Wechsel, kein Prototyp-Branch.** Gründe:
+- Eingabe: Stiftdruck, Radierer, Handballenfilter und Gerätezuordnung hängen am
+  GDK-Eingabepfad (`InputContext`, `PageView`). Ein neues Framework hätte diese
+  Kette samt Undo/Selektion neu verlangt – das Ziel verbietet, Dokumentmodell,
+  Editor und Speicherformat gleichzeitig zu ersetzen. Eine eingebettete GTK-
+  Fläche in WinUI/Qt ist für Stift-/IME-/Fokuswechsel nicht belastbar.
+- Ein ausführbarer WinUI-Prototyp ist in der Linux-Umgebung dieses Auftrags
+  weder baubar noch mit Stift messbar; ein unprüfbarer Prototyp wäre keine
+  Entscheidungsgrundlage. GTK4 würde zudem die gesamte Xournal++-Widgetbasis
+  (Toolbars, Dialoge, Glade) brechen.
+- Was das Ziel tatsächlich verlangt (Tokens, Rundungen, Ebenen, schwebendes
+  Menüband/Navigation, Dichte-Modi, Akzent, Hell/Dunkel, reduzierte Bewegung)
+  ist mit GTK3-CSS, GtkOverlay und kleinem C++-Shellcode wartbar umsetzbar,
+  ohne neue Bibliothek (keine Lizenzprüfung nötig; Lucide-Icons bereits ISC).
+- Grenzen: kein Mica/Acrylic, keine native Windows-Titelleiste-Integration,
+  Barrierefreiheit über ATK→UIA-Brücke von GTK3 (unter Windows nicht geprüft).
+Neubewertung, wenn GTK3-Wartung unter MSYS2 endet oder UIA nachweislich
+unzureichend ist. Details: design-references/FOLIQ-DESIGN-SYSTEM.md.

@@ -169,56 +169,385 @@ menubar, toolbar {
     -GtkWidget-window-dragging: false
 }
 
-/* Foliq UI foundations. Existing document/paper colors belong to the editor. */
-@define-color foliq_accent #5269b8;
-@define-color foliq_focus #738bdf;
-#foliq-ribbon { padding: 4px; border-bottom: 1px solid alpha(currentColor, .15); }
-#foliq-ribbon button { border-radius: 6px; padding: 6px 10px; }
-#foliq-navigation { font-size: 1em; }
-#foliq-navigation treeview.view:selected { background-color: @foliq_accent; color: white; }
-#foliq-navigation button { padding: 6px; border-radius: 6px; }
-#foliq-ribbon button:focus, #foliq-navigation button:focus,
-#foliq-navigation treeview:focus, #foliq-ribbon combobox:focus {
-    outline: 2px solid @foliq_focus; outline-offset: -2px;
+/* ==========================================================================
+ * Foliq design system (Fluent-inspired, own implementation, GTK3 CSS).
+ * Tokens: docs/design-references/FOLIQ-DESIGN-SYSTEM.md. No Microsoft assets.
+ * Scope: the Foliq main window (window.foliq) and Foliq dialogs (.foliq-dialog
+ * via .foliq-app). Document paper colours stay with the editor.
+ * The accent colour is overridden at runtime by a higher-priority provider.
+ * ========================================================================== */
+
+/* ---- Colour tokens: light ---------------------------------------------- */
+@define-color foliq_accent #005fb8;          /* runtime override */
+@define-color foliq_accent_hover #1a6fc0;    /* runtime override */
+@define-color foliq_on_accent #ffffff;       /* runtime override (contrast-safe) */
+@define-color foliq_accent_subtle rgba(0, 95, 184, 0.12); /* runtime override */
+@define-color foliq_focus #1a1a1a;           /* focus ring: neutral, always contrasting */
+@define-color foliq_bg #f3f3f3;              /* app/shell background ("Mica" fallback, opaque) */
+@define-color foliq_layer #fbfbfb;           /* panels and ribbon layer */
+@define-color foliq_card #ffffff;            /* floating surfaces, popovers, dialogs */
+@define-color foliq_text #1b1b1b;
+@define-color foliq_text_secondary #5f5f5f;
+@define-color foliq_text_disabled #a0a0a0;
+@define-color foliq_stroke rgba(0, 0, 0, 0.08);
+@define-color foliq_stroke_strong rgba(0, 0, 0, 0.16);
+@define-color foliq_hover rgba(0, 0, 0, 0.04);
+@define-color foliq_pressed rgba(0, 0, 0, 0.07);
+@define-color foliq_danger #c42b1c;
+@define-color foliq_danger_bg #fde7e9;
+@define-color foliq_success #0f7b0f;
+
+/* ---- Base window -------------------------------------------------------- */
+window.foliq, .foliq-app {
+    background-color: @foliq_bg;
+    color: @foliq_text;
 }
-/* Stable dark shell even when the system GTK theme has no dark variant. */
-@define-color foliq_dark_bg #20252e;
-@define-color foliq_dark_panel #2b323e;
-@define-color foliq_dark_text #edf0f7;
-@define-color foliq_dark_border #455064;
-window.darkMode #foliq-ribbon, window.darkMode #foliq-navigation,
-window.darkMode #foliq-ribbon notebook, window.darkMode #foliq-ribbon header,
-window.darkMode #foliq-navigation treeview.view {
-    background-color: @foliq_dark_bg;
-    color: @foliq_dark_text;
-}
-window.darkMode #foliq-ribbon button, window.darkMode #foliq-navigation button {
+window.foliq *:disabled, .foliq-app *:disabled { color: @foliq_text_disabled; }
+
+/* ---- Buttons (subtle/"Fluent standard") -------------------------------- */
+window.foliq button, .foliq-app button,
+window.foliq menubutton > button {
     background-image: none;
-    background-color: @foliq_dark_panel;
-    color: @foliq_dark_text;
-    border-color: @foliq_dark_border;
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    box-shadow: none;
     text-shadow: none;
+    -gtk-icon-shadow: none;
+    color: @foliq_text;
+    padding: 5px 10px;
+    min-height: 22px;
+    transition: background-color 83ms ease-out, border-color 83ms ease-out;
+}
+window.foliq button:hover, .foliq-app button:hover { background-color: @foliq_hover; }
+window.foliq button:active, .foliq-app button:active { background-color: @foliq_pressed; }
+window.foliq button:checked, .foliq-app button:checked {
+    background-color: @foliq_accent_subtle;
+    color: @foliq_text;
+    border-color: transparent;
+}
+window.foliq button:checked image { color: @foliq_accent; }
+window.foliq button:disabled, .foliq-app button:disabled {
+    background-color: transparent;
+    color: @foliq_text_disabled;
+}
+window.foliq button:disabled image { opacity: 0.4; }
+/* Bordered "standard" buttons in dialogs/forms. */
+.foliq-app .dialog-action-area button, dialog.foliq-app button, messagedialog.foliq-app button,
+window.foliq button.foliq-standard, .foliq-app button.foliq-standard {
+    background-color: @foliq_card;
+    border-color: @foliq_stroke_strong;
+}
+/* Accent / primary button. */
+window.foliq button.suggested-action, .foliq-app button.suggested-action,
+window.foliq button.foliq-primary, .foliq-app button.default {
+    background-color: @foliq_accent;
+    border-color: @foliq_accent;
+    color: @foliq_on_accent;
+}
+window.foliq button.suggested-action:hover, .foliq-app button.suggested-action:hover,
+window.foliq button.foliq-primary:hover { background-color: @foliq_accent_hover; }
+window.foliq button.destructive-action, .foliq-app button.destructive-action {
+    background-color: @foliq_danger; border-color: @foliq_danger; color: #ffffff;
+}
+
+/* ---- Focus: 2px ring outside + 1px inner, independent of accent -------- */
+window.foliq *:focus, .foliq-app *:focus { outline-color: transparent; }
+window.foliq button:focus, .foliq-app button:focus,
+window.foliq entry:focus, .foliq-app entry:focus,
+window.foliq combobox button:focus, window.foliq treeview:focus,
+.foliq-app treeview:focus, .foliq-app notebook > header tab:focus,
+.foliq-app checkbutton:focus, .foliq-app switch:focus,
+window.foliq checkbutton:focus, window.foliq switch:focus {
+    outline: 2px solid @foliq_focus;
+    outline-offset: 1px;
+    -gtk-outline-radius: 7px;
+}
+
+/* ---- Inputs ------------------------------------------------------------- */
+window.foliq entry, .foliq-app entry, .foliq-app spinbutton,
+window.foliq spinbutton, .foliq-app textview, .foliq-app combobox button.combo,
+window.foliq combobox button.combo {
+    background-image: none;
+    background-color: @foliq_card;
+    color: @foliq_text;
+    border: 1px solid @foliq_stroke_strong;
+    border-bottom-color: alpha(@foliq_text, 0.45);
+    border-radius: 6px;
+    box-shadow: none;
+    min-height: 26px;
+}
+window.foliq entry:focus, .foliq-app entry:focus, .foliq-app spinbutton:focus {
+    border-bottom: 2px solid @foliq_accent;
+}
+window.foliq entry.error, .foliq-app entry.error { border-color: @foliq_danger; color: @foliq_danger; }
+.foliq-app spinbutton button { border-radius: 4px; border: none; background: transparent; }
+.foliq-app spinbutton entry { border: none; }
+
+/* Checkbox, radio, switch ------------------------------------------------ */
+window.foliq check, .foliq-app check, window.foliq radio, .foliq-app radio {
+    background-image: none;
+    background-color: @foliq_card;
+    border: 1px solid alpha(@foliq_text, 0.55);
+    border-radius: 4px;
+    min-width: 16px; min-height: 16px;
     box-shadow: none;
 }
-window.darkMode #foliq-ribbon button:hover, window.darkMode #foliq-navigation button:hover {
-    background-color: #39445a;
+window.foliq radio, .foliq-app radio { border-radius: 9px; }
+window.foliq check:checked, .foliq-app check:checked,
+window.foliq radio:checked, .foliq-app radio:checked {
+    background-color: @foliq_accent; border-color: @foliq_accent; color: @foliq_on_accent;
 }
-window.darkMode #foliq-ribbon button:checked,
-window.darkMode #foliq-navigation treeview.view:selected {
-    background-color: @foliq_accent;
-    color: white;
+window.foliq switch, .foliq-app switch {
+    background-image: none; background-color: @foliq_card;
+    border: 1px solid alpha(@foliq_text, 0.55); border-radius: 12px; box-shadow: none;
 }
-window.darkMode #foliq-ribbon button:disabled {
-    color: #929cab;
-    background-color: @foliq_dark_bg;
+window.foliq switch:checked, .foliq-app switch:checked { background-color: @foliq_accent; border-color: @foliq_accent; }
+window.foliq switch slider, .foliq-app switch slider {
+    background-image: none; background-color: alpha(@foliq_text, 0.7);
+    border: none; border-radius: 10px; min-width: 18px; min-height: 18px; box-shadow: none; margin: 2px;
 }
-window.darkMode #foliq-ribbon viewport,
-window.darkMode #foliq-ribbon stack,
-window.darkMode #foliq-ribbon header tabs tab {
-    background-color: @foliq_dark_bg;
-    border-color: @foliq_dark_border;
+window.foliq switch:checked slider, .foliq-app switch:checked slider { background-color: @foliq_on_accent; }
+
+/* Scale and progress ---------------------------------------------------- */
+window.foliq scale trough, .foliq-app scale trough, .foliq-app progressbar trough,
+window.foliq progressbar trough {
+    background-image: none; background-color: alpha(@foliq_text, 0.18); border: none; border-radius: 3px;
+    min-height: 4px;
 }
-window.darkMode #foliq-ribbon label { color: @foliq_dark_text; }
-window.darkMode #foliq-ribbon header tabs tab:checked {
-    background-color: @foliq_dark_panel;
+window.foliq scale highlight, .foliq-app scale highlight, .foliq-app progressbar progress,
+window.foliq progressbar progress {
+    background-image: none; background-color: @foliq_accent; border: none; border-radius: 3px;
 }
+.foliq-app scale slider, window.foliq scale slider {
+    background-image: none; background-color: @foliq_card; border: 5px solid @foliq_accent;
+    border-radius: 10px; min-width: 12px; min-height: 12px; box-shadow: 0 1px 2px rgba(0,0,0,.2);
+}
+
+/* ---- Scrollbars: thin, overlay-like ------------------------------------- */
+window.foliq scrollbar, .foliq-app scrollbar {
+    background-color: transparent; border: none;
+}
+window.foliq scrollbar slider, .foliq-app scrollbar slider {
+    background-color: alpha(@foliq_text, 0.35); border: none; border-radius: 4px;
+    min-width: 4px; min-height: 4px; margin: 2px;
+}
+window.foliq scrollbar slider:hover, .foliq-app scrollbar slider:hover { background-color: alpha(@foliq_text, 0.55); min-width: 6px; min-height: 6px; }
+window.foliq scrollbar button { min-width: 0; min-height: 0; padding: 0; }
+
+/* ---- Menus, popovers, tooltips: floating layer --------------------------- */
+window.foliq menu, .foliq-app menu, .foliq-menu, menu.foliq-menu,
+window.popup menu, window.csd.popup decoration {
+    background-color: @foliq_card;
+    color: @foliq_text;
+    border: 1px solid @foliq_stroke_strong;
+    border-radius: 8px;
+    padding: 4px;
+}
+menu menuitem, .foliq-menu menuitem {
+    border-radius: 4px;
+    padding: 6px 10px;
+    min-height: 20px;
+    text-shadow: none;
+}
+menu menuitem:hover { background-color: @foliq_hover; color: @foliq_text; box-shadow: inset 3px 0 0 @foliq_accent; }
+menu menuitem:disabled label { color: @foliq_text_disabled; }
+menu separator { background-color: @foliq_stroke; margin: 4px 0; min-height: 1px; }
+popover, window.foliq popover, .foliq-app popover {
+    background-color: @foliq_card;
+    color: @foliq_text;
+    border: 1px solid @foliq_stroke_strong;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.14);
+    padding: 8px;
+}
+tooltip, tooltip.background {
+    background-color: @foliq_card;
+    color: @foliq_text;
+    border: 1px solid @foliq_stroke_strong;
+    border-radius: 6px;
+    box-shadow: none;
+}
+tooltip label { color: @foliq_text; padding: 2px 4px; }
+
+/* ---- Notebook tabs in dialogs: pill tabs, no frames -------------------- */
+.foliq-app notebook, .foliq-app notebook > stack:not(:only-child) {
+    background-color: transparent; border: none; box-shadow: none;
+}
+.foliq-app notebook > header {
+    background-color: transparent; border: none; box-shadow: none; padding: 4px;
+}
+.foliq-app notebook > header tab {
+    border: none; border-radius: 6px; padding: 6px 12px; margin: 2px; min-height: 20px;
+    color: @foliq_text_secondary; box-shadow: none; background: transparent;
+}
+.foliq-app notebook > header tab:hover { background-color: @foliq_hover; color: @foliq_text; }
+.foliq-app notebook > header tab:checked {
+    background-color: @foliq_card; color: @foliq_text;
+    box-shadow: inset 3px 0 0 @foliq_accent;
+}
+.foliq-app notebook > header.top tab:checked,
+.foliq-app notebook > header.bottom tab:checked { box-shadow: inset 0 -3px 0 @foliq_accent; }
+.foliq-app frame > border { border: 1px solid @foliq_stroke; border-radius: 8px; background-color: @foliq_card; }
+.foliq-app frame > label, notebook frame > label { color: @foliq_text; font-weight: 600; }
+.foliq-app scrolledwindow, .foliq-app viewport { background-color: transparent; border: none; }
+.foliq-app list, .foliq-app treeview.view {
+    background-color: @foliq_card; color: @foliq_text; border-radius: 6px;
+}
+.foliq-app treeview.view:selected, .foliq-app list row:selected {
+    background-color: @foliq_accent_subtle; color: @foliq_text;
+}
+.foliq-app headerbar, .foliq-app .titlebar {
+    background-image: none; background-color: @foliq_bg; border: none; box-shadow: none;
+}
+.foliq-app .dialog-action-area { padding: 12px 0 0 0; background-color: transparent; border: none; }
+.foliq-app .dialog-vbox { padding: 4px; }
+messagedialog.foliq-app, messagedialog.foliq-app .titlebar { background-color: @foliq_card; }
+.foliq-dialog-title { font-weight: 600; font-size: 1.15em; }
+
+/* ===== Main window structure ============================================ */
+window.foliq menubar { background: transparent; box-shadow: none; border: none; padding: 0; }
+
+/* Command bar (title row) */
+#foliq-ribbon {
+    background-color: @foliq_bg;
+    border: none;
+    padding: 6px 8px 4px 8px;
+}
+#foliq-commandbar { min-height: 36px; }
+#foliq-brand { font-weight: 600; color: @foliq_text; padding: 0 6px 0 2px; }
+#foliq-crumb { color: @foliq_text_secondary; }
+
+/* Ribbon tab strip: text tabs with accent indicator (Fluent "pivot") */
+#foliq-tabstrip button {
+    padding: 5px 12px; border-radius: 6px; color: @foliq_text_secondary; font-weight: normal;
+    min-height: 22px;
+}
+#foliq-tabstrip button:hover { color: @foliq_text; }
+#foliq-tabstrip button:checked {
+    background-color: transparent; color: @foliq_text; font-weight: 600;
+    box-shadow: inset 0 -3px 0 -0px @foliq_accent;
+    border-radius: 6px 6px 2px 2px;
+}
+
+/* Ribbon command surface: one calm, rounded layer (floating when temporary). */
+#foliq-ribbon-panel {
+    background-color: @foliq_layer;
+    border: 1px solid @foliq_stroke;
+    border-radius: 8px;
+    padding: 4px 6px;
+    margin-top: 4px;
+}
+#foliq-ribbon-panel.foliq-temporary {
+    background-color: @foliq_card;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.14);
+    border-color: @foliq_stroke_strong;
+}
+#foliq-ribbon-panel button { padding: 4px 8px; }
+#foliq-ribbon-panel button label { padding-left: 2px; }
+#foliq-ribbon-panel separator.vertical {
+    background-color: @foliq_stroke_strong; min-width: 1px; margin: 6px 6px;
+}
+.foliq-group-caption { color: @foliq_text_secondary; font-size: 0.85em; }
+
+/* Status pill: quiet on success, prominent on error. */
+#foliq-status { color: @foliq_text_secondary; font-size: 0.92em; padding: 3px 10px; border-radius: 12px; }
+#foliq-status.foliq-unsaved { color: @foliq_text_secondary; }
+#foliq-status.foliq-error {
+    background-color: @foliq_danger_bg; color: @foliq_danger; font-weight: 600;
+}
+
+/* Search box in command bar */
+#foliq-search-button {
+    background-color: @foliq_card; border: 1px solid @foliq_stroke_strong;
+    border-radius: 6px; color: @foliq_text_secondary; min-width: 150px; padding: 4px 10px;
+}
+#foliq-search-button label { color: @foliq_text_secondary; }
+
+/* Navigation pane: one layer, no boxes inside boxes */
+#foliq-navigation, #foliq-navigation > box, #foliq-navigation paned {
+    background-color: @foliq_bg;
+}
+#foliq-navigation treeview.view, #foliq-navigation scrolledwindow, #foliq-navigation viewport {
+    background-color: @foliq_bg; color: @foliq_text; border: none;
+}
+#foliq-navigation treeview.view { padding: 0; }
+#foliq-navigation treeview.view:hover { background-color: @foliq_hover; }
+#foliq-navigation treeview.view:selected {
+    background-color: @foliq_accent_subtle;
+    color: @foliq_text;
+    border-radius: 6px;
+}
+#foliq-navigation treeview.view:selected:focus { box-shadow: inset 3px 0 0 @foliq_accent; }
+#foliq-navigation .foliq-pane-title { font-weight: 600; color: @foliq_text; padding: 2px 4px; }
+#foliq-navigation button { padding: 4px; }
+#foliq-navigation > separator {
+    background-color: transparent; background-image: none; border: none; min-width: 6px;
+}
+window.foliq paned > separator { background-color: transparent; border: none; min-width: 5px; background-image: none; }
+
+/* Editor host: canvas sits on a rounded content layer edge */
+#foliq-editor-host { background-color: @foliq_bg; }
+#foliq-editor-host > box, #foliq-editor-host scrolledwindow { border-radius: 8px 0 0 0; }
+
+/* Legacy toolbars, when shown, follow the system */
+window.foliq toolbar { background-color: @foliq_bg; border: none; box-shadow: none; padding: 2px 6px; }
+window.foliq toolbar button { padding: 4px; }
+
+/* Floating toolbox */
+#floatingToolbox > box, #pdfFloatingToolGrid {
+    background-color: @foliq_card; border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.14), 0 0 0 1px @foliq_stroke;
+}
+#floatingToolbox button, #pdfFloatingToolGrid button { background: transparent; border-radius: 6px; }
+#floatingToolbox button:checked { background-color: @foliq_accent_subtle; box-shadow: none; }
+
+/* Search bar (existing GTK search) */
+window.foliq #searchBar, window.foliq searchbar, window.foliq searchbar > revealer > box {
+    background-color: @foliq_layer; border: none; box-shadow: none;
+}
+
+/* Sidebar (legacy page previews) */
+window.foliq #sidebarContents { background-color: @foliq_bg; }
+
+/* ===== Touch / pen density: larger targets, same commands ================ */
+window.foliq.foliq-touch button { min-height: 34px; min-width: 34px; padding: 8px 12px; }
+window.foliq.foliq-touch #foliq-ribbon-panel button { padding: 8px 12px; }
+window.foliq.foliq-touch #foliq-tabstrip button { padding: 9px 16px; }
+window.foliq.foliq-touch #foliq-navigation treeview.view { -GtkTreeView-vertical-separator: 4; }
+window.foliq.foliq-touch #foliq-commandbar { min-height: 48px; }
+window.foliq.foliq-touch menu menuitem { padding: 11px 14px; }
+window.foliq.foliq-touch check, window.foliq.foliq-touch radio { min-width: 22px; min-height: 22px; }
+window.foliq.foliq-touch scrollbar slider { min-width: 8px; min-height: 8px; }
+
+/* ===== Reduced motion ==================================================== */
+window.foliq.foliq-reduced-motion *, .foliq-app.foliq-reduced-motion * { transition: none; animation: none; }
+
+/* Dark tokens are supplied at runtime (folio/Theme.cpp, Palette::css) because GTK3
+   @define-color cannot be scoped per selector. */
+#foliq-navigation.foliq-floating {
+    background-color: @foliq_card;
+    border-right: 1px solid @foliq_stroke_strong;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+#foliq-navigation.foliq-floating treeview.view, #foliq-navigation.foliq-floating scrolledwindow,
+#foliq-navigation.foliq-floating viewport, #foliq-navigation.foliq-floating > box { background-color: @foliq_card; }
+
+/* Calm splitters and Lucide chevrons instead of classic triangles. */
+window.foliq paned > separator, window.foliq paned.horizontal > separator {
+    background-image: none; background-color: transparent; border: none; box-shadow: none;
+    min-width: 6px; margin: 0;
+}
+#foliq-navigation treeview.view.expander {
+    -gtk-icon-source: -gtk-icontheme("foliq-chevron-right");
+    color: @foliq_text_secondary;
+}
+#foliq-navigation treeview.view.expander:checked { -gtk-icon-source: -gtk-icontheme("foliq-chevron-down"); }
+#foliq-search-button.foliq-narrow { min-width: 0; }
+.foliq-app frame > label { padding: 0 2px 6px 2px; }
+.foliq-app button.default, dialog.foliq-app .dialog-action-area button:last-child {
+    background-color: @foliq_accent; border-color: @foliq_accent; color: @foliq_on_accent;
+}
+/* Icon-first ribbon: square targets; labels live in tooltips and accessible names. */
+#foliq-ribbon-panel button { min-width: 24px; padding: 6px; }
+window.foliq.foliq-touch #foliq-ribbon-panel button { min-width: 36px; padding: 9px; }

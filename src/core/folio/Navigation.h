@@ -3,6 +3,7 @@
 #include <gtk/gtk.h>
 
 #include "Catalog.h"
+#include "Theme.h"
 class Control;
 namespace foliq {
 class Navigation {
@@ -28,6 +29,28 @@ private:
     bool updatingToolButtons = false;
     bool refreshing = false, focus = false;
     int theme = 0;
+    // Fluent shell (see docs/design-references/FOLIQ-DESIGN-SYSTEM.md)
+    ViewOptions options;
+    GtkWidget *overlay = nullptr, *commandBar = nullptr, *ribbonPanel = nullptr, *ribbonStack = nullptr,
+              *navToggle = nullptr, *ribbonPinButton = nullptr, *menuButton = nullptr, *crumb = nullptr,
+              *appMenu = nullptr, *focusButton = nullptr, *touchButton = nullptr, *motionButton = nullptr;
+    GtkCssProvider* paletteProvider = nullptr;
+    std::vector<GtkWidget*> tabButtons, ribbonImages, themeButtons;
+    bool ribbonTemporary = false, navFloating = false, updatingChrome = false;
+    void showTab(int index, bool userAction);
+    void setRibbonPinned(bool pinned);
+    void hideTemporary();
+    void setNavVisible(bool visible);
+    void setNavPinned(bool pinned);
+    void setFocusMode(bool on);
+    void setDensity(bool touch);
+    void applyPalette();
+    void moveMenubar();
+    void accentPopover(GtkWidget* anchor, const std::string& target);
+    void updateCrumb();
+    bool onKey(GdkEventKey* event);
+    void onPress(double x, double y);
+    void cycleFocus(bool backwards);
     void selectTree(GtkWidget* view);
     void setupTree(GtkWidget* view);
     void chrome(GtkWidget* container);

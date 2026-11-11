@@ -1,5 +1,9 @@
 #include "XournalWidget.h"
 
+#include <cmath>
+
+#include "folio/Theme.h"
+
 #include <algorithm>  // for max
 #include <cmath>      // for NAN
 #include <optional>   // for optional
@@ -188,21 +192,26 @@ static void gtk_xournal_realize(GtkWidget* widget) {
 
 static void gtk_xournal_draw_shadow(GtkXournal* xournal, cairo_t* cr, int left, int top, int width, int height,
                                     bool selected) {
+    Settings* settings = xournal->view->getControl()->getSettings();
+    // Foliq: calm current-page outline in the contrast-safe accent instead of a 4px square frame.
+    // A colour customised in the settings is still respected.
+    Color border = settings->getBorderColor();
+    if (border == Colors::red)
+        border = Color(foliq::currentPalette().accentRgb());
+    Shadow::drawShadow(cr, left, top, width, height);
     if (selected) {
-        Shadow::drawShadow(cr, left - 2, top - 2, width + 4, height + 4);
-
-        Settings* settings = xournal->view->getControl()->getSettings();
-
-        // Draw border
-        Util::cairo_set_source_rgbi(cr, settings->getBorderColor());
-        cairo_set_line_width(cr, 4.0);
-        cairo_set_line_cap(cr, CAIRO_LINE_CAP_SQUARE);
-        cairo_set_line_join(cr, CAIRO_LINE_JOIN_MITER);
-
-        cairo_rectangle(cr, left, top, width, height);
+        cairo_save(cr);
+        Util::cairo_set_source_rgbi(cr, border);
+        cairo_set_line_width(cr, 2.0);
+        const double r = 4, x = left - 4, y = top - 4, w = width + 8, h = height + 8;
+        cairo_new_sub_path(cr);
+        cairo_arc(cr, x + w - r, y + r, r, -M_PI / 2, 0);
+        cairo_arc(cr, x + w - r, y + h - r, r, 0, M_PI / 2);
+        cairo_arc(cr, x + r, y + h - r, r, M_PI / 2, M_PI);
+        cairo_arc(cr, x + r, y + r, r, M_PI, 3 * M_PI / 2);
+        cairo_close_path(cr);
         cairo_stroke(cr);
-    } else {
-        Shadow::drawShadow(cr, left, top, width, height);
+        cairo_restore(cr);
     }
 }
 
@@ -236,7 +245,18 @@ static auto gtk_xournal_draw(GtkWidget* widget, cairo_t* cr) -> gboolean {
 
     // Draw background
     Settings* settings = xournal->view->getControl()->getSettings();
-    Util::cairo_set_source_rgbi(cr, settings->getBackgroundColor());
+    // Foliq: the untouched upstream default follows the light/dark shell; a custom colour wins.
+    Color canvas = settings->getBackgroundColor();
+    if (canvas == Colors::xopp_gainsboro02)
+        canvas = Color(foliq::currentPalette().canvasRgb());
+    // A free surface is one seamless sheet: paint its paper colour everywhere, no edges or shadow.
+    bool freeSurface = false;
+    for (auto&& pv: xournal->view->getViewPages())
+        if (pv->isSelected() && pv->getPage()->isInfinite()) {
+            canvas = pv->getPage()->getBackgroundColor();
+            freeSurface = true;
+        }
+    Util::cairo_set_source_rgbi(cr, canvas);
     cairo_paint(cr);
 
     // Add a padding for the shadow of the pages
@@ -252,7 +272,8 @@ static auto gtk_xournal_draw(GtkWidget* widget, cairo_t* cr) -> gboolean {
             continue;
         }
 
-        gtk_xournal_draw_shadow(xournal, cr, px, py, pw, ph, pv->isSelected());
+        if (!freeSurface || !pv->getPage()->isInfinite())
+            gtk_xournal_draw_shadow(xournal, cr, px, py, pw, ph, pv->isSelected());
 
         cairo_save(cr);
         cairo_rectangle(cr, px, py, pw, ph);

@@ -1,8 +1,11 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# Isolated Linux GTK smoke test; run from /src under Xvfb + dbus-run-session.
+# Isolated Linux GTK smoke test; run from the repository root under Xvfb + dbus-run-session.
+# Updated for the Fluent shell (2026-11-11): ⋯ menu, segmented theme, Fokusmodus.
 import os, subprocess, time, configparser, gzip
 from pathlib import Path
 import pyatspi
+REPO=os.getcwd()
+BUILD=os.environ.get('FOLIQ_BUILD',REPO+'/build-codex')
 root=Path('/tmp/foliq-main-ui');root.mkdir(exist_ok=True)
 env=os.environ.copy();env.update(XDG_CONFIG_HOME=str(root/'config'),XDG_CACHE_HOME=str(root/'cache'),XDG_DATA_HOME=str(root/'data'),FOLIQ_LIBRARY=str(root/'library'),GTK_MODULES='gail:atk-bridge')
 log=open(root/'app.log','w')
@@ -40,14 +43,14 @@ def cat():
 def named(name):return next(s for s in cat().sections() if s!='catalog' and cat()[s]['name']==name)
 def shot(name):
  import gi;gi.require_version('Gdk','3.0');from gi.repository import Gdk
- w=Gdk.get_default_root_window();r=find(role='frame').queryComponent().getExtents(pyatspi.DESKTOP_COORDS);Gdk.pixbuf_get_from_window(w,r.x*int(env.get('GDK_SCALE','1')),r.y*int(env.get('GDK_SCALE','1')),r.width*int(env.get('GDK_SCALE','1')),r.height*int(env.get('GDK_SCALE','1'))).savev('/src/docs/validation/'+name+'.png','png',[],[])
+ w=Gdk.get_default_root_window();r=find(role='frame').queryComponent().getExtents(pyatspi.DESKTOP_COORDS);Gdk.pixbuf_get_from_window(w,r.x*int(env.get('GDK_SCALE','1')),r.y*int(env.get('GDK_SCALE','1')),r.width*int(env.get('GDK_SCALE','1')),r.height*int(env.get('GDK_SCALE','1'))).savev(REPO+'/docs/validation/fluent/smoke-'+name+'.png','png',[],[])
 def windowid():
  r=subprocess.run(['xdotool','search','--onlyvisible','--pid',str(p.pid),'--name','Foliq'],capture_output=True,text=True)
  return r.stdout.splitlines()[-1] if r.returncode==0 else None
 def quitapp():
- click('File','menu');click('Quit','menu item');p.wait(timeout=15)
+ xdo('key','ctrl+q');p.wait(timeout=15)
 def start():
- proc=subprocess.Popen(['/src/build-codex/xournalpp'],cwd='/src',env=env,stdout=log,stderr=log);time.sleep(3)
+ proc=subprocess.Popen([BUILD+'/xournalpp'],cwd=REPO,env=env,stdout=log,stderr=log);time.sleep(3)
  r=subprocess.run(['xdotool','search','--onlyvisible','--pid',str(proc.pid),'--name','Foliq'],capture_output=True,text=True)
  if r.returncode==0:
   wid=r.stdout.splitlines()[-1];xdo('windowsize',wid,2400 if env.get('GDK_SCALE')=='2' else 1200,1600 if env.get('GDK_SCALE')=='2' else 800);xdo('windowfocus','--sync',wid)
@@ -84,25 +87,25 @@ try:
  print('PASS keyboard ordering and move menu',flush=True)
  click('Suchen');find('Search','text');xdo('key','Escape');time.sleep(.3)
  shot('main-ui-light')
- click('Ansicht','page tab');combo=find('Farbschema','combo box');combo.queryAction().doAction(0);time.sleep(.2);xdo('key','End','Return');time.sleep(1);shot('main-ui-dark')
+ click('Ansicht','page tab');click('Dunkel','radio button');time.sleep(1);shot('main-ui-dark')
  # Both native pane separators must really resize and survive restart.
  xdo('mousemove',200,500,'mousedown',1,'mousemove',170,500,'mouseup',1);time.sleep(.3)
  xdo('mousemove',420,500,'mousedown',1,'mousemove',360,500,'mouseup',1);time.sleep(.3)
- click('Fokus','toggle button');time.sleep(.5);shot('main-ui-focus')
+ click('Fokusmodus','toggle button');time.sleep(.5);shot('main-ui-focus')
  quitapp()
  v=configparser.ConfigParser();v.read(root/'library/view.ini');assert v['view']['focus']=='1' and v['view']['theme']=='2'
  assert 120<=int(v['view']['books'])<190 and abs(int(v['view']['width'])-360)<3,dict(v['view'])
- p=start();assert find('Fokus','toggle button').getState().contains(pyatspi.STATE_CHECKED)
- click('Fokus','toggle button');wid=subprocess.check_output(['xdotool','search','--onlyvisible','--pid',str(p.pid),'--name','Foliq']).decode().splitlines()[-1];xdo('windowsize',wid,800,600);time.sleep(1);shot('main-ui-small');r=find(role='frame').queryComponent().getExtents(pyatspi.DESKTOP_COORDS);assert (r.width,r.height)==(800,600),(r.width,r.height)
+ p=start();click('Ansicht','page tab');assert find('Fokusmodus','toggle button').getState().contains(pyatspi.STATE_CHECKED)
+ click('Fokusmodus','toggle button');wid=subprocess.check_output(['xdotool','search','--onlyvisible','--pid',str(p.pid),'--name','Foliq']).decode().splitlines()[-1];xdo('windowsize',wid,800,600);time.sleep(1);shot('main-ui-small');r=find(role='frame').queryComponent().getExtents(pyatspi.DESKTOP_COORDS);assert (r.width,r.height)==(800,600),(r.width,r.height)
  print('PASS theme/focus/view restart, long title and 800x600 capture',flush=True)
  quitapp();assert p.returncode==0
  # Native GTK 200% scaling under a separate launch.
  env['GDK_SCALE']='2';p=start();time.sleep(1);shot('main-ui-scale200')
- find('Notizbücher und Abschnitte');find('Farbschema','combo box')
+ find('Notizbücher und Abschnitte');find('Dunkel','radio button')
  quitapp();assert p.returncode==0
  del env['GDK_SCALE']
  # Unsupported optional view format must never be overwritten.
- view=root/'library/view.ini';original=view.read_bytes();future=original.replace(b'version=1',b'version=99');view.write_bytes(future)
+ view=root/'library/view.ini';original=view.read_bytes();future=original.replace(b'version=2',b'version=99');view.write_bytes(future)
  p=start();find(role='alert');click('OK');quitapp()
  assert view.read_bytes()==future;view.write_bytes(original)
  print('PASS 200% GTK launch and unknown view version preservation',flush=True)

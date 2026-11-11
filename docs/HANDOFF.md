@@ -711,3 +711,28 @@ Beleg: validation/windows-ci-portability-linux-tests.xml. `git diff --check`
 erfolgreich. Auf Nutzerauftrag regulären Fix-Push nach main vorbereitet;
 Author/Committer leotrax3d@gmx.net. Neuer Windows-Lauf und Packaging werden nach
 Push separat bis zum Abschluss geprüft; Hardwareabnahme bleibt davon getrennt.
+
+## Fluent-Oberfläche (Windows-11-Stil) – 2026-11-11
+
+Branch `claude/jolly-cray-vn7ad3`. Entscheidung ADR-006: GTK3 bleibt, kein
+Frameworkwechsel. Umgesetzt: Designsystem mit Tokens (`ui/xournalpp.css`,
+`src/core/folio/Theme.*`), neue Befehlsleiste mit Pivot-Registerkarten,
+Icon-Menüband (auf Nutzerwunsch Icons statt Textbeschriftung, Namen als
+Tooltip/ATK), einklappbar mit temporär schwebendem Öffnen, ⋯-Menü mit allen
+Upstream-Menüs (Accelerators erhalten), schwebende/anheftbare Navigation,
+Fokusmodus, Kompakt/Berührung, Hell/Dunkel/System, Akzentfarbe mit
+Kontrastsicherung, Abschnittsfarben, Weniger Bewegung, Pfadanzeige, dezenter
+Status/rote Fehlerpille, ruhige Arbeitsfläche (Akzentkontur statt rotem
+Rahmen; freie Fläche ohne Kanten), Dialog-Styling für alle Toplevels,
+Wiederherstellung der Seitenliste beim Start, view.ini v2 mit v1-Migration.
+Doku: design-references/FOLIQ-DESIGN-SYSTEM.md, WINDOWS-PEN-TEST-FLUENT.md,
+validation/FLUENT-UI-VALIDATION.md (Kommandos, Ergebnisse, Grenzen).
+
+Ausgeführt (Linux/Xvfb): test-units 132/132; main-ui-smoke.py alle PASS;
+fluent-shots.py 18 Zustände. Nicht ausgeführt: Windows-Build/DPI, Stift,
+Touch, NVDA/Narrator. Offen: native Windows-Dateidialoge, Tags/Aufgaben/
+Anhänge/Verschlüsselung existieren noch nicht (keine Fake-UI gebaut),
+englische Upstream-Texte in Dialogen ohne installierte Übersetzung.
+
+Nächster überprüfbarer Schritt: Windows-CI-Paket dieses Branches bauen und
+WINDOWS-PEN-TEST-FLUENT.md auf dem Stiftrechner abarbeiten.

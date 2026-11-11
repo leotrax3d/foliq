@@ -15,7 +15,8 @@ Keine neue Bibliothek und keine Microsoft-Assets.
 
 ## Grundlagen
 
-Zentrale Regeln: `ui/xournalpp.css`, begrenzt auf `foliq-ribbon` und
+**Abgelöst am 2026-11-11 durch [FOLIQ-DESIGN-SYSTEM.md](FOLIQ-DESIGN-SYSTEM.md)** (Fluent-Shell, view.ini v2).
+Frühere Regeln: `ui/xournalpp.css`, begrenzt auf `foliq-ribbon` und
 `foliq-navigation`. GTK-Systemschrift in relativer Größe (1em), Betriebssystem-
 Skalierung und native Hell-/Dunkel-Themen. Ein Akzent #5269b8, Fokus #738bdf; dunkle Flächen #20252e/#2b323e,
 Text #edf0f7 und Rahmen #455064 sichern auch bei GTK-Themen ohne dunkle Variante
