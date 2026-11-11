@@ -306,3 +306,42 @@ Dokumentation hinzu. Author-/Committer-E-Mail aller übernommenen Foliq-Commits
 und dieses Übergabecommits geprüft: leotrax3d@gmx.net. `git diff --check`
 erfolgreich; kein erneuter Editorbuild für die reine Git-/Dokumentationsübernahme.
 Push regulär nach origin/main; abschließend Remote-HEAD und Arbeitsbaum prüfen.
+
+## Codex-Umgebung vorbereiten – 2026-11-11
+
+Auf Nutzerauftrag eine wiederverwendbare Einrichtung für nachfolgende Codex-Chats
+im Repository hinterlegt: `scripts/foliq/setup-codex.sh`, `.codex/README.md` und
+`docs/CODEX.md`; Einstieg in README und AGENTS ergänzt. Setup installiert die
+vorhandenen Build-Abhängigkeiten sowie GTK-Testwerkzeuge, konfiguriert den echten
+Editor und System-GTest ohne Download, baut und führt die Tests aus. Der lokale
+Git-Author/Committer wird auf leotrax3d@gmx.net gesetzt. `--check` prüft nur die
+Voraussetzungen, `--configure` konfiguriert ohne Installation, `--build` nutzt
+installierte Pakete und den inkrementellen Cache. Standardcache `build-codex/`
+ist ignoriert. Root-Paketinstallation wechselt vor dem Build zum Checkout-Eigner.
+Gezielte CMake-Ziele vermeiden Änderungen an versionierten Übersetzungen.
+
+Tatsächlich ausgeführt im vorhandenen Ubuntu-24.04-Container `foliq-build`:
+
+- `bash -n scripts/foliq/setup-codex.sh`: erfolgreich.
+- Unprivilegiertes `--check`: GTK 3.24.41 und GLib 2.80.0 bereit; Python-GI,
+  AT-SPI, Xvfb und übrige Werkzeuge geprüft.
+- Vollständiges `--setup` als root mit `FOLIQ_CODEX_BUILD_DIR=/tmp/build-foliq`:
+  APT-Update/Installation erfolgreich; Wechsel auf ubuntu/UID 1000, Editor und
+  Tests gebaut, **100/100 Tests bestanden**, `xournalpp --version` erfolgreich.
+- Danach `--build` als UID 1000 erneut: Ninja ohne ausstehende Arbeit,
+  **erneut 100/100 Tests bestanden**, Version erfolgreich.
+- `--configure` am Standardpfad `/src/build-codex`: erfolgreich; beide Cache-
+  Konfigurationen gehören UID 1000. Keine Änderungen unter po/.
+- Keine Änderung am C++-Produktcode; kein neuer Windows-Build für diese Linux-
+  Setup-/Dokumentationsänderung. `git diff --check` erfolgreich.
+
+Plattformgrenze: Die aktuelle Cloud-Laufzeit ist erreichbar, aber nicht mit einer
+veröffentlichten Quellkonfiguration verbunden (`source_config_id: null`). In
+dieser Sitzung stehen keine Werkzeuge zum Erstellen/Speichern/Veröffentlichen
+von Codex-Umgebungsvorlagen zur Verfügung; auch keine Browser-Steuerung für den
+Einstellungsdialog. Es wurde daher keine dauerhafte Codex-Plattformressource
+angelegt und kein öffentlich erreichbarer Server gestartet. Die konkrete,
+getestete Einrichtung liegt auf main bereit. Einmal in den Codex-Umgebungseinstellungen
+Foliq für leotrax3d/foliq/main anlegen, Setup-Befehl gemäß CODEX.md eintragen,
+ausführen und speichern/veröffentlichen; anschließend in neuen Chats auswählen.
+Git und HANDOFF bleiben die dauerhafte Wissens-/Arbeitsübergabe.

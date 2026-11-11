@@ -33,3 +33,12 @@ prüfen; explizit konfigurieren statt Umgebungsstandards zu übernehmen.
 Auch API-, Merge- und Automatisierungswege müssen diese Identität gewährleisten;
 ist das nicht möglich, den Commit lokal mit korrekter Identität erstellen.
 Unveränderte historische Upstream-Autorenangaben erhalten.
+
+## Codex-Umgebung und Einstieg für neue Chats
+
+- Wiederverwendbares Setup und Startbefehle: docs/CODEX.md, .codex/README.md.
+- Nach Snapshot-/Chatwechsel `git status -sb`, aktuellen Remote-Stand und
+  `bash scripts/foliq/setup-codex.sh --check` prüfen. Cache oder frühere
+  Testergebnisse sind kein Nachweis für den aktuell ausgecheckten Code.
+- Für inkrementellen Build plus Tests `bash scripts/foliq/setup-codex.sh --build`.
+  Kein laufender Chat-Server erforderlich; Arbeit über Git und HANDOFF übergeben.
