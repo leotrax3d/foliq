@@ -690,3 +690,24 @@ oder deaktivierten Tests. Keine Produktänderung seit der abschließenden Prüfu
 Author und Committer ausdrücklich leotrax3d@gmx.net. Regulärer Push nach main;
 Remote-HEAD und Arbeitsbaum anschließend kontrollieren. Ein neuer Windows-CI-
 Lauf ist separat zu bewerten und ersetzt keine Hardwareabnahme.
+
+## Windows-CI #14: Test-Portabilität korrigieren – 2026-11-11
+
+Fehllauf 43011642471 (Commit 7bb5db0e) und Job 130492443747 anhand der echten
+GitHub-Actions-Logs untersucht. Windows/UCRT64 baut den Editor erfolgreich;
+129 Tests laufen, 124 bestehen. Fünf Tests scheitern vor dem Packaging:
+
+- Drei PDF-Rücklesetests bilden `file://` plus einen Windows-Pfad mit Laufwerk
+  und Backslashes. Stattdessen die vorhandene plattformgerechte Funktion
+  Util::toUri verwenden; Parsefehler erhalten die konkrete Poppler-Diagnose.
+  Zwei Testdateinamen enthalten nun Leerzeichen und `#`, um URI-Escaping zu prüfen.
+- Zwei Dateierhaltungstests rufen fs::remove auf, während ihr eigener
+  std::ifstream noch geöffnet ist. Die Lesestreams werden jetzt per Scope vor
+  dem Entfernen geschlossen. Die Inhalts-/Nichtüberschreiben-Assertions bleiben.
+
+Nur Testcode geändert, keine Produktfunktion und kein Abschalten von Tests.
+Linux: test-units neu gebaut, alle **128/128 Tests aus 23 Suites** bestanden.
+Beleg: validation/windows-ci-portability-linux-tests.xml. `git diff --check`
+erfolgreich. Auf Nutzerauftrag regulären Fix-Push nach main vorbereitet;
+Author/Committer leotrax3d@gmx.net. Neuer Windows-Lauf und Packaging werden nach
+Push separat bis zum Abschluss geprüft; Hardwareabnahme bleibt davon getrennt.

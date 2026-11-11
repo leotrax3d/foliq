@@ -237,13 +237,15 @@ TEST(PageSurface, PdfExportTilingIncludesNegativeCoordinates) {
     s.tileWidth = 100;
     s.tileHeight = 100;
     p->setSurface(s);
-    auto path = tempFile("surface-tiled.pdf");
+    auto path = tempFile("surface tiled #1.pdf");
     XojCairoPdfExport pdf(&doc, nullptr);
     ASSERT_TRUE(pdf.createPdf(path, false)) << pdf.getLastError();
     GError* error = nullptr;
-    auto uri = std::string("file://") + path.string();
-    auto* result = poppler_document_new_from_file(uri.c_str(), nullptr, &error);
-    ASSERT_NE(result, nullptr);
+    auto uri = Util::toUri(path);
+    ASSERT_TRUE(uri.has_value()) << path.u8string();
+    auto* result = poppler_document_new_from_file(uri->c_str(), nullptr, &error);
+    ASSERT_NE(result, nullptr) << (error ? error->message : "No Poppler error reported");
+    g_clear_error(&error);
     EXPECT_EQ(poppler_document_get_n_pages(result), 6);
     auto* first = poppler_document_get_page(result, 0);
     double w, h;
@@ -285,10 +287,12 @@ TEST(PageSurface, PdfPreflightDoesNotOverwriteDestinationOnExcessiveTiles) {
     }
     XojCairoPdfExport pdf(&doc, nullptr);
     EXPECT_FALSE(pdf.createPdf(path, false));
-    std::ifstream in(path);
-    std::string value;
-    in >> value;
-    EXPECT_EQ(value, "original");
+    {
+        std::ifstream in(path);
+        std::string value;
+        in >> value;
+        EXPECT_EQ(value, "original");
+    }  // Windows requires the read handle to be closed before removal.
     fs::remove(path);
 }
 
@@ -314,9 +318,11 @@ TEST(PageSurface, StrictSurfaceMetadataValidationPreservesInput) {
         }
         LoadHandler load;
         EXPECT_EQ(load.loadDocument(path), nullptr);
-        std::ifstream in(path);
-        std::string after((std::istreambuf_iterator<char>(in)), {});
-        EXPECT_EQ(after, payload);
+        {
+            std::ifstream in(path);
+            std::string after((std::istreambuf_iterator<char>(in)), {});
+            EXPECT_EQ(after, payload);
+        }  // Windows requires the read handle to be closed before removal.
         fs::remove(path);
     }
 }
@@ -336,9 +342,11 @@ TEST(PageSurface, SingleCropAndMixedPaperPdfExport) {
     XojCairoPdfExport pdf(&doc, nullptr);
     ASSERT_TRUE(pdf.createPdf(path, false));
     GError* error = nullptr;
-    auto uri = std::string("file://") + path.string();
-    auto* result = poppler_document_new_from_file(uri.c_str(), nullptr, &error);
-    ASSERT_NE(result, nullptr);
+    auto uri = Util::toUri(path);
+    ASSERT_TRUE(uri.has_value()) << path.u8string();
+    auto* result = poppler_document_new_from_file(uri->c_str(), nullptr, &error);
+    ASSERT_NE(result, nullptr) << (error ? error->message : "No Poppler error reported");
+    g_clear_error(&error);
     EXPECT_EQ(poppler_document_get_n_pages(result), 2);
     auto* first = poppler_document_get_page(result, 0);
     double w, h;
