@@ -56,6 +56,10 @@ private:
     GtkWidget *fullscreenPill = nullptr, *fullscreenButton = nullptr;
     bool fullscreen = false, focusBeforeFullscreen = false;
     void applyFullscreen(bool on);
+    // Onboarding (Onboarding.cpp) and library location (config/foliq/library.ini).
+    void onboarding(bool firstRun);
+    void openLibrary(const fs::path& root);
+    bool firstRun = false;
     void selectTree(GtkWidget* view);
     void setupTree(GtkWidget* view);
     void chrome(GtkWidget* container);

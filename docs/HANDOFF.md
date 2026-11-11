@@ -757,3 +757,23 @@ WINDOWS-PEN-TEST-FLUENT.md auf dem Stiftrechner abarbeiten.
   Windows-CI prüfbar.
 - Bekannt: Installer-„DisplayVersion" zeigt die Upstream-Version aus `VERSION`;
   Konfigurationsordner ist noch nicht von Xournal++ getrennt (ARCHITECTURE.md).
+
+## Vollbild, Zeichenwerkzeuge, Onboarding – 2026-11-11
+
+- Vollbild-Icon (F11/Esc): nur schwebende Werkzeugleiste; Fullscreen-View-Mode
+  zeigt im Foliq-Build keine alten Leisten (gilt für neue Profile; gespeicherte
+  Upstream-Einstellungen bleiben).
+- Zeichnen: Formerkennung, Linie, Rechteck, Ellipse, Pfeil, Geodreieck, Zirkel.
+- Onboarding (`folio/Onboarding*.cpp`): erster Start ohne `config/foliq/library.ini`
+  oder „Foliq einrichten …“ (⋯-Menü, Ansicht). Profile Schüler/in, Student/in,
+  Lehrkraft, Beruf/Privat, Leer; Speicherort per nativem Ordnerdialog
+  (GtkFileChooserNative); Fächer = Notizbuch mit Profil-Abschnitten, 16 Farben,
+  Papier je Fach (liniert/kariert/gepunktet/blanko/frei), Notizbuch-/Abschnittszeilen
+  vollflächig in der Fachfarbe getönt (Auswahl: stärkere Tönung + fett); Design, Akzent,
+  Eingabe; Einführung. Neues Format `library.ini` v1 (Pfad), validiert, atomar,
+  unbekannte Version wird gemeldet und nicht überschrieben; Tests in
+  FoliqOnboardingTest. `FOLIQ_LIBRARY` überspringt das Onboarding.
+- Linux: 137/137 Tests, main-ui-smoke 5×PASS, onboarding-smoke.py 2×PASS.
+- Nächste vereinbarte Punkte: farbige Reiter/Notizbuchfarben, globale Suche,
+  Tags & Aufgaben, Seitenkopf & Schnellnotiz, dunkles Papier (nur Anzeige),
+  Stiftfavoriten, Seitenvorschau & Ebenen.

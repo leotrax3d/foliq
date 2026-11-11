@@ -558,3 +558,5 @@ window.foliq.foliq-touch #foliq-ribbon-panel button { min-width: 36px; padding: 
 }
 #foliq-fullscreen-pill separator { background-color: @foliq_stroke_strong; min-width: 1px; margin: 6px 4px; }
 window.foliq.foliq-touch #foliq-fullscreen-pill button { min-width: 40px; min-height: 40px; }
+/* Coloured rows: keep the tint visible with rounded ends; selection adds a left accent bar. */
+#foliq-navigation treeview.view { -GtkTreeView-horizontal-separator: 0; }

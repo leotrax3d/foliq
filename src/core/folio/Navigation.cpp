@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "Navigation.h"
 
+#include "Onboarding.h"
+
 #include <algorithm>
 #include <cmath>
 #include <stdexcept>
@@ -193,6 +195,19 @@ Navigation::Navigation(Control* control, GtkWidget* container, GtkWindow* window
     try {
         const auto* overrideRoot = g_getenv("FOLIQ_LIBRARY");
         auto root = overrideRoot ? fs::u8path(overrideRoot) : fs::u8path(g_get_user_data_dir()) / "foliq" / "library";
+        if (!overrideRoot) {
+            auto config = libraryConfigPath();
+            if (!fs::exists(config))
+                firstRun = true;  // fresh installation: onboarding after startup
+            else {
+                try {
+                    root = fs::u8path(parseLibraryConfig(read(config)).path);
+                } catch (const std::exception& e) {
+                    // Damaged/unknown library.ini is reported and left untouched; default library is used.
+                    error(e);
+                }
+            }
+        }
         catalog = std::make_unique<Catalog>(root);
         gtk_widget_set_tooltip_text(status, root.u8string().c_str());
         try {
@@ -210,6 +225,15 @@ Navigation::Navigation(Control* control, GtkWidget* container, GtkWindow* window
                     self->restoreIdle = 0;
                     try {
                         self->applyTheme();
+                        if (self->firstRun) {
+                            self->firstRun = false;
+                            g_idle_add(
+                                    +[](gpointer p) -> gboolean {
+                                        static_cast<Navigation*>(p)->onboarding(true);
+                                        return false;
+                                    },
+                                    self);
+                        }
                         auto id = self->catalog->last();
                         if (!id.empty() && !self->catalog->trashed(id) &&
                             self->control->getDocument()->getFilepath().empty() &&
@@ -566,21 +590,31 @@ void Navigation::setupTree(GtkWidget* view) {
     g_object_set(cell, "ellipsize", PANGO_ELLIPSIZE_END, "ypad", 7, nullptr);
     auto* col = gtk_tree_view_column_new();
     gtk_tree_view_column_set_title(col, "Titel");
-    // Section colour marker (optional, user-chosen); text keeps the theme colour for contrast.
-    auto* dot = gtk_cell_renderer_text_new();
-    g_object_set(dot, "xpad", 2, nullptr);
-    gtk_tree_view_column_pack_start(col, dot, false);
+    // Notebook/section colour (user decision 2026-11-11): the whole row is tinted, not a dot.
+    // Text keeps the theme colour; tint strength is limited so contrast stays >= 4.5:1, and a
+    // selected row gets a stronger tint plus bold text so selection never depends on hue alone.
     gtk_tree_view_column_set_cell_data_func(
-            col, dot,
+            col, cell,
             +[](GtkTreeViewColumn*, GtkCellRenderer* r, GtkTreeModel* m, GtkTreeIter* it, gpointer p) {
                 auto* self = static_cast<Navigation*>(p);
                 gchar* id = nullptr;
                 gtk_tree_model_get(m, it, 1, &id, -1);
                 auto found = id ? self->options.sectionColors.find(id) : self->options.sectionColors.end();
-                if (found != self->options.sectionColors.end())
-                    g_object_set(r, "text", "●", "foreground", found->second.c_str(), "visible", TRUE, nullptr);
-                else
-                    g_object_set(r, "text", "", "visible", FALSE, nullptr);
+                auto* view = self->books;
+                for (auto* v: {self->books, self->pages})
+                    if (gtk_tree_view_get_model(GTK_TREE_VIEW(v)) == m)
+                        view = v;
+                bool selected = gtk_tree_selection_iter_is_selected(
+                        gtk_tree_view_get_selection(GTK_TREE_VIEW(view)), it);
+                Rgb rgb;
+                if (found != self->options.sectionColors.end() && parseHex(found->second, rgb)) {
+                    bool dark = currentPalette().dark;
+                    GdkRGBA tint{rgb.r, rgb.g, rgb.b, selected ? (dark ? 0.55 : 0.42) : (dark ? 0.32 : 0.22)};
+                    g_object_set(r, "cell-background-rgba", &tint, "cell-background-set", TRUE, "weight",
+                                 selected ? PANGO_WEIGHT_SEMIBOLD : PANGO_WEIGHT_NORMAL, "weight-set", TRUE, nullptr);
+                } else
+                    g_object_set(r, "cell-background-set", FALSE, "weight",
+                                 selected ? PANGO_WEIGHT_SEMIBOLD : PANGO_WEIGHT_NORMAL, "weight-set", TRUE, nullptr);
                 g_free(id);
             },
             this, nullptr);
@@ -1052,6 +1086,12 @@ void Navigation::chrome(GtkWidget* container) {
     custom(view, "Akzentfarbe", "foliq-sun-moon", G_CALLBACK(+[](GtkButton* b, gpointer p) {
                static_cast<Navigation*>(p)->accentPopover(GTK_WIDGET(b), {});
            }));
+    custom(view, "Einrichtung starten (Profil, Speicherort, Fächer)", "foliq-file-cog",
+           G_CALLBACK(+[](GtkButton*, gpointer p) {
+               auto* self = static_cast<Navigation*>(p);
+               self->hideTemporary();
+               self->onboarding(false);
+           }));
     motionButton = gtk_check_button_new_with_label("Weniger Bewegung");
     gtk_widget_set_focus_on_click(motionButton, false);
     gtk_widget_set_tooltip_text(motionButton, "Animationen und Übergänge abschalten");
@@ -1179,6 +1219,24 @@ void Navigation::chrome(GtkWidget* container) {
     applyPalette();
 }
 
+void Navigation::openLibrary(const fs::path& root) {
+    if (!rememberPosition() || !flush())
+        throw std::runtime_error("Aktuelle Seite konnte nicht gespeichert werden; Speicherort nicht gewechselt.");
+    saveView();
+    catalog.reset();  // releases the old library lock
+    catalog = std::make_unique<Catalog>(root);
+    section.clear();
+    options.sectionColors.clear();
+    viewWritable = false;
+    try {
+        loadView();
+    } catch (const std::exception& e) {
+        error(e);
+    }
+    gtk_widget_set_tooltip_text(status, root.u8string().c_str());
+    gtk_widget_set_sensitive(panel, true);
+    refresh();
+}
 void Navigation::applyFullscreen(bool on) {
     if (on == fullscreen)
         return;
@@ -1223,6 +1281,13 @@ void Navigation::moveMenubar() {
         g_object_unref(item);
     }
     g_list_free(items);
+    auto* setup = gtk_menu_item_new_with_label("Foliq einrichten …");
+    g_signal_connect(setup, "activate", G_CALLBACK(+[](GtkMenuItem*, gpointer p) {
+                         static_cast<Navigation*>(p)->onboarding(false);
+                     }),
+                     this);
+    gtk_menu_shell_prepend(GTK_MENU_SHELL(appMenu), gtk_separator_menu_item_new());
+    gtk_menu_shell_prepend(GTK_MENU_SHELL(appMenu), setup);
     gtk_widget_show_all(appMenu);
     gtk_widget_set_no_show_all(bar, true);
     gtk_widget_hide(bar);
