@@ -489,17 +489,21 @@ void EditSelectionContents::paint(cairo_t* cr, double x, double y, double rotati
     }
 
     if (this->crBuffer == nullptr) {
-        this->crBuffer = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, static_cast<int>(std::abs(width) * zoom),
-                                                    static_cast<int>(std::abs(height) * zoom));
+        // A sparse selection can span millions of empty points. Bound its temporary preview,
+        // while committing and exporting the unchanged vector elements at full precision.
+        const double cacheZoom = std::min(zoom, 2048.0 / std::max(std::abs(width), std::abs(height)));
+        this->crBuffer = cairo_image_surface_create(
+                CAIRO_FORMAT_ARGB32, std::max(1, static_cast<int>(std::ceil(std::abs(width) * cacheZoom))),
+                std::max(1, static_cast<int>(std::ceil(std::abs(height) * cacheZoom))));
         cairo_t* cr2 = cairo_create(this->crBuffer);
 
-        int dx = static_cast<int>(this->relativeX * zoom);
-        int dy = static_cast<int>(this->relativeY * zoom);
+        double dx = this->relativeX * cacheZoom;
+        double dy = this->relativeY * cacheZoom;
 
-        cairo_translate(cr2, fx < 0 ? -width * zoom : 0, fy < 0 ? -height * zoom : 0);
+        cairo_translate(cr2, fx < 0 ? -width * cacheZoom : 0, fy < 0 ? -height * cacheZoom : 0);
         cairo_scale(cr2, fx, fy);
         cairo_translate(cr2, -dx, -dy);
-        cairo_scale(cr2, zoom, zoom);
+        cairo_scale(cr2, cacheZoom, cacheZoom);
 
         xoj::view::ElementContainerView view(this);
         view.draw(xoj::view::Context::createDefault(cr2));
@@ -519,7 +523,7 @@ void EditSelectionContents::paint(cairo_t* cr, double x, double y, double rotati
     double sy = static_cast<double>(hTarget) / hImg;
 
     if (wTarget != wImg || hTarget != hImg || std::abs(rotation) > std::numeric_limits<double>::epsilon()) {
-        if (!this->rescaleId) {
+        if (!this->rescaleId && std::max(wTarget, hTarget) <= 2048) {
             this->rescaleId = g_idle_add(xoj::util::wrap_v<repaintSelection>, this);
         }
         cairo_scale(cr, sx, sy);

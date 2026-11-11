@@ -60,6 +60,10 @@ void RenderJob::rerenderRectangle(Rectangle<double> const& rect) {
 }
 
 void RenderJob::run() {
+    if (view->page->isInfinite()) {
+        Util::execInUiThread([w = view->xournal->getWidget()] { gtk_widget_queue_draw(w); });
+        return;
+    }
     this->view->repaintRectMutex.lock();
 
     bool rerenderComplete = std::exchange(this->view->rerenderComplete, false);

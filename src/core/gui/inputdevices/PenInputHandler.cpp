@@ -25,8 +25,9 @@
 #include "gui/scroll/ScrollHandling.h"          // for ScrollHandling
 #include "gui/widgets/XournalWidget.h"          // for GtkXournal
 #include "model/Point.h"                        // for Point, Point::NO_PRES...
-#include "util/Point.h"                         // for Point
-#include "util/Util.h"                          // for execInUiThread
+#include "model/XojPage.h"
+#include "util/Point.h"  // for Point
+#include "util/Util.h"   // for execInUiThread
 
 #include "AbstractInputHandler.h"  // for AbstractInputHandler
 #include "InputContext.h"          // for InputContext
@@ -317,7 +318,7 @@ auto PenInputHandler::actionMotion(InputEvent const& event) -> bool {
         // Relay the event to the page
         PositionInputData pos = getInputDataRelativeToCurrentPage(sequenceStartPage, event);
 
-        if (!toolHandler->acceptsOutOfPageEvents()) {
+        if (!sequenceStartPage->getPage()->isInfinite() && !toolHandler->acceptsOutOfPageEvents()) {
             // Enforce input to stay within page
             pos.x = std::clamp(pos.x, 0.0, static_cast<double>(sequenceStartPage->getDisplayWidth()));
             pos.y = std::clamp(pos.y, 0.0, static_cast<double>(sequenceStartPage->getDisplayHeight()));

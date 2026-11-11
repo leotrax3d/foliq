@@ -24,6 +24,7 @@ namespace xoj::view::StrokeViewHelper {
  * @brief Simply adds the points to a cairo context, as a single path
  */
 void pathToCairo(cairo_t* cr, const std::vector<Point>& pts);
+void filledPathToCairo(cairo_t* cr, const std::vector<Point>& pts);
 
 /**
  * @brief No pressure sensitivity, one line is drawn, with given width and line style (dashes)

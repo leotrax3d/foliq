@@ -50,7 +50,9 @@ auto XojCairoPdfExport::startPdf(const fs::path& file, bool exportOutline) -> bo
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 16, 0)
     cairo_pdf_surface_set_metadata(surface, CAIRO_PDF_METADATA_TITLE, doc->getFilepath().filename().u8string().c_str());
     cairo_pdf_surface_set_metadata(surface, CAIRO_PDF_METADATA_CREATOR, PROJECT_STRING);
-    if (exportOutline) {
+    bool freePages = false;
+    for (size_t i = 0; i < doc->getPageCount(); ++i) freePages |= doc->getPage(i)->isInfinite();
+    if (exportOutline && !freePages) {
         this->populatePdfOutline();
     }
 #endif
@@ -133,6 +135,35 @@ bool XojCairoPdfExport::endPdf() {
 void XojCairoPdfExport::exportPage(size_t page) {
     PageRef p = doc->getPage(page);
 
+    if (p->isInfinite()) {
+        const auto& s = p->getSurface();
+        const auto area = s.exportContent ? p->getContentBounds() : s.crop;
+        for (size_t i = 0, n = s.tileCount(area); i < n; ++i) {
+            auto tile = s.tile(area, i);
+            cairo_pdf_surface_set_size(surface, tile.width, tile.height);
+            cairo_save(cr);
+            cairo_rectangle(cr, 0, 0, tile.width, tile.height);
+            cairo_clip(cr);
+            cairo_translate(cr, -tile.x, -tile.y);
+            DocumentView view;
+            if (exportBackground != EXPORT_BACKGROUND_NONE) {
+                Util::cairo_set_source_rgbi(cr, p->getBackgroundColor());
+                cairo_paint(cr);
+            }
+            // Keep PDF backgrounds anchored at world origin and at their original dimensions.
+            if (p->getBackgroundType().isPdfPage() && exportBackground != EXPORT_BACKGROUND_NONE)
+                doc->getPdfPage(p->getPdfPageNr())->renderForPrinting(cr);
+            if (layerRange)
+                view.drawLayersOfPage(*layerRange, p, cr, true, true, exportBackground == EXPORT_BACKGROUND_NONE,
+                                      exportBackground <= EXPORT_BACKGROUND_UNRULED);
+            else
+                view.drawPage(p, cr, true, true, exportBackground == EXPORT_BACKGROUND_NONE,
+                              exportBackground <= EXPORT_BACKGROUND_UNRULED);
+            cairo_restore(cr);
+            cairo_show_page(cr);
+        }
+        return;
+    }
     cairo_pdf_surface_set_size(this->surface, p->getWidth(), p->getHeight());
 
     DocumentView view;
@@ -193,6 +224,8 @@ auto XojCairoPdfExport::createPdf(fs::path const& file, const PageRangeVector& r
     // greater than the total number of pages, leading to corrupt pdf files
     bool outline = range.size() == 1 && range.front().first == 0 && range.front().last >= doc->getPageCount() - 1;
 
+    if (!preflightSurfaces())
+        return false;
     if (!startPdf(file, outline)) {
         this->lastError = _("Failed to initialize PDF Cairo surface");
         this->lastError += "\nCairo error: ";
@@ -232,6 +265,8 @@ auto XojCairoPdfExport::createPdf(fs::path const& file, bool progressiveMode) ->
         return false;
     }
 
+    if (!preflightSurfaces())
+        return false;
     if (!startPdf(file, /* exportOutline */ true)) {
         this->lastError = _("Failed to initialize PDF Cairo surface");
         this->lastError += "\nCairo error: ";
@@ -266,5 +301,22 @@ void XojCairoPdfExport::setLayerRange(const char* rangeStr) {
         // Use no upper bound for layer indices, as the maximal value can vary between pages
         layerRange =
                 std::make_unique<LayerRangeVector>(ElementRange::parse(rangeStr, std::numeric_limits<size_t>::max()));
+    }
+}
+
+bool XojCairoPdfExport::preflightSurfaces() {
+    try {
+        for (size_t i = 0; i < doc->getPageCount(); ++i) {
+            auto p = doc->getPage(i);
+            if (p->isInfinite()) {
+                const auto& s = p->getSurface();
+                s.validate();
+                s.tileCount(s.exportContent ? p->getContentBounds() : s.crop);
+            }
+        }
+        return true;
+    } catch (const std::exception& e) {
+        lastError = e.what();
+        return false;
     }
 }

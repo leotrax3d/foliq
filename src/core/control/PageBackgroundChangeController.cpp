@@ -264,6 +264,13 @@ auto PageBackgroundChangeController::applyPageBackground(PageRef page, const Pag
     }
 
 
+    if (page->isInfinite() && !pt.isSpecial() && pt.format != PageTypeFormat::Plain &&
+        pt.format != PageTypeFormat::Lined && pt.format != PageTypeFormat::Graph) {
+        XojMsgBox::showErrorToUser(control->getGtkWindow(),
+                                   _("Free surfaces currently support Plain, Lined and Grid backgrounds. Select one of "
+                                     "these, or create a paper copy in Page Surface / Paper Format."));
+        return false;
+    }
     page->setBackgroundType(pt);
     return true;
 }

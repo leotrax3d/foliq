@@ -165,6 +165,11 @@ void UndoRedoHandler::addUndoAction(UndoActionPtr action) {
         return;
     }
 
+    if (!undoList.empty() && undoList.back().get() != savedUndo && undoList.back().get() != autosavedUndo &&
+        redoList.empty() && undoList.back()->merge(*action)) {
+        fireUpdateUndoRedoButtons(undoList.back()->getPages());
+        return;
+    }
     this->undoList.emplace_back(std::move(action));
     clearRedo();
     fireUpdateUndoRedoButtons(this->undoList.back()->getPages());

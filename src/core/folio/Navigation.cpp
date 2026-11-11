@@ -516,6 +516,8 @@ void Navigation::chrome(GtkWidget* container) {
         g_signal_connect(b, "clicked", G_CALLBACK(+[](GtkButton* b, gpointer p) {
             auto a = static_cast<ActionType>(GPOINTER_TO_INT(g_object_get_data(G_OBJECT(b), "action")));
             auto* self = static_cast<Navigation*>(p);
+            if (self->updatingToolButtons)
+                return;
             self->control->actionPerformed(a, a >= ACTION_TOOL_PEN && a <= ACTION_TOOL_HAND ? GROUP_TOOL : GROUP_NOGROUP, nullptr, true);
             self->updateStatus();
         }), this); return b;
@@ -556,6 +558,8 @@ void Navigation::chrome(GtkWidget* container) {
     button(insert, "Bild", "xopp-tool-image", ACTION_TOOL_IMAGE);
     button(insert, "PDF annotieren", "xopp-document-open", ACTION_ANNOTATE_PDF);
     button(insert, "Dokumentseite", "xopp-page-add", ACTION_NEW_PAGE_AFTER);
+    auto* surface = button(insert, "Seitentyp / Papier", nullptr, ACTION_PAPER_FORMAT);
+    gtk_widget_set_tooltip_text(surface, "Papierformat, freie Arbeitsfläche, Lineatur, Farbe und PDF-Ausschnitt");
     auto* draw = page("Zeichnen");
     button(draw, "Stift", "xopp-tool-pencil", ACTION_TOOL_PEN);
     button(draw, "Radierer", "xopp-tool-eraser", ACTION_TOOL_ERASER);
@@ -600,8 +604,10 @@ void Navigation::updateStatus() {
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(legacyToggle), visible);
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(drawOptions), visible);
     }
+    updatingToolButtons = true;
     for (const auto& entry: toolButtons)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry.first), control->getToolHandler()->getToolType() == entry.second);
+    updatingToolButtons = false;
     auto* undo = control->getUndoRedoHandler();
     gtk_widget_set_sensitive(undoButton, undo->canUndo()); gtk_widget_set_sensitive(redoButton, undo->canRedo());
     gtk_label_set_text(GTK_LABEL(status), failedSave ? "Speicherfehler · Änderungen im Editor" :

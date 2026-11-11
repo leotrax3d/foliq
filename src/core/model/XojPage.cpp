@@ -4,6 +4,7 @@
 #include <iterator>   // for back_insert_iterator, back_inserter, begin
 #include <utility>    // for move
 
+#include "model/Element.h"
 #include "model/Layer.h"     // for Layer, Layer::Index
 #include "model/PageType.h"  // for PageType, PageTypeFormat, PageTypeForma...
 #include "util/i18n.h"       // for _
@@ -24,12 +25,15 @@ XojPage::~XojPage() {
 
 XojPage::XojPage(XojPage const& page):
         backgroundImage(page.backgroundImage),
+        surface(page.surface),
         width(page.width),
         height(page.height),
         currentLayer(page.currentLayer),
         bgType(page.bgType),
         pdfBackgroundPage(page.pdfBackgroundPage),
-        backgroundColor(page.backgroundColor) {
+        backgroundColor(page.backgroundColor),
+        backgroundVisible(page.backgroundVisible),
+        backgroundName(page.backgroundName) {
     this->layer.reserve(page.layer.size());
     std::transform(begin(page.layer), end(page.layer), std::back_inserter(this->layer),
                    [](auto* layer) { return layer->clone(); });
@@ -148,7 +152,7 @@ void XojPage::setBackgroundType(const PageType& bgType) {
     }
 }
 
-auto XojPage::getBackgroundType() -> PageType { return this->bgType; }
+auto XojPage::getBackgroundType() const -> PageType { return this->bgType; }
 
 auto XojPage::getBackgroundImage() -> BackgroundImage& { return this->backgroundImage; }
 
@@ -170,3 +174,27 @@ auto XojPage::getBackgroundName() const -> std::string { return backgroundName.v
 auto XojPage::backgroundHasName() const -> bool { return backgroundName.has_value(); }
 
 void XojPage::setBackgroundName(const std::string& newName) { backgroundName = newName; }
+
+SurfaceRect XojPage::getContentBounds() const {
+    bool first = !bgType.isSpecial();
+    double x1 = 0, y1 = 0, x2 = width, y2 = height;
+    for (auto* l: layer)
+        for (auto* e: l->getElements()) {
+            double left = e->getX() - 2, top = e->getY() - 2;
+            double right = e->getX() + e->getElementWidth() + 2;
+            double bottom = e->getY() + e->getElementHeight() + 2;
+            if (first) {
+                x1 = left;
+                y1 = top;
+                x2 = right;
+                y2 = bottom;
+                first = false;
+            } else {
+                x1 = std::min(x1, left);
+                y1 = std::min(y1, top);
+                x2 = std::max(x2, right);
+                y2 = std::max(y2, bottom);
+            }
+        }
+    return {x1, y1, std::max(1.0, x2 - x1), std::max(1.0, y2 - y1)};
+}

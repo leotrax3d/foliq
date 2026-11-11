@@ -161,7 +161,29 @@ void ImageExport::exportImagePage(size_t pageId, size_t id, double zoomRatio, Ex
     PageRef page = doc->getPage(pageId);
     doc->unlock();
 
-    zoomRatio = createSurface(page->getWidth(), page->getHeight(), id, zoomRatio);
+    auto area = SurfaceRect{0, 0, page->getWidth(), page->getHeight()};
+    if (page->isInfinite()) {
+        const auto& s = page->getSurface();
+        area = s.exportContent ? page->getContentBounds() : s.crop;
+        double scale = zoomRatio;
+        if (qualityParameter.getQualityCriterion() == EXPORT_QUALITY_WIDTH)
+            scale = qualityParameter.getValue() / area.width;
+        if (qualityParameter.getQualityCriterion() == EXPORT_QUALITY_HEIGHT)
+            scale = qualityParameter.getValue() / area.height;
+        if (format == EXPORT_GRAPHICS_PNG &&
+            (!std::isfinite(scale) || scale <= 0 || area.width * scale > 16384 || area.height * scale > 16384 ||
+             area.width * scale * area.height * scale > 16777216)) {
+            lastError = _("Free surface image exceeds 16 megapixels or 16384 pixels per side. Choose a smaller PDF "
+                          "crop, lower image resolution, or tiled PDF export.");
+            return;
+        }
+    }
+    zoomRatio = createSurface(area.width, area.height, id, zoomRatio);
+    cairo_translate(cr, -area.x, -area.y);
+    if (page->isInfinite() && exportBackground != EXPORT_BACKGROUND_NONE) {
+        Util::cairo_set_source_rgbi(cr, page->getBackgroundColor());
+        cairo_paint(cr);
+    }
 
     cairo_status_t state = cairo_surface_status(this->surface);
     if (state != CAIRO_STATUS_SUCCESS) {

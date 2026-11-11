@@ -124,3 +124,32 @@ Nach einem neuen Windows-Build Paket-Commit und Windows-/GTK-Version protokollie
    Export und Autosave erneut mit der bestehenden Matrix oben prüfen.
 6. NVDA: Namen der Bäume, Farbschema, Aktionsmenüs, Auswahl und Fokus prüfen.
    Linux-ATK-Inspektion ersetzt diese Windows-Screenreader-Abnahme nicht.
+
+## Seitentypen: konkrete Stift- und Touchabnahme (noch auszuführen)
+
+Diese Matrix ist eine Anleitung, kein Hardwareprüfbericht. In dieser Änderung
+wurden keine Windows-Geräte, echten Druckwerte oder physische Eingabelatenzen
+geprüft. Pro Durchlauf Windows-Build, Gerät/Stift, Treiber/Firmware, GTK-Version,
+Bildschirm-Hz, DPI (100/150/200 %), Touch-Einstellungen, Energieprofil und
+Git-Commit protokollieren. Dieselbe synthetische Notiz im Papier- und freien
+Modus verwenden; freie Tests in allen vier Quadranten und nach Neustart.
+
+| Prüfung | Konkreter Ablauf | Erwartung / Beleg |
+|---|---|---|
+| Druck | Je 20 langsame diagonale Linien mit leicht → kräftig → leichtem Druck bei 25/100/400 % Zoom; Kreise und schnelle Schleifen ergänzen. Im freien Modus nach links/oben über den Ursprung schwenken und wiederholen. | Kontinuierliche Strichbreiten ohne Nullstellen/Spitzen; Drucksegmentwerte im gespeicherten XOPP vor/nach Neustart vergleichen. Der letzte Punkt besitzt upstreamgemäß keinen eigenen Segmentdruck. Bildschirmaufnahme und Gerät angeben. |
+| Textmarker | Mehrfach über Text/Handschrift zeichnen, gefülltes Rechteck/Polygon ergänzen; bei negativem Ursprung zoomen und radieren. | Transparenz/Füllung unverändert; keine schwarzen Kacheln, kein Flackern durch flächenproportionale Masken. PDF-Ausschnitt vergleichen. |
+| Handballen | Stift zunächst schwebend, dann schreibend; Handballen auflegen, verschieben, abheben, erneut auflegen. 20 Wiederholungen je Zuordnung, links-/rechtshändige Lage. Dazu Stift aus Erkennungsbereich entfernen und Touch-Geste bewusst ausführen. | Während Schreiben keine zusätzlichen Striche, Lasso-Aktionen oder Kamerasprünge durch die Hand. Danach Touch wieder nutzbar. Unterschied zwischen gerätegemeldetem Proximity und verfügbaren Softwarefiltern festhalten. Ohne passende Gerätedaten keine universelle Palm-Rejection behaupten. |
+| Seitentasten | In Einstellungen beide Stifttasten getrennt z. B. auf Radierer und Lasso legen. Je 20-mal vor Kontakt, während Kontakt und schwebend drücken/loslassen; falls vorhanden Stift umdrehen. Danach neu starten. Windows-Option für Tablet-PC-Button-Ereignisse mitprotokollieren. | Gewähltes Werkzeug wirkt nur entsprechend konfigurierter Zuordnung; Loslassen stellt Werkzeug zurück, kein hängender Modus und kein Zusatzpunkt. Einstellungen über Neustart erhalten. |
+| Maus/Touch-Zuordnung | Mausmitte/-rechts je Hand/Lasso, Touch auf Schwenken bzw. Zeichnen sperren; Stift schreibt. Während schreibendem Stift einen zweiten Touchkontakt setzen, danach einzeln und per Pinch navigieren. | Bestehende Gerätekonfiguration bleibt wirksam; kein Stift-/Maus-Doppelstrich. Schwenken/Zoom bewegen den Ausschnitt, nicht die gespeicherten Striche. |
+| Auswahl/Formen | In jedem Quadranten Strich und Rechteck/Ellipse/Pfeil erzeugen; Lasso, Verschieben, Skalieren, Spiegeln und Ebenenwechsel verwenden. Bei 400 % vergrößert und bei 25 % wiederholen. | Griffe treffen die sichtbaren Elemente; Druck/Geometrie bleiben nach Speichern/Laden. Undo/Redo für jeden Bearbeitungsschritt, Schwenk, Zoom und Seiteneinstellung durchführen. |
+| Umwandlung | Freie Notiz mit Inhalt in allen Quadranten und ausgeblendeter Ebene zu A4 quer kopieren. Typwechsel rückgängig/wiederholen. Papierkopie zurück zu Frei kopieren. | Originalseite unverändert vorhanden. Papierkopie nur übersetzt, ohne Skalierung; Überlauf bleibt gespeichert, ist aber auf Papier abgeschnitten. Dialoggrenzen vor Bestätigung lesbar. |
+| PDF | Freien Ausschnitt mit negativem X/Y setzen und 2×3 Teilseiten exportieren; anschließend ungeteilten Ausschnitt und gemischtes Papier/Frei-Dokument exportieren. Datei in unabhängigem PDF-Leser öffnen. | Seitenzahl, Kantenanschlüsse, Inhalt und Druckbreiten vergleichen; Randseiten können verkürzt sein. Übermäßig großen Export anfordern: sichtbarer Fehler und vorherige PDF unverändert. |
+| Latenz | Mit mindestens 240-fps-Kamera gleichzeitig Stiftspitze und Anzeige filmen. Je 30 kurze Starts und Richtungswechsel pro Modus bei 100/400 %; dann dieselben Abläufe bei weit entferntem negativem/positivem Ursprung. Leere Fläche und Notiz mit 10.000 synthetischen Strichen getrennt messen. | Zeit von sichtbarem Kontakt/Bewegungsbeginn zum ersten passenden Pixel in Frames zählen; Median, p95 und Messunsicherheit (bei 240 fps mindestens ±4,17 ms pro Framegrenze) berichten. Gegen denselben Papier-/Vorversionslauf vergleichen; zusätzliche Verzögerung >1 Bildschirmframe oder Aussetzer untersuchen. Keine aus Maus-/Softwaretests abgeleitete Millisekundenbehauptung. |
+
+Zusätzlich während 100 wechselseitiger Schwenks zwischen weit entfernten leeren
+Ausschnitten privaten Arbeitssatz und CPU beobachten: der Aufwand darf nicht mit
+der besuchten leeren Weltfläche anwachsen. Erst normale Cache-/Initialisierung
+abwarten, dann Anfang/Maximum/Ende messen. Bei großen Auswahlbereichen kann die
+auf 2.048 Pixel begrenzte temporäre Vorschau weich erscheinen; die Vektoren und
+der finale PDF-Export müssen scharf bleiben. Direkten Druck freier Dokumente
+über den angezeigten PDF-Weg durchführen. Audio ist hiervon nicht abgenommen.

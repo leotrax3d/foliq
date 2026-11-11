@@ -826,9 +826,9 @@ void Stroke::calcSize() const {
     }
 
     double minSnapX = std::numeric_limits<double>::max();
-    double maxSnapX = std::numeric_limits<double>::min();
+    double maxSnapX = std::numeric_limits<double>::lowest();
     double minSnapY = std::numeric_limits<double>::max();
-    double maxSnapY = std::numeric_limits<double>::min();
+    double maxSnapY = std::numeric_limits<double>::lowest();
 
     auto halfThick = 0.0;
 

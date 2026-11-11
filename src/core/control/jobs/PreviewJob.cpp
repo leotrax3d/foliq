@@ -82,6 +82,12 @@ void PreviewJob::drawPage() {
         layer = (dynamic_cast<SidebarPreviewLayerEntry*>(this->sidebarPreview))->getLayer();
     }
 
+    if (page->isInfinite()) {
+        auto bounds = page->getContentBounds();
+        double ratio = std::min(page->getWidth() / bounds.width, page->getHeight() / bounds.height);
+        cairo_scale(cr2, ratio, ratio);
+        cairo_translate(cr2, -bounds.x, -bounds.y);
+    }
     auto context = xoj::view::Context::createDefault(cr2);
 
     switch (type) {

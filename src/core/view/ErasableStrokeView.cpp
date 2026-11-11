@@ -297,7 +297,12 @@ void ErasableStrokeView::paintFilledHighlighter(cairo_t* cr) const {
 }
 
 auto ErasableStrokeView::createMask(cairo_t* target, const Range& box, double zoom) const -> Mask {
-    Mask mask(cairo_get_target(target), box, zoom);
+    double x1, y1, x2, y2;
+    cairo_clip_extents(target, &x1, &y1, &x2, &y2);
+    auto visible = box.intersect(Range(x1, y1, x2, y2));
+    if (visible.empty() || !visible.isValid())
+        visible = Range(x1, y1, x1 + 1 / zoom, y1 + 1 / zoom);
+    Mask mask(cairo_get_target(target), visible, zoom);
 
     cairo_t* crMask = mask.get();
     cairo_set_line_join(crMask, CAIRO_LINE_JOIN_ROUND);

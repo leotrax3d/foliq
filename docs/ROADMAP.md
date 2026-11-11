@@ -42,3 +42,8 @@ M2-Implementierung: zweispaltige GTK-Navigation, echte Drag-and-drop-Verschiebun
 Werkzeugreiter, Fokus, Farbschemata und persistente Ansichten sind umgesetzt.
 Linux-GUI-/Skalierungsbelege: validation/MAIN-UI-VALIDATION.md. Die Windows-DPI-,
 NVDA- und physische Stiftabnahme bleibt Teil der M2-Abnahme.
+
+M4-Implementierung: Papier und freie Weltkoordinaten statt endlicher Auto-Grow-
+Seite, mit Kamera, Undo, kopierender Umwandlung und PDF-Ausschnitt/Teilung.
+Stand und Grenzen in SURFACES.md; Linux-Nachweise in validation/SURFACES-VALIDATION.md.
+Windows-Stift-/Touch-/Latenzabnahme bleibt eigenständig offen.

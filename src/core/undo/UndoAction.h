@@ -29,6 +29,7 @@ public:
     virtual bool redo(Control* control) = 0;
 
     virtual std::string getText() = 0;
+    virtual bool merge(const UndoAction&) { return false; }
 
     /**
      * Get the affected pages

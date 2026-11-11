@@ -167,6 +167,9 @@ public:
      * respect to the display
      */
     int getY() const override;
+    int getViewportX() const { return dispX; }
+    int getViewportY() const { return dispY; }
+    void panSurface(double dx, double dy, bool recordUndo = true);
 
     TexImage* getSelectedTex();
     Text* getSelectedText();

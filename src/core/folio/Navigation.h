@@ -25,6 +25,7 @@ private:
     std::vector<std::pair<GtkWidget*, int>> toolButtons;
     std::vector<std::pair<GtkWidget*, const char*>> mirroredButtons;
     bool viewWritable = false;
+    bool updatingToolButtons = false;
     bool refreshing = false, focus = false;
     int theme = 0;
     void selectTree(GtkWidget* view);

@@ -1,0 +1,19 @@
+{
+  "iterations": 200,
+  "tests_per_iteration": 2,
+  "output_target_pixels": [
+    64,
+    64
+  ],
+  "world_extent_points": [
+    -900000,
+    900000
+  ],
+  "viewport_origin_points": [
+    500000,
+    500000
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 0.068,
+  "max_rss_kib": 33608
+}

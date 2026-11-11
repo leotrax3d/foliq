@@ -63,18 +63,20 @@
 #include "undo/DeleteUndoAction.h"                  // for DeleteUndoAction
 #include "undo/InsertUndoAction.h"                  // for InsertUndoAction
 #include "undo/MoveUndoAction.h"                    // for MoveUndoAction
-#include "undo/TextBoxUndoAction.h"                 // for TextBoxUndoAction
-#include "undo/UndoRedoHandler.h"                   // for UndoRedoHandler
-#include "util/Color.h"                             // for rgb_to_GdkRGBA
-#include "util/Range.h"                             // for Range
-#include "util/Rectangle.h"                         // for Rectangle
-#include "util/Util.h"                              // for npos
-#include "util/XojMsgBox.h"                         // for XojMsgBox
-#include "util/gtk4_helper.h"                       // for gtk_box_append
-#include "util/i18n.h"                              // for _F, FC, FS, _
-#include "util/raii/CLibrariesSPtr.h"               // for adopt
-#include "util/serdesstream.h"                      // for serdes_stream
-#include "view/DebugShowRepaintBounds.h"            // for IF_DEBUG_REPAINT
+#include "undo/SurfacePanUndoAction.h"
+#include "undo/TextBoxUndoAction.h"       // for TextBoxUndoAction
+#include "undo/UndoRedoHandler.h"         // for UndoRedoHandler
+#include "util/Color.h"                   // for rgb_to_GdkRGBA
+#include "util/Range.h"                   // for Range
+#include "util/Rectangle.h"               // for Rectangle
+#include "util/Util.h"                    // for npos
+#include "util/XojMsgBox.h"               // for XojMsgBox
+#include "util/gtk4_helper.h"             // for gtk_box_append
+#include "util/i18n.h"                    // for _F, FC, FS, _
+#include "util/raii/CLibrariesSPtr.h"     // for adopt
+#include "util/serdesstream.h"            // for serdes_stream
+#include "view/DebugShowRepaintBounds.h"  // for IF_DEBUG_REPAINT
+#include "view/DocumentView.h"
 #include "view/overlays/OverlayView.h"              // for OverlayView, Tool...
 #include "view/overlays/PdfElementSelectionView.h"  // for PdfElementSelecti...
 #include "view/overlays/SearchResultView.h"         // for SearchResultView
@@ -126,16 +128,16 @@ void XojPageView::deleteViewBuffer() {
 
 auto XojPageView::containsPoint(int x, int y, bool local) const -> bool {
     if (!local) {
-        bool leftOk = this->getX() <= x;
-        bool rightOk = x <= this->getX() + this->getDisplayWidth();
-        bool topOk = this->getY() <= y;
-        bool bottomOk = y <= this->getY() + this->getDisplayHeight();
+        bool leftOk = dispX <= x;
+        bool rightOk = x <= dispX + this->getDisplayWidth();
+        bool topOk = dispY <= y;
+        bool bottomOk = y <= dispY + this->getDisplayHeight();
 
         return leftOk && rightOk && topOk && bottomOk;
     }
 
 
-    return x >= 0 && y >= 0 && x <= this->getWidth() && y <= this->getHeight();
+    return page->isInfinite() || (x >= 0 && y >= 0 && x <= this->getWidth() && y <= this->getHeight());
 }
 
 auto XojPageView::searchTextOnPage(const std::string& text, size_t* occurrences, double* yOfUpperMostMatch) -> bool {
@@ -226,7 +228,7 @@ auto XojPageView::onButtonPressEvent(const PositionInputData& pos) -> bool {
     double x = pos.x;
     double y = pos.y;
 
-    if (x < 0 || y < 0) {
+    if (!page->isInfinite() && (x < 0 || y < 0)) {
         return false;
     }
 
@@ -396,7 +398,7 @@ auto XojPageView::onButtonClickEvent(const PositionInputData& pos) -> bool {
     double x = pos.x;
     double y = pos.y;
 
-    if (x < 0 || y < 0) {
+    if (!page->isInfinite() && (x < 0 || y < 0)) {
         return false;
     }
 
@@ -415,7 +417,7 @@ auto XojPageView::onButtonDoublePressEvent(const PositionInputData& pos) -> bool
     double zoom = this->xournal->getZoom();
     double x = pos.x / zoom;
     double y = pos.y / zoom;
-    if (x < 0 || y < 0) {
+    if (!page->isInfinite() && (x < 0 || y < 0)) {
         return false;
     }
 
@@ -483,7 +485,7 @@ auto XojPageView::onButtonTriplePressEvent(const PositionInputData& pos) -> bool
     double zoom = this->xournal->getZoom();
     double x = pos.x / zoom;
     double y = pos.y / zoom;
-    if (x < 0 || y < 0) {
+    if (!page->isInfinite() && (x < 0 || y < 0)) {
         return false;
     }
 
@@ -751,6 +753,10 @@ auto XojPageView::onKeyReleaseEvent(GdkEventKey* event) -> bool {
 }
 
 void XojPageView::rerenderPage(bool sizeChanged) {
+    if (page->isInfinite()) {
+        repaintPage();
+        return;
+    }
     this->rerenderComplete = true;
     this->sizeChanged = sizeChanged;
     this->xournal->getControl()->getScheduler()->addRerenderPage(this);
@@ -811,6 +817,10 @@ auto XojPageView::toWindowCoordinates(const xoj::util::Rectangle<double>& r) con
 }
 
 void XojPageView::rerenderRect(double x, double y, double width, double height) {
+    if (page->isInfinite()) {
+        repaintPage();
+        return;
+    }
     if (this->rerenderComplete) {
         return;
     }
@@ -989,7 +999,11 @@ auto XojPageView::paintPage(cairo_t* cr, GdkRectangle* rect) -> bool {
     xoj::util::CairoSaveGuard saveGuard(cr);
     cairo_scale(cr, zoom, zoom);
 
-    {
+    if (page->isInfinite()) {
+        DocumentView view;
+        view.setPdfCache(xournal->getCache());
+        view.drawPage(page, cr, false);
+    } else {
         std::lock_guard lock(this->drawingMutex);  // Lock the mutex first
         xoj::util::CairoSaveGuard saveGuard(cr);   // see comment at the end of the scope
         if (!this->hasBuffer()) {
@@ -1030,11 +1044,17 @@ auto XojPageView::getSelectionColor() -> GdkRGBA { return Util::rgb_to_GdkRGBA(s
 
 auto XojPageView::getTextEditor() -> TextEditor* { return textEditor.get(); }
 
-auto XojPageView::getX() const -> int { return this->dispX; }
+auto XojPageView::getX() const -> int {
+    return this->dispX -
+           (page->isInfinite() ? static_cast<int>(std::round(page->getSurface().cameraX * getZoom())) : 0);
+}
 
 void XojPageView::setX(int x) { this->dispX = x; }
 
-auto XojPageView::getY() const -> int { return this->dispY; }
+auto XojPageView::getY() const -> int {
+    return this->dispY -
+           (page->isInfinite() ? static_cast<int>(std::round(page->getSurface().cameraY * getZoom())) : 0);
+}
 
 void XojPageView::setY(int y) { this->dispY = y; }
 
@@ -1054,18 +1074,20 @@ auto XojPageView::getPage() const -> const PageRef { return page; }
 
 auto XojPageView::getXournal() const -> XournalView* { return this->xournal; }
 
-auto XojPageView::getDisplayWidth() const -> int {
-    return static_cast<int>(std::round(this->page->getWidth() * this->xournal->getZoom()));
-}
+auto XojPageView::getDisplayWidth() const -> int { return static_cast<int>(std::round(getDisplayWidthDouble())); }
 
-auto XojPageView::getDisplayHeight() const -> int {
-    return static_cast<int>(std::round(this->page->getHeight() * this->xournal->getZoom()));
-}
+auto XojPageView::getDisplayHeight() const -> int { return static_cast<int>(std::round(getDisplayHeightDouble())); }
 
-auto XojPageView::getDisplayWidthDouble() const -> double { return this->page->getWidth() * this->xournal->getZoom(); }
+auto XojPageView::getDisplayWidthDouble() const -> double {
+    if (page->isInfinite())
+        return std::max(320, gtk_widget_get_allocated_width(gtk_widget_get_parent(xournal->getWidget())) - 20);
+    return page->getWidth() * getZoom();
+}
 
 auto XojPageView::getDisplayHeightDouble() const -> double {
-    return this->page->getHeight() * this->xournal->getZoom();
+    if (page->isInfinite())
+        return std::max(240, gtk_widget_get_allocated_height(gtk_widget_get_parent(xournal->getWidget())) - 20);
+    return page->getHeight() * getZoom();
 }
 
 auto XojPageView::getSelectedTex() -> TexImage* {
@@ -1097,7 +1119,7 @@ auto XojPageView::getSelectedText() -> Text* {
 }
 
 auto XojPageView::getRect() const -> Rectangle<double> {
-    return Rectangle<double>(getX(), getY(), getDisplayWidth(), getDisplayHeight());
+    return Rectangle<double>(dispX, dispY, getDisplayWidth(), getDisplayHeight());
 }
 
 void XojPageView::rectChanged(Rectangle<double>& rect) { rerenderRect(rect.x, rect.y, rect.width, rect.height); }
@@ -1141,4 +1163,23 @@ void XojPageView::showFloatingToolbox(const PositionInputData& pos) {
     wy += static_cast<int>(std::round(pos.y) + this->getY());
 
     control->getWindow()->getFloatingToolbox()->show(wx, wy);
+}
+
+void XojPageView::panSurface(double dx, double dy, bool recordUndo) {
+    if (!page->isInfinite() || !std::isfinite(dx) || !std::isfinite(dy))
+        return;
+    auto s = page->getSurface();
+    auto oldX = s.cameraX, oldY = s.cameraY;
+    // Leave room for the visible window at the numerical boundary.
+    s.cameraX =
+            std::clamp(s.cameraX + dx, -PageSurface::COORDINATE_LIMIT + 14400, PageSurface::COORDINATE_LIMIT - 14400);
+    s.cameraY =
+            std::clamp(s.cameraY + dy, -PageSurface::COORDINATE_LIMIT + 14400, PageSurface::COORDINATE_LIMIT - 14400);
+    if (s.cameraX == oldX && s.cameraY == oldY)
+        return;
+    page->setSurface(s);
+    if (recordUndo)
+        xournal->getControl()->getUndoRedoHandler()->addUndoAction(
+                std::make_unique<SurfacePanUndoAction>(page, oldX, oldY));
+    repaintPage();
 }

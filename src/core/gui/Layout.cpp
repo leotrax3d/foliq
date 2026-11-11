@@ -15,8 +15,9 @@
 #include "gui/PageView.h"               // for XojPageView
 #include "gui/scroll/ScrollHandling.h"  // for ScrollHandling
 #include "model/Document.h"             // for Document
-#include "util/Rectangle.h"             // for Rectangle
-#include "util/safe_casts.h"            // for strict_cast, as_signed, as_si...
+#include "model/XojPage.h"
+#include "util/Rectangle.h"   // for Rectangle
+#include "util/safe_casts.h"  // for strict_cast, as_signed, as_si...
 
 #include "XournalView.h"  // for XournalView
 
@@ -349,6 +350,11 @@ auto Layout::getPaddingLeftOfPage(size_t pageIndex) const -> int {
 void Layout::setLayoutSize(int width, int height) { this->scrollHandling->setLayoutSize(width, height); }
 
 void Layout::scrollRelative(double x, double y) {
+    auto current = view->getControl()->getCurrentPageNo();
+    if (current < view->viewPages.size() && view->viewPages[current]->getPage()->isInfinite()) {
+        view->viewPages[current]->panSurface(x / view->getZoom(), y / view->getZoom());
+        return;
+    }
     if (this->view->getControl()->getSettings()->isPresentationMode()) {
         return;
     }

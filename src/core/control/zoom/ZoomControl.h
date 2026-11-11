@@ -76,6 +76,7 @@ public:
      * @return zoom value depending zoom100Value
      */
     double getZoom() const;
+    void setZoomFromSurfaceHistory(double value);
 
     /**
      * @return real zoom value in percent
@@ -202,6 +203,7 @@ private:
     friend bool onTouchpadPinchEvent(GtkWidget* widget, GdkEventTouchpadPinch* event, ZoomControl* zoom);
 
 private:
+    bool restoringSurfaceHistory = false;
     XournalView* view = nullptr;
     Control* control = nullptr;
     std::vector<ZoomListener*> listener;

@@ -83,6 +83,13 @@ inline void handlePrintError(GError*& error, const char* message) {
 
 // Todo: maybe loop over this twice,
 void PrintHandler::print(Document* doc, size_t currentPage, GtkWindow* parent) {
+    for (size_t i = 0; i < doc->getPageCount(); ++i)
+        if (doc->getPage(i)->isInfinite()) {
+            XojMsgBox::showErrorToUser(parent,
+                                       _("For documents with free surfaces, export a PDF first and print that PDF. "
+                                         "Choose the crop and tile dimensions in Page Surface / Paper Format."));
+            return;
+        }
     GtkPrintSettings* settings{};
     auto filepath = Util::getConfigFile(PRINT_CONFIG_FILE);
     if (fs::exists(filepath)) {

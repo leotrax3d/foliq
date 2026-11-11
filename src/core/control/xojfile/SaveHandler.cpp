@@ -216,6 +216,20 @@ void SaveHandler::visitPage(XmlNode* root, PageRef p, Document* doc, int id) {
     root->addChild(page);
     page->setAttrib("width", p->getWidth());
     page->setAttrib("height", p->getHeight());
+    const auto& s = p->getSurface();
+    if (s.infinite) {
+        page->setAttrib("foliq-surface-version", PageSurface::VERSION);
+        page->setAttrib("foliq-camera-x", s.cameraX);
+        page->setAttrib("foliq-camera-y", s.cameraY);
+        page->setAttrib("foliq-export-content", int(s.exportContent));
+        page->setAttrib("foliq-crop-x", s.crop.x);
+        page->setAttrib("foliq-crop-y", s.crop.y);
+        page->setAttrib("foliq-crop-width", s.crop.width);
+        page->setAttrib("foliq-crop-height", s.crop.height);
+        page->setAttrib("foliq-tiled", int(s.tiled));
+        page->setAttrib("foliq-tile-width", s.tileWidth);
+        page->setAttrib("foliq-tile-height", s.tileHeight);
+    }
 
     auto* background = new XmlNode("background");
     page->addChild(background);

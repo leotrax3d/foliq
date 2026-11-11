@@ -429,8 +429,8 @@ void XournalView::scrollTo(size_t pageNo, double yDocument) {
     // Make sure it is visible
     Layout* layout = gtk_xournal_get_layout(this->widget);
 
-    int x = v->getX();
-    int y = v->getY() + std::lround(yDocument);
+    int x = v->getViewportX();
+    int y = v->getViewportY() + std::lround(yDocument);
     int width = v->getDisplayWidth();
     int height = v->getDisplayHeight();
 
@@ -550,7 +550,9 @@ void XournalView::zoomChanged() {
 
     layoutPages();
 
-    if (zoom->isZoomPresentationMode() || zoom->isZoomFitMode()) {
+    if (view->getPage()->isInfinite()) {
+        view->repaintPage();
+    } else if (zoom->isZoomPresentationMode() || zoom->isZoomFitMode()) {
         scrollTo(currentPage);
     } else if (zoom->isZoomSequenceActive()) {
         auto pos = zoom->getScrollPositionAfterZoom();

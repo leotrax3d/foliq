@@ -72,7 +72,12 @@ void StrokeView::draw(const Context& ctx) const {
         /**
          * Create a mask tailored to the stroke's bounding box
          */
-        mask = Mask(cairo_get_target(ctx.cr), Range(s->boundingRect()), zoom);
+        double x1, y1, x2, y2;
+        cairo_clip_extents(ctx.cr, &x1, &y1, &x2, &y2);
+        auto visible = Range(s->boundingRect()).intersect(Range(x1, y1, x2, y2));
+        if (visible.empty() || !visible.isValid())
+            return;
+        mask = Mask(cairo_get_target(ctx.cr), visible, zoom);
         cr = mask.get();
     }
 
@@ -100,7 +105,7 @@ void StrokeView::draw(const Context& ctx) const {
             ErasableStrokeView erasableStrokeView(*erasable);
             erasableStrokeView.drawFilling(cr);
         } else {
-            StrokeViewHelper::pathToCairo(cr, s->getPointVector());
+            StrokeViewHelper::filledPathToCairo(cr, s->getPointVector());
             cairo_fill(cr);
         }
     }

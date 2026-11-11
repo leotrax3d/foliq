@@ -318,6 +318,44 @@ void LoadHandler::parseContents() {
 
         this->page = std::make_unique<XojPage>(width, height, /*suppressLayer*/ true);
 
+        if (const char* version = LoadHandlerHelper::getAttrib("foliq-surface-version", true, this)) {
+            if (std::string(version) != "1") {
+                error("Unsupported Foliq surface version: %s. Original file must be preserved.", version);
+                return;
+            }
+            try {
+                auto number = [this](const char* key) {
+                    auto* value = LoadHandlerHelper::getAttrib(key, true, this);
+                    if (!value)
+                        throw std::invalid_argument(std::string("Missing Foliq surface attribute: ") + key);
+                    char* end = nullptr;
+                    double result = g_ascii_strtod(value, &end);
+                    if (end == value || *end || !std::isfinite(result))
+                        throw std::invalid_argument(std::string("Invalid Foliq surface number: ") + key);
+                    return result;
+                };
+                auto boolean = [&number](const char* key) {
+                    double result = number(key);
+                    if (result != 0 && result != 1)
+                        throw std::invalid_argument(std::string("Invalid Foliq surface boolean: ") + key);
+                    return result == 1;
+                };
+                PageSurface s;
+                s.infinite = true;
+                s.cameraX = number("foliq-camera-x");
+                s.cameraY = number("foliq-camera-y");
+                s.exportContent = boolean("foliq-export-content");
+                s.crop = {number("foliq-crop-x"), number("foliq-crop-y"), number("foliq-crop-width"),
+                          number("foliq-crop-height")};
+                s.tiled = boolean("foliq-tiled");
+                s.tileWidth = number("foliq-tile-width");
+                s.tileHeight = number("foliq-tile-height");
+                this->page->setSurface(s);
+            } catch (const std::exception& e) {
+                error("%s", e.what());
+                return;
+            }
+        }
         pages.push_back(this->page);
     } else if (strcmp(elementName, "audio") == 0) {
         this->parseAudio();

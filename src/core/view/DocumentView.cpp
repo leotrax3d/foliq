@@ -1,12 +1,15 @@
 #include "DocumentView.h"
 
+#include <cmath>
 #include <memory>  // for __shared_ptr_access, uni...
 #include <vector>  // for vector
 
 #include <glib.h>  // for g_message
 
-#include "model/Layer.h"                     // for Layer
-#include "model/XojPage.h"                   // for XojPage
+#include "model/BackgroundConfig.h"
+#include "model/Layer.h"    // for Layer
+#include "model/XojPage.h"  // for XojPage
+#include "util/Util.h"
 #include "view/DebugShowRepaintBounds.h"     // for IF_DEBUG_REPAINT
 #include "view/View.h"                       // for EditionTreatment, NORMAL...
 #include "view/background/BackgroundView.h"  // for BackgroundFlags, Backgro...
@@ -61,6 +64,45 @@ void DocumentView::finializeDrawing() {
  * Draw the background
  */
 void DocumentView::drawBackground(xoj::view::BackgroundFlags bgFlags) const {
+    if (page->isInfinite() && !bgFlags.showPDF && !bgFlags.showImage && !bgFlags.showRuling)
+        return;
+    if (page->isInfinite() && !page->getBackgroundType().isSpecial()) {
+        if (!page->isLayerVisible(0))
+            return;
+        Util::cairo_set_source_rgbi(cr, page->getBackgroundColor());
+        cairo_paint(cr);
+        if (!bgFlags.showRuling || page->getBackgroundType().format == PageTypeFormat::Plain)
+            return;
+        double x1, y1, x2, y2;
+        cairo_clip_extents(cr, &x1, &y1, &x2, &y2);
+        double step = 14.17;
+        BackgroundConfig(page->getBackgroundType().config).loadValue("r1", step);
+        if (!std::isfinite(step) || step < 2)
+            step = 14.17;
+        // At low zoom keep the number of visible grid lines bounded.
+        double ux = 1, uy = 1;
+        cairo_device_to_user_distance(cr, &ux, &uy);
+        step *= std::max(1.0, std::ceil(std::abs(ux) * 4 / step));
+        cairo_set_source_rgba(cr, 0.45, 0.55, 0.7, 0.45);
+        cairo_set_line_width(cr, std::abs(ux) * 0.75);
+        for (double y = std::floor(y1 / step) * step; y <= y2; y += step) {
+            cairo_move_to(cr, x1, y);
+            cairo_line_to(cr, x2, y);
+        }
+        auto format = page->getBackgroundType().format;
+        if (format == PageTypeFormat::Graph) {
+            for (double x = std::floor(x1 / step) * step; x <= x2; x += step) {
+                cairo_move_to(cr, x, y1);
+                cairo_line_to(cr, x, y2);
+            }
+        }
+        cairo_stroke(cr);
+        return;
+    }
+    if (page->isInfinite() && (bgFlags.showPDF || !page->getBackgroundType().isPdfPage())) {
+        Util::cairo_set_source_rgbi(cr, page->getBackgroundColor());
+        cairo_paint(cr);
+    }
     auto bgView = xoj::view::BackgroundView::createForPage(page, bgFlags, pdfCache);
     bgView->draw(cr);
 }

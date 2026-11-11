@@ -29,8 +29,7 @@ Bedienung und Grenzen stehen in [NOTEBOOKS.md](NOTEBOOKS.md).
 
 Noch nicht implementiert: Rich Text mit gemischten Stilen,
 strukturierte Tabellen/Listen, beliebige Anhänge, Tags/Aufgaben, globale Suche,
-OCR, Handschrift-zu-Text, verschlüsselte Notizbücher, automatisch wachsende
-Arbeitsfläche. Die neue GTK-Hauptoberfläche ist implementiert; Bedienung und
+OCR, Handschrift-zu-Text und verschlüsselte Notizbücher. Die neue GTK-Hauptoberfläche ist implementiert; Bedienung und
 Gestaltungsgrundlagen: [FOLIQ-UI.md](design-references/FOLIQ-UI.md). `HandRecognition` im Upstream ist
 Handballen-/Touch-Unterdrückung und keine Handschrifterkennung.
 
@@ -44,3 +43,8 @@ Die fünf vom Nutzer bereitgestellten Screenshots und die daraus abgeleitete
 Anordnung sind unter [design-references/](design-references/README.md) abgelegt.
 Sie dienen der GTK-Oberfläche als Orientierung für Werkzeuggruppen und
 reduzierten Zeichenmodus. Die Foliq-Navigation nutzt zwei Spalten links.
+
+Papiermodus und freie Arbeitsfläche mit negativen/positiven Weltkoordinaten,
+Kamera, Zoom und kopierender Umwandlung sind implementiert. Bedienung, XOPP-
+Erweiterung und Exportgrenzen: [SURFACES.md](SURFACES.md). Die frühere endliche
+Auto-Grow-Planung ist durch ADR-006 ersetzt; Hardwareabnahme bleibt offen.

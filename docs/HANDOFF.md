@@ -450,3 +450,109 @@ erfolgreich. Lokale Git-Identität ausdrücklich auf leotrax3d@gmx.net gesetzt;
 Author und Committer vor Push prüfen. Regulärer Push nach origin/main; abschließend
 Remote-HEAD und sauberen Arbeitsbaum prüfen. Kein erneuter Produktcode geändert
 und kein neuer Hardwaretest für diesen Veröffentlichungsschritt.
+
+## M4 Seitentypen – 2026-11-11 (Integration und Abnahme)
+
+Zunächst AGENTS, PRODUCT/ARCHITECTURE/ROADMAP/UPSTREAM/HANDOFF sowie das tatsächliche
+XojPage-/PageView-/Input-/Render-/XOPP-/Undo-/PDF-Modell untersucht. Vorbereiteter
+Checkout lag bei a80e1e90; `git ls-remote origin HEAD` zeigte e94b6344 und lokale
+origin/main enthielt bereits die neuere Hauptoberfläche. Nicht überschneidende
+Änderungen per `git merge --ff-only origin/main` erhalten. Auf aktuellem M2-Stand
+weitergearbeitet; kein Push/Commit für diesen Auftrag.
+
+Papier und freier Raum sind nun explizit im bestehenden Editor modelliert.
+PageSurface v1 speichert Kamera und PDF-Ausschnitt/-Teilung als validierte
+XOPP-Seitenattribute; alte Dateien bleiben Papier. Unbekannte Versionen,
+unvollständige Metadaten und ungültige Zahlen werden beim Laden abgewiesen.
+SaveJob-Staging, Backup, atomarer Replace und Konflikterkennung bleiben erhalten.
+Kein neues externes Format, keine Laufzeitbibliothek. ADR-006 ersetzt den zuvor
+bewusst beschränkten endlichen Auto-Grow-Ansatz aus ADR-004.
+
+Keine vorab riesige Papierseite: freie PageViews zeichnen direkt in den sichtbaren
+Clip, Bildschirmfenster bleibt beim Zoomen konstant. Weltursprung getrennt von
+Layoutposition; alle bestehenden Werkzeuge verwenden dieselbe Projektion.
+Hand/Touch/Mausrad verschieben Kamera. Zoomanker, Pan/Zoom-Undo mit 350-ms-
+Zusammenfassung und vollständiges Einstellungs-Undo ergänzt. Neue GTK-Oberfläche:
+Einfügen → Seitentyp / Papier; vorhandene Journal-Aktion öffnet denselben Dialog.
+Papierformat/Orientierung, unterstützte Lineatur/Rasterabstand/Farbe sowie
+PDF-Ausschnitt und Kachelgrößen sind dort erreichbar. Typwechsel erzeugt eine
+Kopie im selben Dokument; Original bleibt erhalten, Überlauf wird nicht gelöscht.
+Grenzen vor Anwenden im Dialog. Details: SURFACES.md.
+
+Tests fanden und korrigierten übernommene Annahmen: negative-only Stroke-Bounds
+initialisierten Maxima mit kleinstem positivem Double statt lowest(); aktive
+Werkzeugknöpfe lösten beim programmgesteuerten Synchronisieren erneut Klickaktionen
+aus und schalteten zurück zum Stift. Beide Fehler sind korrigiert. Große
+Textmarker-/Radiermasken werden auf den Clip begrenzt; breite Polygone/Segmente
+werden vor Cairos intern begrenztem Rasterizer geometrisch zugeschnitten.
+Auswahlvorschauen erhalten maximal 2.048 Pixel pro Kante; originale Vektoren
+bleiben erhalten. Vorschauen passen den Inhaltsbereich in eine kleine Ausgabe.
+
+PDF nutzt pro freier Seite wählbaren Inhalt oder numerischen Ausschnitt inklusive
+negativer Koordinaten und iteriert Teilseiten ohne Gesamtbitmap. Papier bleibt
+unverändert. Vorprüfung begrenzt Teilseitenzahl/Größe; Outline-Ziele werden bei
+freien Dokumenten ausdrücklich weggelassen. Direkter GTK-Druck verweist auf
+PDF-Export; PNG/SVG nutzen Ausschnitt ohne Teilung, PNG mit Pixelbudget.
+
+Bisher ausgeführt: voller Linux-Editorbuild im frischen Ubuntu-24.04-Dockercontainer
+`foliq-pages`, Host Debian 13 ohne sudo/CMake. Setup über vorhandenes Skript,
+Build als UID 1000. Zwischenstand **115/115 Tests aus 22 Suites bestanden**.
+Neue GTests prüfen Koordinaten/Zoomanker, Bounds, Validierung, kopierende Umwandlung,
+Drucksegment-Roundtrip, Legacy-Papier, Settings-Undo-Swap, History-Merge, gekachelte
+und gemischte PDFs samt Poppler-Pixel-/Seitengrößenprüfung sowie geschützte
+Zieldatei bei Exportfehler. Tatsächliche finale Belege und GTK-/Stressresultate
+werden nach Abschluss darunter ergänzt. WINDOWS.md enthält konkrete, ausdrücklich
+noch offene Hardwaretests für Druck, Handballen, Tasten und Latenz.
+
+### M4: endgültige Belege und verbleibende Grenzen
+
+Nach allen Produktkorrekturen und Formatierung erneut gebaut:
+`docker exec -u 1000 foliq-pages bash scripts/foliq/setup-codex.sh --build`.
+**116/116 Tests aus 22 Suites bestanden**, darunter 16 neue PageSurface-Tests;
+Editor und --version erfolgreich. XML: validation/surfaces-linux-tests.xml.
+Letzter inkrementeller Lauf ohne neue Compilerwarnung; Gesamtbuild enthält
+weiterhin bestehende Upstream-Warnungen. Zusätzlich Hintergrundunterdrückung
+für freie Exporte geprüft, damit die vorhandene Exportoption wirksam bleibt.
+
+Native GTK-Prüfung auf finalem Code mit Xvfb/DBus/AT-SPI/xdotool, Exit 0:
+**10 Prüfschritte bestanden**. Negative Maus-Stiftkoordinaten, Lasso-Verschieben,
+Skalieren, Textmarker, Radierer, Hand-Schwenken, Zeiger-Zoom, Papierkopie und
+Papiermaße jeweils mit relevanter Undo/Redo-Prüfung anhand der tatsächlich
+abgespeicherten XOPP-Daten. Neustart erhält beide Seitentypen, Kameraposition und
+Strichdaten; reguläre Programmenden mit Code 0. Reproduzierbares Skript und
+Kurzprotokoll: validation/surfaces-ui-smoke.py, surfaces-ui-results.txt.
+Screenshots freie Fläche, Dialog und Auswahl daneben. Nur synthetische Daten.
+
+Enger Cairo-Stresstest: zwei breit gespannte Renderfälle jeweils 200-mal,
+insgesamt **400 bestandene Testausführungen**, feste Ausgabe 64×64 Pixel,
+Weltkoordinaten ±900.000 pt, Ausschnitt bei (500.000,500.000). Gemessen 0,068 s
+und maximaler Prozess-RSS 33.608 KiB. Kein GUI-/Windows-/Stiftlatenz-Benchmark.
+Rohdaten: validation/surfaces-render-stress.json. Einzelheiten, Kommandos und
+Nachweisgrenzen: validation/SURFACES-VALIDATION.md. `git diff --check` und
+Python-Syntaxprüfung erfolgreich.
+
+Bekannte, offen ausgewiesene Grenzen: numerischer Kamerabereich, O(Elementzahl)-
+Traversal statt räumlichem Index, global vereinfachte freie Lineatur, begrenzte
+Auswahlvorschau, endliche PDF-/Bildhintergründe, maximal 10.000 PDF-Teilseiten,
+gekürzte Randseiten und keine PDF-Outlines in freien Dokumenten. Direkter Druck
+über PDF-Export. PNG mit Pixelbudget. Älteres Xournal++ ignoriert die freien
+Metadaten; Original in Foliq bewahren. Der Umwandlungsdialog erklärt Beschneidung,
+Originalerhalt, Lineatur- und Exportgrenzen vor Anwenden. Nicht jede einzelne
+Form und Gerätezuordnung wurde automatisiert bedient; die vorhandenen Modell-,
+Input-, Filter- und Undo-Pfade wurden erhalten. Keine Hardware- oder Windows-CI-
+Abnahme behauptet; kein neues Windows-Testpaket und kein Commit/Push in diesem
+Auftrag. Nächster überprüfbarer Schritt: Quellreview, Windows-Build und physische
+Stift-/Palm-/Seitentasten-/Latenzmatrix aus WINDOWS.md auf realer Hardware.
+
+## Seitentypen auf main veröffentlichen – 2026-11-11
+
+Auf ausdrücklichen Nutzerauftrag den vollständigen Seitentyp-Stand einschließlich
+Quellen, Dokumentation, GTK-Prüfskript, Screenshots und Testbelegen für origin/main
+vorbereitet. Vor Commit `git fetch origin`: HEAD und origin/main identisch (0/0),
+keine Konflikte oder Historienumschreibung erforderlich. `git diff --check`
+erfolgreich; gespeicherte XML-/GTK-Belege erneut geprüft (116 Unit-Tests ohne
+Fehler, zehn erfolgreiche GTK-Prüfschritte). Keine Produktänderung seit der
+abschließenden Validierung; kein neuer Hardwaretest behauptet.
+Git-Identität lokal explizit auf leotrax3d@gmx.net gesetzt, Author und Committer
+geprüft. Regulärer Push von HEAD nach origin/main; Remote-HEAD und Arbeitsbaum
+anschließend kontrollieren. Windows-CI-Ergebnis ist separat abzuwarten.

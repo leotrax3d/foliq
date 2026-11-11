@@ -54,8 +54,10 @@ void SaveJob::updatePreview(Control* control) {
     if (doc->getPageCount() > 0) {
         PageRef page = doc->getPage(0);
 
-        double width = page->getWidth();
-        double height = page->getHeight();
+        auto bounds =
+                page->isInfinite() ? page->getContentBounds() : SurfaceRect{0, 0, page->getWidth(), page->getHeight()};
+        double width = bounds.width;
+        double height = bounds.height;
 
         double zoom = 1;
 
@@ -72,6 +74,7 @@ void SaveJob::updatePreview(Control* control) {
 
         cairo_t* cr = cairo_create(crBuffer);
         cairo_scale(cr, zoom, zoom);
+        cairo_translate(cr, -bounds.x, -bounds.y);
 
         // We don't have access to a PdfCache on which DocumentView relies for PDF backgrounds.
         // We thus print the PDF background by hand.

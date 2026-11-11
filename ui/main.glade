@@ -1338,7 +1338,7 @@
                             <property name="name">menuJournalPaperFormat</property>
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Paper _Format</property>
+                            <property name="label" translatable="yes">Page _Surface / Paper Format</property>
                             <property name="use-underline">True</property>
                             <signal name="activate" handler="ACTION_PAPER_FORMAT" swapped="no"/>
                           </object>

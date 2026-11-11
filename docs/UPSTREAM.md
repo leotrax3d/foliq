@@ -52,3 +52,10 @@ produktiven Xournal++-Instanz im selben Benutzerprofil testen.
 Seit M1 kommen der lokale Katalog und die GTK-Navigation hinzu. Foliq nutzt
 eigene Profilordner/App-ID; XOPP und der Binaryname bleiben erhalten.
 Speicherpfad und neue Dateien siehe NOTEBOOKS.md und HANDOFF.md.
+
+Seit M4 erweitern `PageSurface`/`SurfaceState`, der gemeinsame GTK-Seitendialog,
+Kameraprojektion, bestehende Werkzeug-/Undo-/Renderpfade und PDF-Ausgabe den
+Editor. Neue Beiträge tragen GPL-2.0-or-later-Hinweise; vorhandene Dateilizenzen
+bleiben bestehen. XOPP enthält versionierte optionale Foliq-Seitenattribute,
+kein neues Archivformat. Keine neue Laufzeitabhängigkeit. Speichermodell und
+Kompatibilitätsgrenzen: SURFACES.md; ADR-006 und HANDOFF dokumentieren die Eingriffe.

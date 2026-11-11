@@ -14,8 +14,11 @@
 #include "gui/PageView.h"               // for XojPageView
 #include "gui/XournalView.h"            // for XournalView
 #include "gui/widgets/XournalWidget.h"  // for gtk_xournal_get_layout
-#include "util/Util.h"                  // for execInUiThread
-#include "util/glib_casts.h"            // for wrap_for_g_callback
+#include "model/XojPage.h"
+#include "undo/SurfacePanUndoAction.h"
+#include "undo/UndoRedoHandler.h"
+#include "util/Util.h"        // for execInUiThread
+#include "util/glib_casts.h"  // for wrap_for_g_callback
 
 using xoj::util::Rectangle;
 
@@ -37,6 +40,18 @@ auto onScrolledwindowMainScrollEvent(GtkWidget* widget, GdkEventScroll* event, Z
         return true;
     }
 
+    auto* pv = zoom->view->getViewFor(zoom->view->getCurrentPage());
+    if (pv && pv->getPage()->isInfinite()) {
+        double dx = 0, dy = 0;
+        if (!gdk_event_get_scroll_deltas(reinterpret_cast<GdkEvent*>(event), &dx, &dy)) {
+            dx = event->direction == GDK_SCROLL_LEFT ? -1 : event->direction == GDK_SCROLL_RIGHT ? 1 : 0;
+            dy = event->direction == GDK_SCROLL_UP ? -1 : event->direction == GDK_SCROLL_DOWN ? 1 : 0;
+        }
+        if (state & GDK_SHIFT_MASK)
+            std::swap(dx, dy);
+        gtk_xournal_get_layout(zoom->view->getWidget())->scrollRelative(dx * 40, dy * 40);
+        return true;
+    }
     // TODO(unknown): Disabling scroll here is maybe a bit hacky find a better way
     return zoom->isZoomPresentationMode();
 }
@@ -268,8 +283,28 @@ void ZoomControl::setZoom(double zoomI) {
     if (this->zoom == zoomI) {
         return;
     }
+    auto* pv = view ? view->getViewFor(view->getCurrentPage()) : nullptr;
+    const bool free = pv && pv->getPage()->isInfinite();
+    const auto oldZoom = this->zoom;
+    const auto oldSurface = free ? pv->getPage()->getSurface() : PageSurface{};
+    auto center = isZoomSequenceActive() ? zoomWidgetPos : utl::Point<double>{0, 0};
+    auto before = free ? getVisibleRect() : Rectangle<double>{};
+    double wx = 0, wy = 0;
+    if (free) {
+        wx = (before.x + center.x - pv->getX()) / this->zoom;
+        wy = (before.y + center.y - pv->getY()) / this->zoom;
+    }
     this->zoom = zoomI;
     fireZoomChanged();
+    if (free && isZoomSequenceActive() && !restoringSurfaceHistory) {
+        auto after = getVisibleRect();
+        const auto& s = pv->getPage()->getSurface();
+        auto cx = PageSurface::zoomedCamera(wx, after.x + center.x, pv->getViewportX(), zoomI);
+        auto cy = PageSurface::zoomedCamera(wy, after.y + center.y, pv->getViewportY(), zoomI);
+        pv->panSurface(cx - s.cameraX, cy - s.cameraY, false);
+        control->getUndoRedoHandler()->addUndoAction(
+                std::make_unique<SurfacePanUndoAction>(pv->getPage(), oldSurface.cameraX, oldSurface.cameraY, oldZoom));
+    }
 }
 
 void ZoomControl::setZoom100Value(double zoom100Val) {
@@ -414,4 +449,10 @@ void ZoomControl::pageSelected(size_t page) {
         return;
     }
     updateZoomFitValue(this->current_page);
+}
+
+void ZoomControl::setZoomFromSurfaceHistory(double value) {
+    restoringSurfaceHistory = true;
+    setZoom(value);
+    restoringSurfaceHistory = false;
 }

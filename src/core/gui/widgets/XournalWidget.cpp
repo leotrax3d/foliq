@@ -18,8 +18,9 @@
 #include "gui/XournalView.h"                // for XournalView
 #include "gui/inputdevices/InputContext.h"  // for InputContext
 #include "gui/scroll/ScrollHandling.h"      // for ScrollHandling
-#include "util/Color.h"                     // for cairo_set_source_rgbi
-#include "util/Rectangle.h"                 // for Rectangle
+#include "model/XojPage.h"
+#include "util/Color.h"      // for cairo_set_source_rgbi
+#include "util/Rectangle.h"  // for Rectangle
 
 
 using xoj::util::Rectangle;
@@ -83,8 +84,8 @@ auto gtk_xournal_get_visible_area(GtkWidget* widget, const XojPageView* p) -> Re
     r2.height = static_cast<int>(gtk_adjustment_get_page_size(vadj));
 
     GdkRectangle r1;
-    r1.x = p->getX();
-    r1.y = p->getY();
+    r1.x = p->getViewportX();
+    r1.y = p->getViewportY();
     r1.width = p->getDisplayWidth();
     r1.height = p->getDisplayHeight();
 
@@ -95,17 +96,17 @@ auto gtk_xournal_get_visible_area(GtkWidget* widget, const XojPageView* p) -> Re
         return nullptr;
     }
 
-    r3.x -= r1.x;
-    r3.y -= r1.y;
+    r3.x -= p->getX();
+    r3.y -= p->getY();
 
     double zoom = xournal->view->getZoom();
 
-    if (r3.x < 0 || r3.y < 0) {
+    if (!p->getPage()->isInfinite() && (r3.x < 0 || r3.y < 0)) {
         g_warning("XournalWidget:gtk_xournal_get_visible_area: intersection rectangle coordinates are negative which "
                   "should never happen");
     }
 
-    return new Rectangle<double>(std::max(r3.x, 0) / zoom, std::max(r3.y, 0) / zoom, r3.width / zoom, r3.height / zoom);
+    return new Rectangle<double>(r3.x / zoom, r3.y / zoom, r3.width / zoom, r3.height / zoom);
 }
 
 auto gtk_xournal_get_layout(GtkWidget* widget) -> Layout* {
@@ -242,8 +243,8 @@ static auto gtk_xournal_draw(GtkWidget* widget, cairo_t* cr) -> gboolean {
     Rectangle clippingRect(x1 - 10, y1 - 10, x2 - x1 + 20, y2 - y1 + 20);
 
     for (auto&& pv: xournal->view->getViewPages()) {
-        int px = pv->getX();
-        int py = pv->getY();
+        int px = pv->getViewportX();
+        int py = pv->getViewportY();
         int pw = pv->getDisplayWidth();
         int ph = pv->getDisplayHeight();
 
@@ -254,7 +255,9 @@ static auto gtk_xournal_draw(GtkWidget* widget, cairo_t* cr) -> gboolean {
         gtk_xournal_draw_shadow(xournal, cr, px, py, pw, ph, pv->isSelected());
 
         cairo_save(cr);
-        cairo_translate(cr, px, py);
+        cairo_rectangle(cr, px, py, pw, ph);
+        cairo_clip(cr);
+        cairo_translate(cr, pv->getX(), pv->getY());
 
         pv->paintPage(cr, nullptr);
         cairo_restore(cr);

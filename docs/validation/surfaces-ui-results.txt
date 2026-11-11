@@ -1,0 +1,10 @@
+PASS GTK negative-coordinate pen input and save
+PASS GTK stroke undo/redo
+PASS GTK lasso move and undo/redo at negative coordinates
+PASS GTK selection scaling and undo/redo
+PASS GTK highlighter and eraser with undo/redo
+PASS GTK Hand panning into negative space and undo/redo
+PASS GTK real zoom keeps pointer world anchor
+PASS GTK conversion preserves original, translates copy, undo/redo
+PASS GTK paper settings undo/redo
+PASS GTK restart preserves page modes, camera and negative content

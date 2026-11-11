@@ -81,3 +81,45 @@ SaveJob behält Original und Backup bis zum erfolgreichen Commit; Bildhintergrü
 werden vorab unter neuen Namen geschrieben. Der synchrone Fehlerpfad in Control
 setzt den Dirty-Zustand jetzt nur nach Erfolg zurück. Foliq-Profil und GTK-App-ID
 sind von Xournal++ getrennt.
+
+## ADR-006: Freie Weltkoordinaten und begrenzte Ansichtsfenster (2026-11-11)
+
+Ersetzt ADR-004 für die jetzt geforderte freie Arbeitsfläche. Kein Auto-Grow einer
+riesigen Papierseite: `PageSurface` trennt Papier von freiem Koordinatenraum.
+`XojPage::width/height` bleiben Papier-/Fallbackmaße, niemals Weltgrenzen.
+Freie PageViews belegen ein Ansichtsfenster in der vorhandenen Dokumentanordnung;
+dessen Bildschirmgröße bleibt beim Zoomen konstant. Die Kamera verschiebt die
+Projektion, ohne Elemente umzuschreiben. `getViewportX/Y` liefern Layoutkoordinaten,
+`getX/Y` den projizierten Weltursprung für die bisherigen Werkzeugpfade. GTK-
+Integergrenzen begrenzen die Kameraposition auf ±985.600 pt; der deklarierte
+Koordinatenbereich ist ±1.000.000 pt einschließlich des sichtbaren Ausschnitts.
+Das ist eine numerische Sicherheitsgrenze, keine vorab angelegte Fläche.
+
+Der freie Bildschirmrenderer zeichnet direkt in Cairos sichtbaren Clip. Kein
+seitergroßer Bitmapcache, keine Allokation von Weltkacheln für leere Bereiche.
+LayerView prüft Element-Bounding-Boxes gegen den Clip; die Traversierung bleibt
+O(Anzahl gespeicherter Elemente), unabhängig vom Abstand zwischen ihnen.
+Textmarker- und Radiermasken werden auf den Clip begrenzt. Großflächige Pfade
+werden vor dem Rasterizer mit Double-Koordinaten zugeschnitten (Polygon- bzw.
+Segment-Clipping), um dessen interne Rastergrenzen nicht zu überschreiten.
+Temporäre Auswahl-Bitmaps sind auf 2.048 Pixel pro Kante beschränkt; die endgültige
+Transformation verwendet weiterhin die originalen Vektoren. Vorschauen erhalten
+begrenzte Ausgabeflächen und passen den Inhaltsbereich ein. Keine zusätzliche
+Bibliothek und kein zweiter Editor.
+
+`AbstractInputHandler` und bestehende Druck-/Gerätefilter bleiben erhalten.
+Gemeinsame Ursprungstransformation gilt für Schreiben, Radieren, Lasso, Formen,
+Verschieben und Skalieren. Papier-Clamps entfallen nur für freie Seiten.
+Hand/Touch/Mausrad laufen über Layout::scrollRelative; Zoom hält den Weltpunkt
+unter dem Zeiger fest. Freies Schwenken und Zoomen besitzen gemeinsam mit
+Seiteneinstellungen Undo/Redo; zusammenhängende Navigationsereignisse werden
+innerhalb 350 ms zusammengefasst, niemals über einen Speicherpunkt hinweg.
+Programmgesteuertes Wiederherstellen der Zoom-Metadaten verändert keine Kamera
+und erzeugt keinen Bearbeitungseintrag.
+
+XOPP-Erweiterung v1, Validierung, Kompatibilität, kopierende Umwandlung und
+Exportgrenzen stehen in [SURFACES.md](SURFACES.md). Der bestehende SaveJob behält
+atomaren Staging-/Backup-/Konfliktschutz. PDF-Ausgabe verwendet dieselben Elemente,
+clippt wählbare Ausschnitte und adressiert Teilseiten einzeln; keine große
+Zwischenbitmap. Direkter GTK-Druck freier Dokumente verweist ausdrücklich auf
+diesen PDF-Pfad, statt unbemerkt bei (0,0) abzuschneiden.

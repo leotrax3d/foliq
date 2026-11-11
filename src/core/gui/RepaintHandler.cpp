@@ -12,8 +12,8 @@ RepaintHandler::RepaintHandler(XournalView* xournal): xournal(xournal) {}
 RepaintHandler::~RepaintHandler() { this->xournal = nullptr; }
 
 void RepaintHandler::repaintPage(const XojPageView* view) {
-    int x1 = view->getX();
-    int y1 = view->getY();
+    int x1 = view->getViewportX();
+    int y1 = view->getViewportY();
     int x2 = x1 + view->getDisplayWidth();
     int y2 = y1 + view->getDisplayHeight();
 

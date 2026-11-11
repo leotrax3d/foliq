@@ -22,6 +22,7 @@
 #include "BackgroundImage.h"  // for BackgroundImage
 #include "Layer.h"            // for Layer, Layer::Index
 #include "PageHandler.h"      // for PageHandler
+#include "PageSurface.h"
 #include "PageType.h"         // for PageType
 
 class XojPage: public PageHandler {
@@ -44,7 +45,7 @@ public:
     void setBackgroundPdfPageNr(size_t page);
 
     void setBackgroundType(const PageType& bgType);
-    PageType getBackgroundType();
+    PageType getBackgroundType() const;
 
     /**
      * Do not call this, cal doc->setPageSize(Page * p, double width, double height);
@@ -81,6 +82,14 @@ public:
      */
     XojPage* clone();
 
+    const PageSurface& getSurface() const { return surface; }
+    void setSurface(const PageSurface& value) {
+        value.validate();
+        surface = value;
+    }
+    bool isInfinite() const { return surface.infinite; }
+    SurfaceRect getContentBounds() const;
+
 private:
     /**
      * The Background image if any
@@ -90,6 +99,7 @@ private:
     /**
      * The size of the page
      */
+    PageSurface surface;
     double width = 0;
     double height = 0;
 
