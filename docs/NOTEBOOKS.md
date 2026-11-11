@@ -1,10 +1,13 @@
 # Lokale Notizbücher – Format 1
 
-Die neue linke Navigation arbeitet mit echten XOPP-Dateien im bestehenden Editor.
-Zuerst ein Notizbuch anlegen, dort Gruppen oder Abschnitte, im Abschnitt Seiten.
-Eine Seite als Elternknoten ergibt eine Unterseite. Doppelklick/Eingabe öffnet
-Seiten; Notizbücher lassen sich damit öffnen/schließen. Pfeile ändern die
-Reihenfolge, „Verschieben“ bietet Zielknoten an (ungültige Ziele werden abgewiesen).
+Die linke Notizbuch-/Abschnittsnavigation und die benachbarte Seitenliste arbeiten
+mit echten XOPP-Dateien im bestehenden Editor. Über „+ Neu“ zuerst ein Notizbuch
+anlegen, dort Gruppen oder Abschnitte. Abschnitt wählen und über „+ Seite“ Seiten
+anlegen. Die beiden Knöpfe öffnen auch die weiteren Aktionen. Eine ausgewählte
+Seite als Elternknoten ergibt eine Unterseite. Doppelklick/Eingabe öffnet
+Seiten; Notizbücher lassen sich damit öffnen/schließen. Alt+↑/↓ und die Pfeilaktionen im Menü ändern die Reihenfolge; „Verschieben“
+bietet gültige Zielknoten an. Drag-and-drop an Zeilenkanten sortiert, in die
+Zeilenmitte verschiebt es in den Zielknoten; Typen und Zyklen werden validiert.
 „Löschen“ legt den gesamten Teilbaum in den Papierkorb; die Papierkorbansicht
 zeigt zur Orientierung auch nicht gelöschte Elternpfade. Eltern zuerst
 wiederherstellen. Es gibt bewusst noch kein unwiderrufliches Leeren.

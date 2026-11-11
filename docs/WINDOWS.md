@@ -96,3 +96,31 @@ $env:FOLIQ_LIBRARY = "$env:USERPROFILE\Foliq-Testbibliothek"
    „Speichern unter“ retten, Original nicht überschreiben.
 
 Automatische Tests sind kein Windows-Stift-/DPI-/Screenreader-/Hardwaretest.
+
+## Neue Hauptoberfläche prüfen
+
+Diese Matrix gilt für den neuen Quellstand, nicht für das ältere verlinkte Paket.
+Nach einem neuen Windows-Build Paket-Commit und Windows-/GTK-Version protokollieren.
+
+1. Zwei Abschnitte mit Seiten/Unterseiten erstellen. Abschnitt links wählen;
+   daneben nur dessen Seiten. Links/Rechts klappt Unterseiten ein/aus;
+   Eingabe öffnet sie. F2, Tab, Shift+Tab und sichtbaren Fokus prüfen.
+2. Seiten und Abschnitte an Zeilenkanten sortieren, in Zeilenmitte in andere
+   gültige Eltern verschieben. Unterseiten bleiben erhalten. Zyklus und falscher
+   Knotentyp müssen abgewiesen werden. Dieselben Ziele über Aktionen → Verschieben
+   und Reihenfolge über Alt+↑/↓ prüfen; Neustart muss die Änderung behalten.
+3. Beide Spaltengrenzen ändern. Fokus ein-/ausschalten; Hell, Dunkel, System
+   wählen. Werkzeugreiter und eingeklappte Unterseiten ändern, regulär beenden
+   und neu starten: Ansichtsoptionen wiederhergestellt. Unbekannte view.ini-
+   Version nur in einer Testkopie prüfen: sichtbarer Fehler, kein Überschreiben.
+4. Fenster bei 800×600 und 1280×800 sowie 100/150/200 % Windows-Skalierung
+   prüfen. Sehr lange Unicode-Titel dürfen die Schreibfläche nicht verdrängen.
+   Werkzeuggruppen müssen horizontal erreichbar bleiben. Fokusmodus bei kleinem
+   Fenster prüfen. Beide Trennleisten auch mit Tastatur bedienen.
+5. Alle vier Werkzeugreiter bedienen; „Zeichnen → Weitere Werkzeuge“ und
+   „Ansicht → Alle Werkzeuge“ müssen die bisherigen Werkzeugleisten mit Farben,
+   Strichstärken und Spezialwerkzeugen ein-/ausblenden; Dokument-Suche, Undo/Redo und tatsächlichen
+   Speicherstatus prüfen. Stift/Radierer/Druck, PDF-Anmerkungen, Spezialwerkzeuge,
+   Export und Autosave erneut mit der bestehenden Matrix oben prüfen.
+6. NVDA: Namen der Bäume, Farbschema, Aktionsmenüs, Auswahl und Fokus prüfen.
+   Linux-ATK-Inspektion ersetzt diese Windows-Screenreader-Abnahme nicht.

@@ -76,6 +76,7 @@ MainWindow::MainWindow(GladeSearchpath* gladeSearchPath, Control* control, GtkAp
     if (FOLIQ_BUILD) {
         gtk_orientable_set_orientation(GTK_ORIENTABLE(get("mainContentContainer")), GTK_ORIENTATION_HORIZONTAL);
         notebookNavigation = std::make_unique<foliq::Navigation>(control, get("mainContentContainer"), GTK_WINDOW(getWindow()));
+        boxContainerWidget.reset(notebookNavigation->editorContainer(), xoj::util::ref);
     }
 
     loadMainCSS(gladeSearchPath, "xournalpp.css");

@@ -1,3 +1,4 @@
+#include "config.h"
 #include "Settings.h"
 
 #include <algorithm>    // for max
@@ -83,16 +84,16 @@ void Settings::loadDefault() {
     this->font.setName(DEFAULT_FONT);
     this->font.setSize(DEFAULT_FONT_SIZE);
 
-    this->mainWndWidth = 800;
-    this->mainWndHeight = 600;
+    this->mainWndWidth = FOLIQ_BUILD ? 1200 : 800;
+    this->mainWndHeight = FOLIQ_BUILD ? 800 : 600;
 
     this->fullscreenActive = false;
 
-    this->showSidebar = true;
+    this->showSidebar = !FOLIQ_BUILD;
     this->sidebarWidth = 150;
     this->sidebarNumberingStyle = SidebarNumberingStyle::DEFAULT;
 
-    this->showToolbar = true;
+    this->showToolbar = !FOLIQ_BUILD;
     this->selectedToolbar = DEFAULT_TOOLBAR;
 
     this->sidebarOnRight = false;
@@ -106,7 +107,7 @@ void Settings::loadDefault() {
 
     this->stylusCursorType = STYLUS_CURSOR_DOT;
     this->eraserVisibility = ERASER_VISIBILITY_ALWAYS;
-    this->iconTheme = ICON_THEME_COLOR;
+    this->iconTheme = FOLIQ_BUILD ? ICON_THEME_LUCIDE : ICON_THEME_COLOR;
     this->themeVariant = THEME_VARIANT_USE_SYSTEM;
     this->highlightPosition = false;
     this->cursorHighlightColor = 0x80FFFF00;  // Yellow with 50% opacity
@@ -173,6 +174,10 @@ void Settings::loadDefault() {
     this->activeViewMode = PresetViewModeIds::VIEW_MODE_DEFAULT;
     this->viewModes =
             std::vector<ViewMode>{VIEW_MODE_STRUCT_DEFAULT, VIEW_MODE_STRUCT_FULLSCREEN, VIEW_MODE_STRUCT_PRESENTATION};
+    if (FOLIQ_BUILD) {
+        this->viewModes.at(VIEW_MODE_DEFAULT).showSidebar = false;
+        this->viewModes.at(VIEW_MODE_DEFAULT).showToolbar = false;
+    }
 
     this->touchZoomStartThreshold = 0.0;
 

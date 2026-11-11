@@ -1,0 +1,13 @@
+2026-11-11 — Ubuntu 24.04 x86_64, GTK 3.24.41, GCC 13.3; Xvfb/X11 + DBus/AT-SPI
+Editor build + CLI version: PASS
+Unit tests: 100/100, 21 suites, 0 failures (main-ui-linux-tests.xml)
+main-ui-smoke.py: exit 0
+PASS editor stroke, ribbon undo/redo, autosave
+PASS real page and section drag-and-drop
+PASS keyboard ordering and move menu
+PASS theme/focus/view restart, long title and 800x600 capture
+PASS 200% GTK launch and unknown view version preservation
+main-ui-pdf.py: exit 0
+PASS two-page PDF opens, pen annotation and XOPP save
+Independent XOPP count: 2 pages, 2 PDF backgrounds, 1 stroke
+Windows / physical stylus / touch / audio / NVDA: not executed

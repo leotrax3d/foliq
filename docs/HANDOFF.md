@@ -345,3 +345,108 @@ getestete Einrichtung liegt auf main bereit. Einmal in den Codex-Umgebungseinste
 Foliq für leotrax3d/foliq/main anlegen, Setup-Befehl gemäß CODEX.md eintragen,
 ausführen und speichern/veröffentlichen; anschließend in neuen Chats auswählen.
 Git und HANDOFF bleiben die dauerhafte Wissens-/Arbeitsübergabe.
+
+## M2 Hauptoberfläche – 2026-11-11 (Validierung läuft)
+
+Frischen Checkout von origin/main geprüft, AGENTS und Projektdokumentation gelesen,
+`git fetch origin` ausgeführt. Tatsächlich vorhanden: lokaler Katalog v1 mit
+Notizbuch-/Gruppen-/Abschnitts-/Seitenhierarchie und Unterseiten, persistente
+Verschiebe-/Duplikat-/Papierkorbpfade, XOPP-Navigation und Autosave; bestehende
+Xournal++-Werkzeuge einschließlich PDF. Noch kein Rich Text, globale Volltextsuche,
+OCR oder Auto-Grow. Keine solchen Attrappen in der neuen Oberfläche.
+
+GTK3/C++ beibehalten. Navigation hat jetzt zwei native GtkTreeViews in verschiebbaren
+GtkPaned-Spalten; daneben bleibt derselbe Editor. Notizbuch/Abschnitte getrennt
+von Seiten/Unterseiten, einklappbare Hierarchie, ellipsierte Titel, ATK-Namen,
+F2 zum Umbenennen und Alt+↑/↓ zum Sortieren. Kompakte Aktionsmenüs bewahren alle
+bisherigen Katalogaktionen. Drag-and-drop ist kein reines Widget-Reordering:
+Zeilenkanten sortieren, Zeilenmitte verschiebt in den Knoten über Catalog::move,
+inklusive bestehender Typ-/Zyklusvalidierung und sofortiger Persistenz.
+
+Oben Start/Einfügen/Zeichnen/Ansicht mit bestehenden Control-Aktionen, echte
+Dokumentsuche, Undo/Redo, Speicherstatus und Fokusumschalter. Spezialwerkzeuge
+bleiben in den bestehenden Menüs/Werkzeugleisten. Neue Foliq-Profile starten
+mit Lucide-Icons, 1200×800 und ohne die zusätzliche Dokumentvorschauspalte bzw. die doppelten Werkzeugleisten;
+„Weitere Werkzeuge“ unter Zeichnen und „Alle Werkzeuge“ unter Ansicht blenden
+die bestehenden Leisten wieder ein;
+vorhandene gespeicherte Einstellungen bleiben maßgeblich. Hell/Dunkel/System
+benutzen den vorhandenen ThemeVariant-Pfad. Gestaltungsgrundlagen/Referenzen:
+design-references/FOLIQ-UI.md und ui/xournalpp.css. Betrachtet: Repository-2735
+und öffentlicher Joplin-Desktop-Screenshot; keine Fremdassets übernommen.
+
+Optionale view.ini v1 im Bibliotheksordner: beide Spaltenbreiten, Fokus,
+Farbschema, Werkzeugreiter, Abschnitt, aufgeklappte Knoten. Bestehendes atomicWrite
+mit Backup; unbekannte Versionen werden nicht überschrieben. Fehlerhafte
+Ansichtsoptionen sperren nicht den gültigen Katalog. Kein Katalog-/XOPP-Formatwechsel.
+Windows-Matrix erweitert. Neuer GTK-Smoke-Test: validation/main-ui-smoke.py.
+
+Host: Debian 13 x86_64, UID 1000; --check meldete fehlendes CMake. Kein sudo oder
+Pakethelper auf dem Host. Managed Docker 29.9.2 geprüft; Wegwerfcontainer foliq-ui
+mit Ubuntu 24.04 (Digest fe81560990fae86dc4743202b2cb4d3df98d0bcf949173cecef15ce1127ef852)
+und vorhandenen Build-/GTK-Testpaketen eingerichtet. Build läuft als UID 1000
+über setup-codex.sh --build, Cache build-codex. Finale Build-/Test-/GUI-Ergebnisse
+werden unten ergänzt; keine neue Windows-/Stift-/Audio-Hardwareabnahme behauptet.
+
+### M2: endgültige Prüfungen und Ergebnis
+
+Vollständiger Editorbuild unter Ubuntu 24.04 x86_64/GTK 3.24.41/GCC 13.3
+als UID 1000 erfolgreich. Nach den letzten Produktkorrekturen erneut über
+`FOLIQ_BUILD_JOBS=4 bash scripts/foliq/setup-codex.sh --build` gebaut:
+**100/100 Tests aus 21 Suites bestanden**, --version erfolgreich.
+XML: validation/main-ui-linux-tests.xml. Vorhandene Upstream-Warnungen im
+Gesamtbuild; keine pauschale Warnungsfreiheit behauptet. GTK-3.18-Menüfallback
+per Versionsguard erhalten; alter GTK-Fallback nicht separat ausgeführt.
+
+Native GTK-Prüfung mit Xvfb/X11, DBus/AT-SPI und xdotool, beide Skripte mit
+Exit 0 abgeschlossen. Kommandos/Plattform/Grenzen in
+validation/MAIN-UI-VALIDATION.md. Auf finalem Produktcode erneut bestanden:
+
+- Notizbuch/Abschnitt/Seite/Unterseite über echte GTK-Menüs anlegen, XOPP öffnen,
+  Stift-/Radiererwechsel, echter Mausstrich, Undo/Redo über neue Knöpfe und Autosave.
+- Echte Maus-Drag-and-drop-Vorgänge für Seite und Abschnitt; Elternbeziehungen im
+  gespeicherten Katalog geprüft. F2, Alt+↑/↓ und Verschieben-Dialog ebenfalls
+  durch die echte Oberfläche geprüft. Suche öffnet den vorhandenen Dokumentpfad.
+- Beide Spaltengrenzen tatsächlich gezogen; geänderte Breiten gespeichert.
+  GTK verteilt die innere Breite beim Ändern der äußeren proportional weiter.
+- Dunkles Farbschema, Fokus, Abschnitt/Reiter und Breiten nach Neustart erhalten;
+  sichtbare echte Aufnahmen bei 1200×800, exakt 800×600 und GDK_SCALE=2
+  (2400×1600 physisch). Neue dunkle Shell-Farben sichern den Kontrast unabhängig
+  von fehlenden dunklen Systemthemen. Papierfarbe bleibt dokumentbezogen.
+- view.ini-Version 99 zeigt Fehler und bleibt bytesgleich erhalten; kein
+  stillschweigendes Zurückschreiben. Reguläres Beenden über GTK-Menü mit Code 0.
+- Separater PDF-Test: explizites zweiseitiges PDF geöffnet, echte Stiftanmerkung,
+  XOPP gespeichert; unabhängig im Ergebnis **2 Seiten, 2 PDF-Hintergründe,
+  1 Strich** gezählt. Dabei vorhandenen Startfehler behoben: zuletzt verwendete
+  Notiz darf ein explizit geöffnetes PDF ohne XOPP-Dateinamen nicht verdrängen.
+  Wiederherstellung prüft jetzt zusätzlich getPdfPageCount() == 0.
+
+Die GUI-Prüfung korrigierte außerdem den Quellbaum-Refresh beim Abschnittsziehen
+und die Einbettung des alten Vorschau-Umschalters. Letzterer behält einen eigenen
+Editorcontainer; vorhandene Umschaltlogik und Eingabepfade bleiben erhalten.
+Neue Zwischenablageknöpfe spiegeln den tatsächlichen Aktivierungszustand der
+bestehenden Menüaktionen, Werkzeugknöpfe den aktiven Werkzeugzustand.
+
+Screenshots unter validation/: main-ui-light.png, main-ui-dark.png,
+main-ui-focus.png, main-ui-small.png, main-ui-scale200.png und main-ui-pdf-before.png.
+Ausschließlich synthetische Testdaten; keine Microsoft-Assets übernommen.
+Tests lagen im laufenden Container unter /tmp/foliq-main-ui bzw.
+/tmp/foliq-main-ui-pdf-passed, Build unter /src/build-codex. Keine neue
+Laufzeitbibliothek, kein zweiter Editor und keine XOPP-/Katalogmigration.
+
+`git diff --check` erfolgreich. Änderungen lokal im Checkout; kein Commit/Push
+und kein neuer Windows-CI-Lauf in diesem Auftrag. Nächster überprüfbarer Schritt:
+Quelländerungen reviewen, neues Windows-Testpaket bauen und die aktualisierte
+WINDOWS.md-Matrix auf Windows 10/11 einschließlich NVDA, 100/150/200 % DPI und
+physischem Stift/Touch/PDF/Audio abnehmen. Linux/ATK/Mausprüfung ersetzt diese
+Plattform-/Hardwareabnahme nicht.
+
+## Hauptoberfläche nach main veröffentlichen – 2026-11-11
+
+Auf ausdrücklichen Nutzerauftrag alle oben dokumentierten Oberflächenänderungen,
+Testskripte, Testbelege und Screenshots für main übernommen. Vor Commit/Push
+origin aktualisiert: lokaler HEAD und origin/main identisch (0/0), keine
+Integration oder Historienumschreibung erforderlich. `git diff --check`
+erfolgreich. Lokale Git-Identität ausdrücklich auf leotrax3d@gmx.net gesetzt;
+Author und Committer vor Push prüfen. Regulärer Push nach origin/main; abschließend
+Remote-HEAD und sauberen Arbeitsbaum prüfen. Kein erneuter Produktcode geändert
+und kein neuer Hardwaretest für diesen Veröffentlichungsschritt.

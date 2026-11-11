@@ -168,3 +168,57 @@ window.darkMode #sidebarContents {
 menubar, toolbar {
     -GtkWidget-window-dragging: false
 }
+
+/* Foliq UI foundations. Existing document/paper colors belong to the editor. */
+@define-color foliq_accent #5269b8;
+@define-color foliq_focus #738bdf;
+#foliq-ribbon { padding: 4px; border-bottom: 1px solid alpha(currentColor, .15); }
+#foliq-ribbon button { border-radius: 6px; padding: 6px 10px; }
+#foliq-navigation { font-size: 1em; }
+#foliq-navigation treeview.view:selected { background-color: @foliq_accent; color: white; }
+#foliq-navigation button { padding: 6px; border-radius: 6px; }
+#foliq-ribbon button:focus, #foliq-navigation button:focus,
+#foliq-navigation treeview:focus, #foliq-ribbon combobox:focus {
+    outline: 2px solid @foliq_focus; outline-offset: -2px;
+}
+/* Stable dark shell even when the system GTK theme has no dark variant. */
+@define-color foliq_dark_bg #20252e;
+@define-color foliq_dark_panel #2b323e;
+@define-color foliq_dark_text #edf0f7;
+@define-color foliq_dark_border #455064;
+window.darkMode #foliq-ribbon, window.darkMode #foliq-navigation,
+window.darkMode #foliq-ribbon notebook, window.darkMode #foliq-ribbon header,
+window.darkMode #foliq-navigation treeview.view {
+    background-color: @foliq_dark_bg;
+    color: @foliq_dark_text;
+}
+window.darkMode #foliq-ribbon button, window.darkMode #foliq-navigation button {
+    background-image: none;
+    background-color: @foliq_dark_panel;
+    color: @foliq_dark_text;
+    border-color: @foliq_dark_border;
+    text-shadow: none;
+    box-shadow: none;
+}
+window.darkMode #foliq-ribbon button:hover, window.darkMode #foliq-navigation button:hover {
+    background-color: #39445a;
+}
+window.darkMode #foliq-ribbon button:checked,
+window.darkMode #foliq-navigation treeview.view:selected {
+    background-color: @foliq_accent;
+    color: white;
+}
+window.darkMode #foliq-ribbon button:disabled {
+    color: #929cab;
+    background-color: @foliq_dark_bg;
+}
+window.darkMode #foliq-ribbon viewport,
+window.darkMode #foliq-ribbon stack,
+window.darkMode #foliq-ribbon header tabs tab {
+    background-color: @foliq_dark_bg;
+    border-color: @foliq_dark_border;
+}
+window.darkMode #foliq-ribbon label { color: @foliq_dark_text; }
+window.darkMode #foliq-ribbon header tabs tab:checked {
+    background-color: @foliq_dark_panel;
+}

@@ -37,3 +37,8 @@ M1-Implementierung: Katalog v1, echte GTK-Navigation und abgesicherte Speicherun
 liegen jetzt im Code. Testbelege und verbleibende Plattformabnahmen siehe
 HANDOFF; Format und Wiederherstellungsweg siehe NOTEBOOKS. M2 bleibt insbesondere
 für ausgearbeitete Gestaltung, DPI und vollständige Accessibility-Abnahme offen.
+
+M2-Implementierung: zweispaltige GTK-Navigation, echte Drag-and-drop-Verschiebungen,
+Werkzeugreiter, Fokus, Farbschemata und persistente Ansichten sind umgesetzt.
+Linux-GUI-/Skalierungsbelege: validation/MAIN-UI-VALIDATION.md. Die Windows-DPI-,
+NVDA- und physische Stiftabnahme bleibt Teil der M2-Abnahme.
