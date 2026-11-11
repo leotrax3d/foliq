@@ -87,7 +87,7 @@ try:
  print('PASS keyboard ordering and move menu',flush=True)
  click('Suchen');find('Search','text');xdo('key','Escape');time.sleep(.3)
  shot('main-ui-light')
- click('Ansicht','page tab');click('Dunkel','radio button');time.sleep(1);shot('main-ui-dark')
+ click('Ansicht','page tab');click('Darstellung: Design, Eingabe, Akzentfarbe, Bewegung','toggle button');click('Dunkel','radio button');xdo('key','Escape');time.sleep(1);shot('main-ui-dark')
  # Both native pane separators must really resize and survive restart.
  xdo('mousemove',200,500,'mousedown',1,'mousemove',170,500,'mouseup',1);time.sleep(.3)
  xdo('mousemove',420,500,'mousedown',1,'mousemove',360,500,'mouseup',1);time.sleep(.3)
@@ -101,7 +101,7 @@ try:
  quitapp();assert p.returncode==0
  # Native GTK 200% scaling under a separate launch.
  env['GDK_SCALE']='2';p=start();time.sleep(1);shot('main-ui-scale200')
- find('Notizbücher und Abschnitte');find('Dunkel','radio button')
+ find('Notizbücher und Abschnitte');click('Ansicht','page tab');click('Darstellung: Design, Eingabe, Akzentfarbe, Bewegung','toggle button');find('Dunkel','radio button');xdo('key','Escape')
  quitapp();assert p.returncode==0
  del env['GDK_SCALE']
  # Unsupported optional view format must never be overwritten.

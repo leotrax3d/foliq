@@ -352,12 +352,12 @@ void Navigation::onboarding(bool firstRun) {
                          Tip{"foliq-chevron-up", "Menüband",
                              "Start, Einfügen, Zeichnen und Ansicht. Mit Strg+F1 einklappen – dann öffnet ein Klick "
                              "auf die Registerkarte es kurz über der Seite."},
-                         Tip{"xopp-fullscreen", "Vollbild und Fokus",
+                         Tip{"foliq-maximize", "Vollbild und Fokus",
                              "Das Vollbild-Symbol oben rechts (F11) lässt nur eine kleine Werkzeugleiste übrig, "
                              "Escape beendet es. Fokusmodus: Strg+Umschalt+F."},
                          Tip{"foliq-more", "Alle Befehle",
                              "Das ⋯-Menü (F10) enthält sämtliche weiteren Funktionen. Dieser Assistent lässt "
-                             "sich dort und unter „Ansicht“ jederzeit erneut starten."}}) {
+                             "sich dort und unter Ansicht → Darstellung jederzeit erneut starten."}}) {
         auto* row = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 12);
         auto* img = gtk_image_new_from_icon_name(t.icon, GTK_ICON_SIZE_DND);
         gtk_image_set_pixel_size(GTK_IMAGE(img), 24);

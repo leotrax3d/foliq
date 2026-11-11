@@ -4,6 +4,7 @@
 #include "Onboarding.h"
 
 #include <algorithm>
+#include <map>
 #include <cmath>
 #include <stdexcept>
 
@@ -176,6 +177,16 @@ Navigation::Navigation(Control* control, GtkWidget* container, GtkWindow* window
         gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
         gtk_container_add(GTK_CONTAINER(scroll), view);
         gtk_box_pack_start(GTK_BOX(column), scroll, true, true, 0);
+        // Empty state: explains what to do instead of showing a blank list.
+        auto* empty = gtk_label_new(view == books ? "Noch keine Notizbücher.\nMit + ein Notizbuch anlegen oder "
+                                                    "über ⋯ → „Foliq einrichten …“ eine Vorlage wählen." :
+                                                    "Links einen Abschnitt wählen,\num seine Seiten zu sehen.");
+        gtk_label_set_line_wrap(GTK_LABEL(empty), true);
+        gtk_label_set_justify(GTK_LABEL(empty), GTK_JUSTIFY_CENTER);
+        gtk_style_context_add_class(gtk_widget_get_style_context(empty), "dim-label");
+        gtk_widget_set_no_show_all(empty, true);
+        gtk_box_pack_start(GTK_BOX(column), empty, false, false, 12);
+        g_object_set_data(G_OBJECT(view), "empty", empty);
         if (view == books)
             gtk_paned_pack1(GTK_PANED(split), column, true, false);
         else
@@ -350,6 +361,16 @@ void Navigation::refresh(bool pagesOnly) {
     }
     pendingSelection.clear();
     savedExpanded.clear();
+    for (auto* view: {books, pages}) {
+        auto* empty = GTK_WIDGET(g_object_get_data(G_OBJECT(view), "empty"));
+        GtkTreeIter first;
+        bool hasRows = gtk_tree_model_get_iter_first(gtk_tree_view_get_model(GTK_TREE_VIEW(view)), &first);
+        if (view == pages && !section.empty())
+            gtk_label_set_text(GTK_LABEL(empty), "Dieser Abschnitt hat noch keine Seiten.\nMit + eine Seite anlegen.");
+        else if (view == pages)
+            gtk_label_set_text(GTK_LABEL(empty), "Links einen Abschnitt wählen,\num seine Seiten zu sehen.");
+        gtk_widget_set_visible(empty, !hasRows);
+    }
     selectTree(active);
     refreshing = false;
     updateStatus();
@@ -590,6 +611,56 @@ void Navigation::setupTree(GtkWidget* view) {
     g_object_set(cell, "ellipsize", PANGO_ELLIPSIZE_END, "ypad", 7, nullptr);
     auto* col = gtk_tree_view_column_new();
     gtk_tree_view_column_set_title(col, "Titel");
+    // Windows 11 navigation selection: a short pill on the left in the row's colour (accent if none).
+    // (GTK3 never paints cell backgrounds of selected rows, so the pill carries the identity.)
+    // Drawn as a tiny pixbuf: GTK recolours selected text, but never images.
+    auto* pill = gtk_cell_renderer_pixbuf_new();
+    g_object_set(pill, "xpad", 2, nullptr);
+    gtk_tree_view_column_pack_start(col, pill, false);
+    gtk_tree_view_column_set_cell_data_func(
+            col, pill,
+            +[](GtkTreeViewColumn*, GtkCellRenderer* r, GtkTreeModel* m, GtkTreeIter* it, gpointer p) {
+                auto* self = static_cast<Navigation*>(p);
+                auto* view = gtk_tree_view_get_model(GTK_TREE_VIEW(self->books)) == m ? self->books : self->pages;
+                bool selected = gtk_tree_selection_iter_is_selected(
+                        gtk_tree_view_get_selection(GTK_TREE_VIEW(view)), it);
+                gchar* id = nullptr;
+                gtk_tree_model_get(m, it, 1, &id, -1);
+                auto found = id ? self->options.sectionColors.find(id) : self->options.sectionColors.end();
+                bool coloured = found != self->options.sectionColors.end();
+                std::string hex = coloured ? found->second : selected ? currentPalette().accentVisible : "";
+                g_free(id);
+                static std::map<std::string, GdkPixbuf*> cache;  // process lifetime, tiny
+                GdkPixbuf* pb = nullptr;
+                Rgb rgb;
+                if (!hex.empty() && parseHex(hex, rgb)) {
+                    auto& slot = cache[hex];
+                    if (!slot) {
+                        auto* surf = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 4, 16);
+                        auto* cr = cairo_create(surf);
+                        cairo_new_sub_path(cr);
+                        cairo_arc(cr, 2, 2, 2, M_PI, 2 * M_PI);
+                        cairo_arc(cr, 2, 14, 2, 0, M_PI);
+                        cairo_close_path(cr);
+                        cairo_set_source_rgb(cr, rgb.r, rgb.g, rgb.b);
+                        cairo_fill(cr);
+                        cairo_destroy(cr);
+                        slot = gdk_pixbuf_get_from_surface(surf, 0, 0, 4, 16);
+                        cairo_surface_destroy(surf);
+                    }
+                    pb = slot;
+                }
+                if (!pb) {
+                    static GdkPixbuf* blank = [] {
+                        auto* b = gdk_pixbuf_new(GDK_COLORSPACE_RGB, true, 8, 4, 16);
+                        gdk_pixbuf_fill(b, 0);
+                        return b;
+                    }();
+                    pb = blank;
+                }
+                g_object_set(r, "pixbuf", pb, nullptr);
+            },
+            this, nullptr);
     // Notebook/section colour (user decision 2026-11-11): the whole row is tinted, not a dot.
     // Text keeps the theme colour; tint strength is limited so contrast stays >= 4.5:1, and a
     // selected row gets a stronger tint plus bold text so selection never depends on hue alone.
@@ -606,15 +677,10 @@ void Navigation::setupTree(GtkWidget* view) {
                         view = v;
                 bool selected = gtk_tree_selection_iter_is_selected(
                         gtk_tree_view_get_selection(GTK_TREE_VIEW(view)), it);
-                Rgb rgb;
-                if (found != self->options.sectionColors.end() && parseHex(found->second, rgb)) {
-                    bool dark = currentPalette().dark;
-                    GdkRGBA tint{rgb.r, rgb.g, rgb.b, selected ? (dark ? 0.55 : 0.42) : (dark ? 0.32 : 0.22)};
-                    g_object_set(r, "cell-background-rgba", &tint, "cell-background-set", TRUE, "weight",
-                                 selected ? PANGO_WEIGHT_SEMIBOLD : PANGO_WEIGHT_NORMAL, "weight-set", TRUE, nullptr);
-                } else
-                    g_object_set(r, "cell-background-set", FALSE, "weight",
-                                 selected ? PANGO_WEIGHT_SEMIBOLD : PANGO_WEIGHT_NORMAL, "weight-set", TRUE, nullptr);
+                (void)found;
+                // No fills: Windows 11 lists stay neutral, colour lives in the marker.
+                g_object_set(r, "cell-background-set", FALSE, "weight",
+                             selected ? PANGO_WEIGHT_SEMIBOLD : PANGO_WEIGHT_NORMAL, "weight-set", TRUE, nullptr);
                 g_free(id);
             },
             this, nullptr);
@@ -873,8 +939,11 @@ void Navigation::chrome(GtkWidget* container) {
     redoButton = button(commandBar, "Wiederholen", "xopp-edit-redo", ACTION_REDO, false);
     gtk_widget_set_tooltip_text(undoButton, "Rückgängig (Strg+Z)");
     gtk_widget_set_tooltip_text(redoButton, "Wiederholen (Strg+Y)");
-    auto* save = button(commandBar, "Speichern", "xopp-document-save", ACTION_SAVE, false);
-    gtk_widget_set_tooltip_text(save, "Speichern (Strg+S) – Seiten im Notizbuch speichern automatisch");
+    // One self-explaining icon for saving and save state (user request): check = saved,
+    // disk = unsaved changes (click saves), alert = save failed (text shown next to it).
+    auto* save = button(commandBar, "Speichern", "foliq-circle-check", ACTION_SAVE, false);
+    g_object_set_data(G_OBJECT(status), "icon", gtk_button_get_image(GTK_BUTTON(save)));
+    g_object_set_data(G_OBJECT(status), "button", save);
     menuButton = gtk_button_new();
     prepare(menuButton, "Menü", "foliq-more", false);
     gtk_widget_set_tooltip_text(menuButton, "Alle Befehle: Datei, Bearbeiten, Ansicht, Journal, Extras, Hilfe (F10)");
@@ -893,7 +962,7 @@ void Navigation::chrome(GtkWidget* container) {
                      }),
                      this);
     fullscreenButton = gtk_button_new();
-    prepare(fullscreenButton, "Vollbild (F11)", "xopp-fullscreen", false);
+    prepare(fullscreenButton, "Vollbild (F11)", "foliq-maximize", false);
     gtk_box_pack_start(GTK_BOX(commandBar), fullscreenButton, false, false, 0);
     g_signal_connect(fullscreenButton, "clicked", G_CALLBACK(+[](GtkButton*, gpointer p) {
                          auto* self = static_cast<Navigation*>(p);
@@ -961,7 +1030,6 @@ void Navigation::chrome(GtkWidget* container) {
     gtk_widget_set_tooltip_text(format, "Text formatieren: Textcontainer anklicken, dann formatieren (F4)");
     separator(home);
     button(home, "Auswahl", "xopp-select-rect", ACTION_TOOL_SELECT_RECT);
-    button(home, "Lasso", "xopp-select-lasso", ACTION_TOOL_SELECT_REGION);
 
     auto* insert = page("Einfügen");
     button(insert, "Seite", "xopp-page-add", ACTION_NEW_PAGE_AFTER);
@@ -1030,7 +1098,7 @@ void Navigation::chrome(GtkWidget* container) {
     button(view, "Vergrößern", "foliq-zoom-in", ACTION_ZOOM_IN, false);
     separator(view);
     focusButton = gtk_toggle_button_new();
-    prepare(focusButton, "Fokusmodus", "foliq-focus", false);
+    prepare(focusButton, "Fokusmodus", "foliq-eye-off", false);
     gtk_widget_set_tooltip_text(focusButton, "Navigation ausblenden und Menüband einklappen (Strg+Umschalt+F)");
     gtk_box_pack_start(GTK_BOX(view), focusButton, false, false, 0);
     g_object_set_data(G_OBJECT(ribbon), "focus", focusButton);
@@ -1040,8 +1108,29 @@ void Navigation::chrome(GtkWidget* container) {
                              self->setFocusMode(gtk_toggle_button_get_active(b));
                      }),
                      this);
-    separator(view);
-    // Design: segmented System/Hell/Dunkel, density, accent, motion.
+    // Audit 2026-11-11: appearance settings live in one "Darstellung" popover instead of
+    // crowding the Ansicht ribbon; the ribbon keeps view commands (zoom, focus, fullscreen).
+    auto* lookButton = gtk_menu_button_new();
+    prepare(lookButton, "Darstellung: Design, Eingabe, Akzentfarbe, Bewegung", "foliq-palette", false);
+    gtk_box_pack_start(GTK_BOX(view), lookButton, false, false, 0);
+    auto* lookPop = gtk_popover_new(lookButton);
+    gtk_menu_button_set_popover(GTK_MENU_BUTTON(lookButton), lookPop);
+    auto* look = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
+    gtk_container_set_border_width(GTK_CONTAINER(look), 6);
+    gtk_container_add(GTK_CONTAINER(lookPop), look);
+    auto heading = [&](const char* text) {
+        auto* l = gtk_label_new(text);
+        gtk_label_set_xalign(GTK_LABEL(l), 0);
+        gtk_style_context_add_class(gtk_widget_get_style_context(l), "foliq-pane-title");
+        gtk_box_pack_start(GTK_BOX(look), l, false, false, 0);
+    };
+    auto rowBox = [&]() {
+        auto* r = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+        gtk_box_pack_start(GTK_BOX(look), r, false, false, 0);
+        return r;
+    };
+    heading("Design");
+    auto* themeRow = rowBox();
     GSList* group = nullptr;
     for (const auto* name: {"System", "Hell", "Dunkel"}) {
         auto* b = gtk_radio_button_new_with_label(group, name);
@@ -1049,7 +1138,8 @@ void Navigation::chrome(GtkWidget* container) {
         gtk_toggle_button_set_mode(GTK_TOGGLE_BUTTON(b), false);
         gtk_widget_set_focus_on_click(b, false);
         g_object_set_data(G_OBJECT(b), "index", GINT_TO_POINTER(themeButtons.size()));
-        gtk_box_pack_start(GTK_BOX(view), b, false, false, 0);
+        gtk_style_context_add_class(gtk_widget_get_style_context(b), "foliq-standard");
+        gtk_box_pack_start(GTK_BOX(themeRow), b, false, false, 0);
         themeButtons.push_back(b);
         g_signal_connect(b, "toggled", G_CALLBACK(+[](GtkToggleButton* b, gpointer p) {
                              auto* self = static_cast<Navigation*>(p);
@@ -1061,7 +1151,8 @@ void Navigation::chrome(GtkWidget* container) {
                          this);
     }
     theme = static_cast<int>(control->getSettings()->getThemeVariant());
-    separator(view);
+    heading("Eingabe");
+    auto* densityRow = rowBox();
     group = nullptr;
     for (const auto* name: {"Kompakt", "Berührung"}) {
         auto* b = gtk_radio_button_new_with_label(group, name);
@@ -1071,7 +1162,8 @@ void Navigation::chrome(GtkWidget* container) {
         gtk_widget_set_tooltip_text(b, std::string(name) == "Kompakt" ?
                                                "Kompakt für Maus und Tastatur" :
                                                "Berührungsfreundlich: größere Trefferflächen für Stift und Touch");
-        gtk_box_pack_start(GTK_BOX(view), b, false, false, 0);
+        gtk_style_context_add_class(gtk_widget_get_style_context(b), "foliq-standard");
+        gtk_box_pack_start(GTK_BOX(densityRow), b, false, false, 0);
         if (std::string(name) == "Berührung") {
             touchButton = b;
             g_signal_connect(b, "toggled", G_CALLBACK(+[](GtkToggleButton* b, gpointer p) {
@@ -1082,20 +1174,20 @@ void Navigation::chrome(GtkWidget* container) {
                              this);
         }
     }
-    separator(view);
-    custom(view, "Akzentfarbe", "foliq-sun-moon", G_CALLBACK(+[](GtkButton* b, gpointer p) {
-               static_cast<Navigation*>(p)->accentPopover(GTK_WIDGET(b), {});
-           }));
-    custom(view, "Einrichtung starten (Profil, Speicherort, Fächer)", "foliq-file-cog",
-           G_CALLBACK(+[](GtkButton*, gpointer p) {
-               auto* self = static_cast<Navigation*>(p);
-               self->hideTemporary();
-               self->onboarding(false);
-           }));
+    heading("Akzentfarbe");
+    auto* accentButton = gtk_button_new_with_label("Akzentfarbe wählen …");
+    gtk_style_context_add_class(gtk_widget_get_style_context(accentButton), "foliq-standard");
+    gtk_widget_set_halign(accentButton, GTK_ALIGN_START);
+    gtk_box_pack_start(GTK_BOX(look), accentButton, false, false, 0);
+    g_signal_connect(accentButton, "clicked", G_CALLBACK(+[](GtkButton* b, gpointer p) {
+                         static_cast<Navigation*>(p)->accentPopover(GTK_WIDGET(b), {});
+                     }),
+                     this);
+    heading("Weitere");
     motionButton = gtk_check_button_new_with_label("Weniger Bewegung");
     gtk_widget_set_focus_on_click(motionButton, false);
     gtk_widget_set_tooltip_text(motionButton, "Animationen und Übergänge abschalten");
-    gtk_box_pack_start(GTK_BOX(view), motionButton, false, false, 4);
+    gtk_box_pack_start(GTK_BOX(look), motionButton, false, false, 0);
     g_signal_connect(motionButton, "toggled", G_CALLBACK(+[](GtkToggleButton* b, gpointer p) {
                          auto* self = static_cast<Navigation*>(p);
                          if (self->updatingChrome)
@@ -1108,7 +1200,20 @@ void Navigation::chrome(GtkWidget* container) {
     gtk_widget_set_focus_on_click(legacyToggle, false);
     gtk_widget_set_tooltip_text(legacyToggle, "Bestehende konfigurierbare Werkzeugleisten einblenden");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(legacyToggle), control->getSettings()->isToolbarVisible());
-    gtk_box_pack_start(GTK_BOX(view), legacyToggle, false, false, 4);
+    gtk_box_pack_start(GTK_BOX(look), legacyToggle, false, false, 0);
+    gtk_box_pack_start(GTK_BOX(look), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), false, false, 2);
+    auto* setupButton = gtk_button_new_with_label("Foliq einrichten … (Profil, Speicherort, Fächer)");
+    gtk_style_context_add_class(gtk_widget_get_style_context(setupButton), "foliq-standard");
+    gtk_box_pack_start(GTK_BOX(look), setupButton, false, false, 0);
+    g_object_set_data(G_OBJECT(setupButton), "pop", lookPop);
+    g_signal_connect(setupButton, "clicked", G_CALLBACK(+[](GtkButton* b, gpointer p) {
+                         auto* self = static_cast<Navigation*>(p);
+                         gtk_popover_popdown(GTK_POPOVER(g_object_get_data(G_OBJECT(b), "pop")));
+                         self->hideTemporary();
+                         self->onboarding(false);
+                     }),
+                     this);
+    gtk_widget_show_all(look);
     for (auto* toggle: {legacyToggle, drawOptions})
         g_signal_connect(toggle, "toggled", G_CALLBACK(+[](GtkToggleButton* b, gpointer p) {
                              auto* self = static_cast<Navigation*>(p);
@@ -1132,6 +1237,7 @@ void Navigation::chrome(GtkWidget* container) {
                                  gtk_widget_set_visible(widget, visible);
                          };
                          set("brand", !narrow);
+                         // Narrow: status keeps its icon (tooltip) unless saving failed.
                          set("findLabel", !narrow);
                          if (gtk_widget_get_visible(self->crumb) == narrow)
                              gtk_widget_set_visible(self->crumb, !narrow);
@@ -1167,7 +1273,7 @@ void Navigation::chrome(GtkWidget* container) {
                      this);
     g_object_set_data(G_OBJECT(fullscreenPill), "ribbonToggle", showRibbon);
     auto* leave = gtk_button_new();
-    prepare(leave, "Vollbild beenden (Esc)", "foliq-focus", false);
+    prepare(leave, "Vollbild beenden (Esc)", "foliq-minimize", false);
     gtk_box_pack_start(GTK_BOX(fullscreenPill), leave, false, false, 0);
     g_signal_connect(leave, "clicked", G_CALLBACK(+[](GtkButton*, gpointer p) {
                          auto* self = static_cast<Navigation*>(p);
@@ -1257,7 +1363,7 @@ void Navigation::applyFullscreen(bool on) {
         setFocusMode(focusBeforeFullscreen);
     }
     auto* image = gtk_button_get_image(GTK_BUTTON(fullscreenButton));
-    gtk_image_set_from_icon_name(GTK_IMAGE(image), on ? "foliq-focus" : "xopp-fullscreen", GTK_ICON_SIZE_BUTTON);
+    gtk_image_set_from_icon_name(GTK_IMAGE(image), on ? "foliq-minimize" : "foliq-maximize", GTK_ICON_SIZE_BUTTON);
     atk_object_set_name(gtk_widget_get_accessible(fullscreenButton), on ? "Vollbild beenden" : "Vollbild (F11)");
 }
 void Navigation::moveMenubar() {
@@ -1716,6 +1822,22 @@ void Navigation::updateStatus() {
                        control->getDocument()->getFilepath().empty() ? "Nicht gespeichert" :
                                                                         "Gespeichert";
     gtk_label_set_text(GTK_LABEL(status), text);
+    if (auto* icon = GTK_WIDGET(g_object_get_data(G_OBJECT(status), "icon"))) {
+        gtk_image_set_from_icon_name(GTK_IMAGE(icon),
+                                     failedSave ? "foliq-circle-alert" :
+                                     changed    ? "xopp-document-save" :
+                                                  "foliq-circle-check",
+                                     GTK_ICON_SIZE_BUTTON);
+        auto* b = GTK_WIDGET(g_object_get_data(G_OBJECT(status), "button"));
+        gtk_widget_set_tooltip_text(b, (std::string(text) + " – Strg+S speichert").c_str());
+        auto* bctx = gtk_widget_get_style_context(b);
+        if (failedSave)
+            gtk_style_context_add_class(bctx, "foliq-error");
+        else
+            gtk_style_context_remove_class(bctx, "foliq-error");
+    }
+    // Text only when saving failed; otherwise the icon speaks for itself.
+    gtk_widget_set_visible(status, failedSave);
     auto* ctx = gtk_widget_get_style_context(status);
     if (failedSave)
         gtk_style_context_add_class(ctx, "foliq-error");

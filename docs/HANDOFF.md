@@ -777,3 +777,4 @@ WINDOWS-PEN-TEST-FLUENT.md auf dem Stiftrechner abarbeiten.
 - Nächste vereinbarte Punkte: farbige Reiter/Notizbuchfarben, globale Suche,
   Tags & Aufgaben, Seitenkopf & Schnellnotiz, dunkles Papier (nur Anzeige),
   Stiftfavoriten, Seitenvorschau & Ebenen.
+- Design-Audit: design-references/DESIGN-AUDIT-2026-11-11.md (9 Befunde behoben).

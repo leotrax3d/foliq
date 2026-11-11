@@ -425,9 +425,8 @@ window.foliq menubar { background: transparent; box-shadow: none; border: none; 
 }
 #foliq-tabstrip button:hover { color: @foliq_text; }
 #foliq-tabstrip button:checked {
-    background-color: transparent; color: @foliq_text; font-weight: 600;
-    box-shadow: inset 0 -3px 0 -0px @foliq_accent;
-    border-radius: 6px 6px 2px 2px;
+    background-color: @foliq_accent_subtle; color: @foliq_text; font-weight: 600;
+    box-shadow: none; border-radius: 6px;
 }
 
 /* Ribbon command surface: one calm, rounded layer (floating when temporary). */
@@ -473,10 +472,10 @@ window.foliq menubar { background: transparent; box-shadow: none; border: none; 
 }
 #foliq-navigation treeview.view { padding: 0; }
 #foliq-navigation treeview.view:hover { background-color: @foliq_hover; }
+/* Windows 11 list selection: neutral subtle fill + coloured pill (pill drawn in Navigation.cpp). */
 #foliq-navigation treeview.view:selected {
-    background-color: @foliq_accent_subtle;
+    background-color: alpha(@foliq_text, 0.09);
     color: @foliq_text;
-    border-radius: 6px;
 }
 #foliq-navigation treeview.view:selected:focus { box-shadow: inset 3px 0 0 @foliq_accent; }
 #foliq-navigation .foliq-pane-title { font-weight: 600; color: @foliq_text; padding: 2px 4px; }
@@ -560,3 +559,6 @@ window.foliq.foliq-touch #foliq-ribbon-panel button { min-width: 36px; padding: 
 window.foliq.foliq-touch #foliq-fullscreen-pill button { min-width: 40px; min-height: 40px; }
 /* Coloured rows: keep the tint visible with rounded ends; selection adds a left accent bar. */
 #foliq-navigation treeview.view { -GtkTreeView-horizontal-separator: 0; }
+
+#foliq-commandbar button.foliq-error image { color: @foliq_danger; }
+#foliq-commandbar button.foliq-error { background-color: @foliq_danger_bg; }

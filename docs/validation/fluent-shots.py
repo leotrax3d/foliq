@@ -109,14 +109,21 @@ try:
     for step in extra:
         if step == 'dark':
             click('Ansicht', None)
-            click('Dunkel', None) or click('Farbschema', 'combo box')
+            click('Darstellung: Design, Eingabe, Akzentfarbe, Bewegung', None)
+            shot('look-popover')
+            click('Dunkel', None)
+            xdo('key', 'Escape')
             time.sleep(1)
             shot('main-dark')
         elif step == 'touch':
             click('Ansicht', None)
+            click('Darstellung: Design, Eingabe, Akzentfarbe, Bewegung', None)
             click('Berührung', None)
+            xdo('key', 'Escape')
             shot('touch')
+            click('Darstellung: Design, Eingabe, Akzentfarbe, Bewegung', None)
             click('Kompakt', None)
+            xdo('key', 'Escape')
         elif step == 'focus':
             click('Ansicht', None)
             click('Fokusmodus', None)
@@ -140,9 +147,11 @@ try:
             xdo('key', 'Escape')
         elif step == 'accent':
             click('Ansicht', None)
-            click('Akzentfarbe', None)
+            click('Darstellung: Design, Eingabe, Akzentfarbe, Bewegung', None)
+            click('Akzentfarbe wählen …', None)
             shot('accent-popover')
             click('Violett', None)
+            xdo('key', 'Escape')
             shot('accent-violet')
         elif step == 'collapsed':
             click('Menüband einklappen', None)
