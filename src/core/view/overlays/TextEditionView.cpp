@@ -65,6 +65,7 @@ void TextEditionView::drawWithoutDrawingAids(cairo_t* cr) const {
 
     pango_context_set_matrix(pango_layout_get_context(layout), nullptr);
 
+    textElement->getRichText().drawTable(cr, layout);
     pango_cairo_show_layout(cr, layout);
 }
 

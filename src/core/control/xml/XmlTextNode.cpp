@@ -20,8 +20,8 @@ void XmlTextNode::writeOut(OutputStream* out) {
     out->write(">");
 
     std::string tmp(this->text);
-    StringUtils::replaceAllChars(tmp,
-                                 {replace_pair('&', "&amp;"), replace_pair('<', "&lt;"), replace_pair('>', "&gt;")});
+    StringUtils::replaceAllChars(tmp, {replace_pair('&', "&amp;"), replace_pair('<', "&lt;"), replace_pair('>', "&gt;"),
+                                       replace_pair('\r', "&#13;")});
     out->write(tmp);
 
     out->write("</");

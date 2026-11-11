@@ -59,3 +59,9 @@ Editor. Neue Beiträge tragen GPL-2.0-or-later-Hinweise; vorhandene Dateilizenze
 bleiben bestehen. XOPP enthält versionierte optionale Foliq-Seitenattribute,
 kein neues Archivformat. Keine neue Laufzeitabhängigkeit. Speichermodell und
 Kompatibilitätsgrenzen: SURFACES.md; ADR-006 und HANDOFF dokumentieren die Eingriffe.
+
+M3 ergänzt native Textformatierung, editierbare Tabellen, verlustfreien Bild-
+zuschnitt und Fehler-/Undo-Korrekturen am bestehenden LaTeX-Pfad. Keine neue
+Editor-/Laufzeitbibliothek; keine Änderung der ursprünglichen Lizenzhinweise.
+Die optionale externe TeX-Installation wird nicht gebündelt. Genaue benötigte
+Pakete, Offline-/Windows-Hinweise und Lizenzgrenzen: TEXT-AND-MEDIA.md.

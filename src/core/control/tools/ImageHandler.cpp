@@ -14,6 +14,7 @@
 #include "gui/MainWindow.h"                 // for MainWindow
 #include "gui/PageView.h"                   // for XojPageView
 #include "gui/XournalView.h"                // for XournalView
+#include "model/Document.h"                 // for Document
 #include "model/Layer.h"                    // for Layer
 #include "model/PageRef.h"                  // for PageRef
 #include "model/XojPage.h"                  // for XojPage
@@ -22,7 +23,6 @@
 #include "util/XojMsgBox.h"                 // for XojMsgBox
 #include "util/i18n.h"                      // for _
 #include "util/raii/GObjectSPtr.h"          // for GObjectSPtr.h
-#include "model/Document.h"  // for Document
 
 ImageHandler::ImageHandler(Control* control, XojPageView* view) {
     this->control = control;
@@ -104,7 +104,7 @@ void ImageHandler::automaticScaling(Image* img, double x, double y, int width, i
 
     PageRef page = view->getPage();
 
-    if (x + width > page->getWidth() || y + height > page->getHeight()) {
+    if (!page->isInfinite() && (x + width > page->getWidth() || y + height > page->getHeight())) {
         double maxZoomX = (page->getWidth() - x) / width;
         double maxZoomY = (page->getHeight() - y) / height;
         zoom = std::min(maxZoomX, maxZoomY);

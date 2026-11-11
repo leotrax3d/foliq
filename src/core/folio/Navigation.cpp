@@ -1,16 +1,18 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "Navigation.h"
 
-#include <stdexcept>
 #include <algorithm>
-#include "enums/ActionType.enum.h"
-#include "enums/ActionGroup.enum.h"
+#include <stdexcept>
 
 #include <zlib.h>
 
 #include "control/Control.h"
 #include "control/ToolHandler.h"
 #include "control/settings/Settings.h"
+#include "control/tools/ImageHandler.h"
+#include "control/tools/TextEditor.h"
+#include "enums/ActionGroup.enum.h"
+#include "enums/ActionType.enum.h"
 #include "gui/MainWindow.h"
 #include "model/Document.h"
 #include "util/XojMsgBox.h"
@@ -70,41 +72,57 @@ Navigation::Navigation(Control* control, GtkWidget* container, GtkWindow* window
         gtk_widget_set_tooltip_text(add, "Anlegen, Umbenennen, Verschieben und weitere Aktionen");
         g_object_set_data(G_OBJECT(add), "view", view);
         g_signal_connect(add, "clicked", G_CALLBACK(+[](GtkButton* b, gpointer p) {
-            auto* self = static_cast<Navigation*>(p);
-            self->selectTree(GTK_WIDGET(g_object_get_data(G_OBJECT(b), "view")));
-            auto* menu = gtk_menu_new();
-            for (const auto* label: {"Notizbuch", "Gruppe", "Abschnitt", "Seite", "Umbenennen", "Verschieben", "↑", "↓",
-                                    "Duplizieren", "Löschen", "Wiederherstellen", "Öffnen/Schließen", "Papierkorb"}) {
-                auto* item = gtk_menu_item_new_with_label(label);
-                if (std::string(label) == "↑" || std::string(label) == "↓")
-                    atk_object_set_name(gtk_widget_get_accessible(item), std::string(label) == "↑" ? "Nach oben verschieben" : "Nach unten verschieben");
-                gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-                g_signal_connect(item, "activate", G_CALLBACK(+[](GtkMenuItem* item, gpointer p) {
-                    auto* self = static_cast<Navigation*>(p);
-                    try { self->action(gtk_menu_item_get_label(item)); } catch (const std::exception& e) { self->error(e); }
-                }), self);
-            }
-            gtk_widget_show_all(menu);
-            g_signal_connect_swapped(menu, "selection-done", G_CALLBACK(gtk_widget_destroy), menu);
+                             auto* self = static_cast<Navigation*>(p);
+                             self->selectTree(GTK_WIDGET(g_object_get_data(G_OBJECT(b), "view")));
+                             auto* menu = gtk_menu_new();
+                             for (const auto* label:
+                                  {"Notizbuch", "Gruppe", "Abschnitt", "Seite", "Umbenennen", "Verschieben", "↑", "↓",
+                                   "Duplizieren", "Löschen", "Wiederherstellen", "Öffnen/Schließen", "Papierkorb"}) {
+                                 auto* item = gtk_menu_item_new_with_label(label);
+                                 if (std::string(label) == "↑" || std::string(label) == "↓")
+                                     atk_object_set_name(gtk_widget_get_accessible(item),
+                                                         std::string(label) == "↑" ? "Nach oben verschieben" :
+                                                                                     "Nach unten verschieben");
+                                 gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+                                 g_signal_connect(item, "activate", G_CALLBACK(+[](GtkMenuItem* item, gpointer p) {
+                                                      auto* self = static_cast<Navigation*>(p);
+                                                      try {
+                                                          self->action(gtk_menu_item_get_label(item));
+                                                      } catch (const std::exception& e) {
+                                                          self->error(e);
+                                                      }
+                                                  }),
+                                                  self);
+                             }
+                             gtk_widget_show_all(menu);
+                             g_signal_connect_swapped(menu, "selection-done", G_CALLBACK(gtk_widget_destroy), menu);
 #if GTK_CHECK_VERSION(3, 22, 0)
-            gtk_menu_popup_at_widget(GTK_MENU(menu), GTK_WIDGET(b), GDK_GRAVITY_SOUTH_WEST, GDK_GRAVITY_NORTH_WEST, nullptr);
+                             gtk_menu_popup_at_widget(GTK_MENU(menu), GTK_WIDGET(b), GDK_GRAVITY_SOUTH_WEST,
+                                                      GDK_GRAVITY_NORTH_WEST, nullptr);
 #else
             gtk_menu_popup(GTK_MENU(menu), nullptr, nullptr, nullptr, nullptr, 0, gtk_get_current_event_time());
 #endif
-        }), this);
+                         }),
+                         this);
         gtk_box_pack_start(GTK_BOX(column), add, false, false, 0);
         auto* scroll = gtk_scrolled_window_new(nullptr, nullptr);
         gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
         gtk_container_add(GTK_CONTAINER(scroll), view);
         gtk_box_pack_start(GTK_BOX(column), scroll, true, true, 0);
-        if (view == books) gtk_paned_pack1(GTK_PANED(split), column, true, false);
-        else gtk_paned_pack2(GTK_PANED(split), column, true, false);
+        if (view == books)
+            gtk_paned_pack1(GTK_PANED(split), column, true, false);
+        else
+            gtk_paned_pack2(GTK_PANED(split), column, true, false);
         setupTree(view);
     }
     chrome(container);
-    statusTimer = g_timeout_add(250, +[](gpointer p) -> gboolean {
-        static_cast<Navigation*>(p)->updateStatus(); return true;
-    }, this);
+    statusTimer = g_timeout_add(
+            250,
+            +[](gpointer p) -> gboolean {
+                static_cast<Navigation*>(p)->updateStatus();
+                return true;
+            },
+            this);
     gtk_widget_show_all(outer);
     gtk_widget_show_all(ribbon);
     try {
@@ -112,7 +130,11 @@ Navigation::Navigation(Control* control, GtkWidget* container, GtkWindow* window
         auto root = overrideRoot ? fs::u8path(overrideRoot) : fs::u8path(g_get_user_data_dir()) / "foliq" / "library";
         catalog = std::make_unique<Catalog>(root);
         gtk_widget_set_tooltip_text(status, root.u8string().c_str());
-        try { loadView(); } catch (const std::exception& e) { error(e); }
+        try {
+            loadView();
+        } catch (const std::exception& e) {
+            error(e);
+        }
         refresh();
         timer = g_timeout_add_seconds(
                 5, +[](gpointer p) -> gboolean { return static_cast<Navigation*>(p)->tick(); }, this);
@@ -145,7 +167,8 @@ Navigation::Navigation(Control* control, GtkWidget* container, GtkWindow* window
     }
 }
 Navigation::~Navigation() {
-    if (statusTimer) g_source_remove(statusTimer);
+    if (statusTimer)
+        g_source_remove(statusTimer);
     if (restoreIdle)
         g_source_remove(restoreIdle);
     if (timer)
@@ -173,42 +196,55 @@ void Navigation::selectTree(GtkWidget* view) {
     store = view == books ? bookStore : pageStore;
 }
 void Navigation::refresh(bool pagesOnly) {
-    if (refreshing || !catalog) return;
+    if (refreshing || !catalog)
+        return;
     refreshing = true;
     auto* active = tree;
     for (auto* view: {books, pages}) {
-        if (pagesOnly && view == books) continue;
+        if (pagesOnly && view == books)
+            continue;
         selectTree(view);
         auto selection = pendingSelection.empty() ? selected() : pendingSelection;
         std::vector<std::string> expanded = savedExpanded;
-        gtk_tree_view_map_expanded_rows(GTK_TREE_VIEW(view), +[](GtkTreeView* v, GtkTreePath* path, gpointer p) {
-            GtkTreeIter it; gchar* id = nullptr;
-            auto* m = gtk_tree_view_get_model(v);
-            if (gtk_tree_model_get_iter(m, &it, path)) {
-                gtk_tree_model_get(m, &it, 1, &id, -1);
-                static_cast<std::vector<std::string>*>(p)->push_back(id); g_free(id);
-            }
-        }, &expanded);
+        gtk_tree_view_map_expanded_rows(
+                GTK_TREE_VIEW(view),
+                +[](GtkTreeView* v, GtkTreePath* path, gpointer p) {
+                    GtkTreeIter it;
+                    gchar* id = nullptr;
+                    auto* m = gtk_tree_view_get_model(v);
+                    if (gtk_tree_model_get_iter(m, &it, path)) {
+                        gtk_tree_model_get(m, &it, 1, &id, -1);
+                        static_cast<std::vector<std::string>*>(p)->push_back(id);
+                        g_free(id);
+                    }
+                },
+                &expanded);
         gtk_tree_store_clear(store);
-        std::function<void(const std::string&, GtkTreeIter*)> append = [&](const std::string& parent, GtkTreeIter* row) {
+        std::function<void(const std::string&, GtkTreeIter*)> append = [&](const std::string& parent,
+                                                                           GtkTreeIter* row) {
             for (const auto& n: catalog->children(parent)) {
-                if ((!trashView && catalog->trashed(n.id)) || (view == books && n.kind == Kind::Page)) continue;
+                if ((!trashView && catalog->trashed(n.id)) || (view == books && n.kind == Kind::Page))
+                    continue;
                 auto name = n.name + (catalog->trashed(n.id) ? " [Papierkorb]" : "") +
                             (n.kind == Kind::Notebook && !n.opened ? " [geschlossen]" : "");
-                GtkTreeIter it; gtk_tree_store_append(store, &it, row);
+                GtkTreeIter it;
+                gtk_tree_store_append(store, &it, row);
                 gtk_tree_store_set(store, &it, 0, name.c_str(), 1, n.id.c_str(), -1);
-                if (trashView || n.kind != Kind::Notebook || n.opened) append(n.id, &it);
+                if (trashView || n.kind != Kind::Notebook || n.opened)
+                    append(n.id, &it);
                 auto* path = gtk_tree_model_get_path(GTK_TREE_MODEL(store), &it);
                 if (std::find(expanded.begin(), expanded.end(), n.id) != expanded.end())
                     gtk_tree_view_expand_row(GTK_TREE_VIEW(view), path, false);
                 if (n.id == selection) {
-                    if (!pendingSelection.empty()) gtk_tree_view_expand_to_path(GTK_TREE_VIEW(view), path);
+                    if (!pendingSelection.empty())
+                        gtk_tree_view_expand_to_path(GTK_TREE_VIEW(view), path);
                     gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(view)), &it);
                 }
                 gtk_tree_path_free(path);
             }
         };
-        if (view == books || !section.empty()) append(view == books ? "" : section, nullptr);
+        if (view == books || !section.empty())
+            append(view == books ? "" : section, nullptr);
     }
     pendingSelection.clear();
     savedExpanded.clear();
@@ -312,9 +348,12 @@ void Navigation::action(const std::string& action) {
         auto name = prompt("Name");
         if (name.empty())
             return;
-        if (kind == Kind::Page && id.empty()) id = section;
-        auto created = catalog->add(kind, kind == Kind::Notebook ? "" : id, name, kind == Kind::Page ? blankDocument() : "");
-        if (kind == Kind::Section) section = created;
+        if (kind == Kind::Page && id.empty())
+            id = section;
+        auto created =
+                catalog->add(kind, kind == Kind::Notebook ? "" : id, name, kind == Kind::Page ? blankDocument() : "");
+        if (kind == Kind::Section)
+            section = created;
         pendingSelection = created;
         selectTree(kind == Kind::Page ? pages : books);
     } else {
@@ -342,17 +381,26 @@ void Navigation::action(const std::string& action) {
             for (const auto& e: catalog->nodes()) {
                 auto targetKind = e.second.kind;
                 bool compatible = kind == Kind::Page ? targetKind == Kind::Page || targetKind == Kind::Section :
-                    kind != Kind::Notebook && (targetKind == Kind::Notebook || targetKind == Kind::Group);
-                bool descendant = false; auto ancestor = e.second;
+                                                       kind != Kind::Notebook && (targetKind == Kind::Notebook ||
+                                                                                  targetKind == Kind::Group);
+                bool descendant = false;
+                auto ancestor = e.second;
                 while (true) {
-                    if (ancestor.id == id) { descendant = true; break; }
-                    if (ancestor.parent.empty()) break;
+                    if (ancestor.id == id) {
+                        descendant = true;
+                        break;
+                    }
+                    if (ancestor.parent.empty())
+                        break;
                     ancestor = catalog->get(ancestor.parent);
                 }
                 if (compatible && !descendant && !catalog->trashed(e.first)) {
                     std::string label = e.second.name;
                     auto ancestor = e.second;
-                    while (!ancestor.parent.empty()) { ancestor = catalog->get(ancestor.parent); label = ancestor.name + " / " + label; }
+                    while (!ancestor.parent.empty()) {
+                        ancestor = catalog->get(ancestor.parent);
+                        label = ancestor.name + " / " + label;
+                    }
                     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), e.first.c_str(), label.c_str());
                 }
             }
@@ -367,7 +415,10 @@ void Navigation::action(const std::string& action) {
             bool ok = gtk_dialog_run(GTK_DIALOG(dlg)) == GTK_RESPONSE_OK;
             if (ok) {
                 const auto* value = gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo));
-                if (value) target = value; else ok = false;
+                if (value)
+                    target = value;
+                else
+                    ok = false;
             }
             gtk_widget_destroy(dlg);
             if (ok)
@@ -423,74 +474,126 @@ void Navigation::setupTree(GtkWidget* view) {
     auto* col = gtk_tree_view_column_new_with_attributes("Titel", cell, "text", 0, nullptr);
     gtk_tree_view_column_set_expand(col, true);
     gtk_tree_view_append_column(GTK_TREE_VIEW(view), col);
-    atk_object_set_name(gtk_widget_get_accessible(view), view == books ? "Notizbücher und Abschnitte" : "Seiten und Unterseiten");
-    gtk_widget_set_tooltip_text(view, "Pfeile: navigieren/einklappen · Eingabe: öffnen · F2: umbenennen · Alt+↑/↓: sortieren. Aktionen im Menü oberhalb.");
+    atk_object_set_name(gtk_widget_get_accessible(view),
+                        view == books ? "Notizbücher und Abschnitte" : "Seiten und Unterseiten");
+    gtk_widget_set_tooltip_text(view, "Pfeile: navigieren/einklappen · Eingabe: öffnen · F2: umbenennen · Alt+↑/↓: "
+                                      "sortieren. Aktionen im Menü oberhalb.");
     g_signal_connect(view, "focus-in-event", G_CALLBACK(+[](GtkWidget* v, GdkEventFocus*, gpointer p) -> gboolean {
-        static_cast<Navigation*>(p)->selectTree(v); return false;
-    }), this);
-    g_signal_connect(gtk_tree_view_get_selection(GTK_TREE_VIEW(view)), "changed", G_CALLBACK(+[](GtkTreeSelection* sel, gpointer p) {
-        auto* self = static_cast<Navigation*>(p);
-        if (self->refreshing || !self->catalog) return;
-        self->selectTree(GTK_WIDGET(gtk_tree_selection_get_tree_view(sel)));
-        auto id = self->selected();
-        if (id.empty()) return;
-        if (self->tree == self->books) {
-            const auto& n = self->catalog->get(id);
-            self->section = n.kind == Kind::Section ? id : "";
-            self->refresh(true);
-        }
-    }), this);
-    g_signal_connect(view, "row-activated", G_CALLBACK(+[](GtkTreeView* v, GtkTreePath*, GtkTreeViewColumn*, gpointer p) {
-        auto* self = static_cast<Navigation*>(p); self->selectTree(GTK_WIDGET(v));
-        try { self->activate(); } catch (const std::exception& e) { self->error(e); }
-    }), this);
+                         static_cast<Navigation*>(p)->selectTree(v);
+                         return false;
+                     }),
+                     this);
+    g_signal_connect(gtk_tree_view_get_selection(GTK_TREE_VIEW(view)), "changed",
+                     G_CALLBACK(+[](GtkTreeSelection* sel, gpointer p) {
+                         auto* self = static_cast<Navigation*>(p);
+                         if (self->refreshing || !self->catalog)
+                             return;
+                         self->selectTree(GTK_WIDGET(gtk_tree_selection_get_tree_view(sel)));
+                         auto id = self->selected();
+                         if (id.empty())
+                             return;
+                         if (self->tree == self->books) {
+                             const auto& n = self->catalog->get(id);
+                             self->section = n.kind == Kind::Section ? id : "";
+                             self->refresh(true);
+                         }
+                     }),
+                     this);
+    g_signal_connect(view, "row-activated",
+                     G_CALLBACK(+[](GtkTreeView* v, GtkTreePath*, GtkTreeViewColumn*, gpointer p) {
+                         auto* self = static_cast<Navigation*>(p);
+                         self->selectTree(GTK_WIDGET(v));
+                         try {
+                             self->activate();
+                         } catch (const std::exception& e) {
+                             self->error(e);
+                         }
+                     }),
+                     this);
     g_signal_connect(view, "key-press-event", G_CALLBACK(+[](GtkWidget* v, GdkEventKey* e, gpointer p) -> gboolean {
-        auto* self = static_cast<Navigation*>(p); self->selectTree(v);
-        const char* action = e->keyval == GDK_KEY_F2 ? "Umbenennen" :
-            (e->state & GDK_MOD1_MASK) && e->keyval == GDK_KEY_Up ? "↑" :
-            (e->state & GDK_MOD1_MASK) && e->keyval == GDK_KEY_Down ? "↓" : nullptr;
-        if (!action) return false;
-        try { self->action(action); } catch (const std::exception& ex) { self->error(ex); }
-        return true;
-    }), this);
+                         auto* self = static_cast<Navigation*>(p);
+                         self->selectTree(v);
+                         const char* action = e->keyval == GDK_KEY_F2                                 ? "Umbenennen" :
+                                              (e->state & GDK_MOD1_MASK) && e->keyval == GDK_KEY_Up   ? "↑" :
+                                              (e->state & GDK_MOD1_MASK) && e->keyval == GDK_KEY_Down ? "↓" :
+                                                                                                        nullptr;
+                         if (!action)
+                             return false;
+                         try {
+                             self->action(action);
+                         } catch (const std::exception& ex) {
+                             self->error(ex);
+                         }
+                         return true;
+                     }),
+                     this);
     static const GtkTargetEntry target = {const_cast<gchar*>("application/x-foliq-node"), GTK_TARGET_SAME_APP, 0};
     gtk_drag_source_set(view, GDK_BUTTON1_MASK, &target, 1, GDK_ACTION_MOVE);
     gtk_drag_dest_set(view, GTK_DEST_DEFAULT_ALL, &target, 1, GDK_ACTION_MOVE);
-    g_signal_connect(view, "drag-data-get", G_CALLBACK(+[](GtkWidget* v, GdkDragContext*, GtkSelectionData* data, guint, guint, gpointer p) {
-        auto* self = static_cast<Navigation*>(p); self->selectTree(v); self->dragId = self->selected();
-        gtk_selection_data_set(data, gtk_selection_data_get_target(data), 8,
-            reinterpret_cast<const guchar*>(self->dragId.data()), static_cast<int>(self->dragId.size()));
-    }), this);
-    g_signal_connect(view, "drag-data-received", G_CALLBACK(+[](GtkWidget* v, GdkDragContext* ctx, gint x, gint y, GtkSelectionData* data, guint, guint time, gpointer p) {
-        auto* self = static_cast<Navigation*>(p); bool success = false;
-        try {
-            if (!self->catalog || gtk_selection_data_get_length(data) <= 0) throw std::runtime_error("Kein Verschiebeziel.");
-            std::string id(reinterpret_cast<const char*>(gtk_selection_data_get_data(data)), gtk_selection_data_get_length(data));
-            GtkTreePath* path = nullptr; GtkTreeViewDropPosition pos;
-            if (!gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(v), x, y, &path, &pos)) throw std::runtime_error("Auf einen Zieleintrag ziehen.");
-            GtkTreeIter it; auto* model = gtk_tree_view_get_model(GTK_TREE_VIEW(v));
-            gtk_tree_model_get_iter(model, &it, path); gtk_tree_path_free(path);
-            gchar* value; gtk_tree_model_get(model, &it, 1, &value, -1); std::string targetId(value); g_free(value);
-            auto targetNode = self->catalog->get(targetId);
-            std::string parent = targetId; int index = static_cast<int>(self->catalog->children(parent).size());
-            if (pos == GTK_TREE_VIEW_DROP_BEFORE || pos == GTK_TREE_VIEW_DROP_AFTER) {
-                parent = targetNode.parent;
-                auto siblings = self->catalog->children(parent);
-                auto target = std::find_if(siblings.begin(), siblings.end(), [&](const Node& n) { return n.id == targetId; });
-                index = static_cast<int>(std::distance(siblings.begin(), target)) + (pos == GTK_TREE_VIEW_DROP_AFTER ? 1 : 0);
-                auto source = std::find_if(siblings.begin(), siblings.end(), [&](const Node& n) { return n.id == id; });
-                if (source != siblings.end() && std::distance(siblings.begin(), source) < index) --index;
-            }
-            self->catalog->move(id, parent, index);
-            if (self->catalog->get(id).kind == Kind::Page) {
-                auto ancestor = self->catalog->get(id);
-                while (ancestor.kind == Kind::Page) ancestor = self->catalog->get(ancestor.parent);
-                self->section = ancestor.id; self->selectTree(self->pages);
-            } else self->selectTree(self->books);
-            self->pendingSelection = id; self->refresh(); success = true;
-        } catch (const std::exception& e) { self->error(e); }
-        gtk_drag_finish(ctx, success, false, time);
-    }), this);
+    g_signal_connect(view, "drag-data-get",
+                     G_CALLBACK(+[](GtkWidget* v, GdkDragContext*, GtkSelectionData* data, guint, guint, gpointer p) {
+                         auto* self = static_cast<Navigation*>(p);
+                         self->selectTree(v);
+                         self->dragId = self->selected();
+                         gtk_selection_data_set(data, gtk_selection_data_get_target(data), 8,
+                                                reinterpret_cast<const guchar*>(self->dragId.data()),
+                                                static_cast<int>(self->dragId.size()));
+                     }),
+                     this);
+    g_signal_connect(view, "drag-data-received",
+                     G_CALLBACK(+[](GtkWidget* v, GdkDragContext* ctx, gint x, gint y, GtkSelectionData* data, guint,
+                                    guint time, gpointer p) {
+                         auto* self = static_cast<Navigation*>(p);
+                         bool success = false;
+                         try {
+                             if (!self->catalog || gtk_selection_data_get_length(data) <= 0)
+                                 throw std::runtime_error("Kein Verschiebeziel.");
+                             std::string id(reinterpret_cast<const char*>(gtk_selection_data_get_data(data)),
+                                            gtk_selection_data_get_length(data));
+                             GtkTreePath* path = nullptr;
+                             GtkTreeViewDropPosition pos;
+                             if (!gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(v), x, y, &path, &pos))
+                                 throw std::runtime_error("Auf einen Zieleintrag ziehen.");
+                             GtkTreeIter it;
+                             auto* model = gtk_tree_view_get_model(GTK_TREE_VIEW(v));
+                             gtk_tree_model_get_iter(model, &it, path);
+                             gtk_tree_path_free(path);
+                             gchar* value;
+                             gtk_tree_model_get(model, &it, 1, &value, -1);
+                             std::string targetId(value);
+                             g_free(value);
+                             auto targetNode = self->catalog->get(targetId);
+                             std::string parent = targetId;
+                             int index = static_cast<int>(self->catalog->children(parent).size());
+                             if (pos == GTK_TREE_VIEW_DROP_BEFORE || pos == GTK_TREE_VIEW_DROP_AFTER) {
+                                 parent = targetNode.parent;
+                                 auto siblings = self->catalog->children(parent);
+                                 auto target = std::find_if(siblings.begin(), siblings.end(),
+                                                            [&](const Node& n) { return n.id == targetId; });
+                                 index = static_cast<int>(std::distance(siblings.begin(), target)) +
+                                         (pos == GTK_TREE_VIEW_DROP_AFTER ? 1 : 0);
+                                 auto source = std::find_if(siblings.begin(), siblings.end(),
+                                                            [&](const Node& n) { return n.id == id; });
+                                 if (source != siblings.end() && std::distance(siblings.begin(), source) < index)
+                                     --index;
+                             }
+                             self->catalog->move(id, parent, index);
+                             if (self->catalog->get(id).kind == Kind::Page) {
+                                 auto ancestor = self->catalog->get(id);
+                                 while (ancestor.kind == Kind::Page) ancestor = self->catalog->get(ancestor.parent);
+                                 self->section = ancestor.id;
+                                 self->selectTree(self->pages);
+                             } else
+                                 self->selectTree(self->books);
+                             self->pendingSelection = id;
+                             self->refresh();
+                             success = true;
+                         } catch (const std::exception& e) {
+                             self->error(e);
+                         }
+                         gtk_drag_finish(ctx, success, false, time);
+                     }),
+                     this);
 }
 void Navigation::chrome(GtkWidget* container) {
     auto* mainBox = gtk_widget_get_parent(gtk_widget_get_parent(container));
@@ -501,60 +604,98 @@ void Navigation::chrome(GtkWidget* container) {
     gtk_box_reorder_child(GTK_BOX(mainBox), ribbon, 1);
     auto* quick = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
     gtk_box_pack_start(GTK_BOX(ribbon), quick, false, false, 0);
-    auto* brand = gtk_label_new("Foliq"); gtk_box_pack_start(GTK_BOX(quick), brand, false, false, 12);
+    auto* brand = gtk_label_new("Foliq");
+    gtk_box_pack_start(GTK_BOX(quick), brand, false, false, 12);
     auto button = [&](GtkWidget* box, const char* label, const char* icon, ActionType action) {
         bool isTool = action >= ACTION_TOOL_PEN && action <= ACTION_TOOL_HAND;
         auto* b = isTool ? gtk_toggle_button_new_with_label(label) : gtk_button_new_with_label(label);
-        if (isTool) toolButtons.emplace_back(b, action - ACTION_TOOL_PEN + TOOL_PEN);
+        if (isTool)
+            toolButtons.emplace_back(b, action - ACTION_TOOL_PEN + TOOL_PEN);
         if (action == ACTION_CUT || action == ACTION_COPY || action == ACTION_PASTE)
-            mirroredButtons.emplace_back(b, action == ACTION_CUT ? "menuEditCut" : action == ACTION_COPY ? "menuEditCopy" : "menuEditPaste");
-        if (icon) { gtk_button_set_image(GTK_BUTTON(b), gtk_image_new_from_icon_name(icon, GTK_ICON_SIZE_BUTTON)); gtk_button_set_always_show_image(GTK_BUTTON(b), true); }
+            mirroredButtons.emplace_back(b, action == ACTION_CUT  ? "menuEditCut" :
+                                            action == ACTION_COPY ? "menuEditCopy" :
+                                                                    "menuEditPaste");
+        if (icon) {
+            gtk_button_set_image(GTK_BUTTON(b), gtk_image_new_from_icon_name(icon, GTK_ICON_SIZE_BUTTON));
+            gtk_button_set_always_show_image(GTK_BUTTON(b), true);
+        }
         if (action == ACTION_ZOOM_IN || action == ACTION_ZOOM_OUT)
             atk_object_set_name(gtk_widget_get_accessible(b), action == ACTION_ZOOM_IN ? "Vergrößern" : "Verkleinern");
         g_object_set_data(G_OBJECT(b), "action", GINT_TO_POINTER(action));
         gtk_box_pack_start(GTK_BOX(box), b, false, false, 0);
         g_signal_connect(b, "clicked", G_CALLBACK(+[](GtkButton* b, gpointer p) {
-            auto a = static_cast<ActionType>(GPOINTER_TO_INT(g_object_get_data(G_OBJECT(b), "action")));
-            auto* self = static_cast<Navigation*>(p);
-            if (self->updatingToolButtons)
-                return;
-            self->control->actionPerformed(a, a >= ACTION_TOOL_PEN && a <= ACTION_TOOL_HAND ? GROUP_TOOL : GROUP_NOGROUP, nullptr, true);
-            self->updateStatus();
-        }), this); return b;
+                             auto a =
+                                     static_cast<ActionType>(GPOINTER_TO_INT(g_object_get_data(G_OBJECT(b), "action")));
+                             auto* self = static_cast<Navigation*>(p);
+                             if (self->updatingToolButtons)
+                                 return;
+                             self->control->actionPerformed(
+                                     a, a >= ACTION_TOOL_PEN && a <= ACTION_TOOL_HAND ? GROUP_TOOL : GROUP_NOGROUP,
+                                     nullptr, true);
+                             self->updateStatus();
+                         }),
+                         this);
+        return b;
     };
     undoButton = button(quick, "Rückgängig", "xopp-edit-undo", ACTION_UNDO);
     redoButton = button(quick, "Wiederholen", "xopp-edit-redo", ACTION_REDO);
     auto* findButton = button(quick, "Suchen", nullptr, ACTION_SEARCH);
     gtk_widget_set_tooltip_text(findButton, "Im aktuellen Dokument suchen (Strg+F)");
     button(quick, "Speichern", "xopp-document-save", ACTION_SAVE);
-    status = gtk_label_new("Lokal"); gtk_label_set_ellipsize(GTK_LABEL(status), PANGO_ELLIPSIZE_END);
+    status = gtk_label_new("Lokal");
+    gtk_label_set_ellipsize(GTK_LABEL(status), PANGO_ELLIPSIZE_END);
     gtk_box_pack_start(GTK_BOX(quick), status, true, true, 8);
     auto* focusButton = gtk_toggle_button_new_with_label("Fokus");
     gtk_widget_set_tooltip_text(focusButton, "Notizbuch- und Seitennavigation ausblenden");
     gtk_box_pack_end(GTK_BOX(quick), focusButton, false, false, 0);
     g_signal_connect(focusButton, "toggled", G_CALLBACK(+[](GtkToggleButton* b, gpointer p) {
-        auto* self = static_cast<Navigation*>(p); self->focus = gtk_toggle_button_get_active(b);
-        gtk_widget_set_no_show_all(self->panel, self->focus);
-        gtk_widget_set_visible(self->panel, !self->focus);
-    }), this);
+                         auto* self = static_cast<Navigation*>(p);
+                         self->focus = gtk_toggle_button_get_active(b);
+                         gtk_widget_set_no_show_all(self->panel, self->focus);
+                         gtk_widget_set_visible(self->panel, !self->focus);
+                     }),
+                     this);
     g_object_set_data(G_OBJECT(ribbon), "focus", focusButton);
     auto* tabs = gtk_notebook_new();
-    g_object_set_data(G_OBJECT(ribbon), "tabs", tabs); gtk_notebook_set_scrollable(GTK_NOTEBOOK(tabs), true);
+    g_object_set_data(G_OBJECT(ribbon), "tabs", tabs);
+    gtk_notebook_set_scrollable(GTK_NOTEBOOK(tabs), true);
     gtk_box_pack_start(GTK_BOX(ribbon), tabs, false, false, 0);
     auto page = [&](const char* name) {
         auto* scroll = gtk_scrolled_window_new(nullptr, nullptr);
         gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll), GTK_POLICY_AUTOMATIC, GTK_POLICY_NEVER);
-        auto* box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6); gtk_container_set_border_width(GTK_CONTAINER(box), 6);
+        auto* box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
+        gtk_container_set_border_width(GTK_CONTAINER(box), 6);
         gtk_container_add(GTK_CONTAINER(scroll), box);
-        gtk_notebook_append_page(GTK_NOTEBOOK(tabs), scroll, gtk_label_new(name)); return box;
+        gtk_notebook_append_page(GTK_NOTEBOOK(tabs), scroll, gtk_label_new(name));
+        return box;
     };
     auto* home = page("Start");
     button(home, "Text", "xopp-tool-text", ACTION_TOOL_TEXT);
+    auto* format = gtk_button_new_with_label("Text formatieren…");
+    gtk_widget_set_tooltip_text(format, "Textcontainer anklicken, dann formatieren (F4)");
+    gtk_box_pack_start(GTK_BOX(home), format, false, false, 0);
+    g_signal_connect(format, "clicked", G_CALLBACK(+[](GtkButton*, gpointer p) {
+                         auto* self = static_cast<Navigation*>(p);
+                         if (auto* editor = self->control->getTextEditor())
+                             editor->showFormattingDialog();
+                         else
+                             XojMsgBox::showErrorToUser(
+                                     self->control->getGtkWindow(),
+                                     "Zuerst mit dem Textwerkzeug einen Textcontainer auf der Seite anklicken.");
+                     }),
+                     this);
     button(home, "Auswahl", "xopp-select-rect", ACTION_TOOL_SELECT_RECT);
     button(home, "Ausschneiden", "xopp-edit-cut", ACTION_CUT);
     button(home, "Kopieren", "xopp-edit-copy", ACTION_COPY);
     button(home, "Einfügen", "xopp-edit-paste", ACTION_PASTE);
     auto* insert = page("Einfügen");
+    auto* cropButton = gtk_button_new_with_label("Bildgröße / Zuschnitt…");
+    gtk_box_pack_start(GTK_BOX(insert), cropButton, false, false, 0);
+    g_signal_connect(cropButton, "clicked", G_CALLBACK(+[](GtkButton*, gpointer p) {
+                         ImageHandler::editSelectedImage(static_cast<Navigation*>(p)->control);
+                     }),
+                     this);
+    button(insert, "Formel…", nullptr, ACTION_TEX);
     button(insert, "Bild", "xopp-tool-image", ACTION_TOOL_IMAGE);
     button(insert, "PDF annotieren", "xopp-document-open", ACTION_ANNOTATE_PDF);
     button(insert, "Dokumentseite", "xopp-page-add", ACTION_NEW_PAGE_AFTER);
@@ -571,30 +712,38 @@ void Navigation::chrome(GtkWidget* container) {
     auto* view = page("Ansicht");
     button(view, "Einpassen", nullptr, ACTION_ZOOM_FIT);
     button(view, "100 %", nullptr, ACTION_ZOOM_100);
-    button(view, "−", nullptr, ACTION_ZOOM_OUT); button(view, "+", nullptr, ACTION_ZOOM_IN);
+    button(view, "−", nullptr, ACTION_ZOOM_OUT);
+    button(view, "+", nullptr, ACTION_ZOOM_IN);
     legacyToggle = gtk_check_button_new_with_label("Alle Werkzeuge");
     gtk_widget_set_tooltip_text(legacyToggle, "Bestehende konfigurierbare Werkzeugleisten einblenden");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(legacyToggle), control->getSettings()->isToolbarVisible());
     gtk_box_pack_start(GTK_BOX(view), legacyToggle, false, false, 0);
-    for (auto* toggle: {legacyToggle, drawOptions}) g_signal_connect(toggle, "toggled", G_CALLBACK(+[](GtkToggleButton* b, gpointer p) {
-        auto* self = static_cast<Navigation*>(p);
-        if (self->control->getWindow()) self->control->getWindow()->setToolbarVisible(gtk_toggle_button_get_active(b));
-    }), this);
+    for (auto* toggle: {legacyToggle, drawOptions})
+        g_signal_connect(toggle, "toggled", G_CALLBACK(+[](GtkToggleButton* b, gpointer p) {
+                             auto* self = static_cast<Navigation*>(p);
+                             if (self->control->getWindow())
+                                 self->control->getWindow()->setToolbarVisible(gtk_toggle_button_get_active(b));
+                         }),
+                         this);
     auto* themes = gtk_combo_box_text_new();
-    for (const auto* name: {"System", "Hell", "Dunkel"}) gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(themes), name);
+    for (const auto* name: {"System", "Hell", "Dunkel"})
+        gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(themes), name);
     theme = static_cast<int>(control->getSettings()->getThemeVariant());
     gtk_combo_box_set_active(GTK_COMBO_BOX(themes), theme);
     atk_object_set_name(gtk_widget_get_accessible(themes), "Farbschema");
     gtk_box_pack_start(GTK_BOX(view), themes, false, false, 0);
     g_object_set_data(G_OBJECT(ribbon), "theme", themes);
     g_signal_connect(themes, "changed", G_CALLBACK(+[](GtkComboBox* b, gpointer p) {
-        auto* self = static_cast<Navigation*>(p); self->theme = gtk_combo_box_get_active(b); self->applyTheme();
-    }), this);
-
+                         auto* self = static_cast<Navigation*>(p);
+                         self->theme = gtk_combo_box_get_active(b);
+                         self->applyTheme();
+                     }),
+                     this);
 }
 void Navigation::applyTheme() {
     control->getSettings()->setThemeVariant(static_cast<ThemeVariant>(theme));
-    if (control->getWindow()) control->getWindow()->updateColorscheme();
+    if (control->getWindow())
+        control->getWindow()->updateColorscheme();
 }
 void Navigation::updateStatus() {
     if (control->getWindow()) {
@@ -606,39 +755,67 @@ void Navigation::updateStatus() {
     }
     updatingToolButtons = true;
     for (const auto& entry: toolButtons)
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry.first), control->getToolHandler()->getToolType() == entry.second);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry.first),
+                                     control->getToolHandler()->getToolType() == entry.second);
     updatingToolButtons = false;
     auto* undo = control->getUndoRedoHandler();
-    gtk_widget_set_sensitive(undoButton, undo->canUndo()); gtk_widget_set_sensitive(redoButton, undo->canRedo());
+    auto* textEditor = control->getTextEditor();
+    gtk_widget_set_sensitive(undoButton, textEditor ? textEditor->canUndoEdition() : undo->canUndo());
+    gtk_widget_set_sensitive(redoButton, textEditor ? textEditor->canRedoEdition() : undo->canRedo());
     gtk_label_set_text(GTK_LABEL(status), failedSave ? "Speicherfehler · Änderungen im Editor" :
-        undo->isChanged() ? "Ungespeicherte Änderungen" :
-        control->getDocument()->getFilepath().empty() ? "Neue Notiz · noch nicht gespeichert" : "Lokal · gespeichert");
+                                          (undo->isChanged() || (textEditor && textEditor->canUndoEdition())) ?
+                                                       "Ungespeicherte Änderungen" :
+                                          control->getDocument()->getFilepath().empty() ?
+                                                       "Neue Notiz · noch nicht gespeichert" :
+                                                       "Lokal · gespeichert");
 }
 void Navigation::saveView() {
-    if (!catalog || !viewWritable) return;
+    if (!catalog || !viewWritable)
+        return;
     std::string bytes = "[view]\nversion=1\nbooks=" + std::to_string(gtk_paned_get_position(GTK_PANED(split))) +
-        "\nwidth=" + std::to_string(gtk_paned_get_position(GTK_PANED(outer))) + "\ntheme=" + std::to_string(theme) +
-        "\nfocus=" + std::to_string(focus) + "\n";
-    bytes += "section=" + section + "\ntab=" + std::to_string(gtk_notebook_get_current_page(GTK_NOTEBOOK(g_object_get_data(G_OBJECT(ribbon), "tabs")))) + "\nexpanded=";
+                        "\nwidth=" + std::to_string(gtk_paned_get_position(GTK_PANED(outer))) +
+                        "\ntheme=" + std::to_string(theme) + "\nfocus=" + std::to_string(focus) + "\n";
+    bytes += "section=" + section + "\ntab=" +
+             std::to_string(gtk_notebook_get_current_page(GTK_NOTEBOOK(g_object_get_data(G_OBJECT(ribbon), "tabs")))) +
+             "\nexpanded=";
     std::string expanded;
-    for (auto* view: {books, pages}) gtk_tree_view_map_expanded_rows(GTK_TREE_VIEW(view), +[](GtkTreeView* v, GtkTreePath* path, gpointer data) {
-        auto* m = gtk_tree_view_get_model(v); GtkTreeIter it; gchar* id;
-        if (gtk_tree_model_get_iter(m, &it, path)) { gtk_tree_model_get(m, &it, 1, &id, -1);
-            *static_cast<std::string*>(data) += std::string(id) + ";"; g_free(id); }
-    }, &expanded);
+    for (auto* view: {books, pages})
+        gtk_tree_view_map_expanded_rows(
+                GTK_TREE_VIEW(view),
+                +[](GtkTreeView* v, GtkTreePath* path, gpointer data) {
+                    auto* m = gtk_tree_view_get_model(v);
+                    GtkTreeIter it;
+                    gchar* id;
+                    if (gtk_tree_model_get_iter(m, &it, path)) {
+                        gtk_tree_model_get(m, &it, 1, &id, -1);
+                        *static_cast<std::string*>(data) += std::string(id) + ";";
+                        g_free(id);
+                    }
+                },
+                &expanded);
     bytes += expanded + "\n";
     auto path = catalog->directory() / "view.ini";
-    if (!fs::exists(path) || read(path) != bytes) atomicWrite(path, bytes);
+    if (!fs::exists(path) || read(path) != bytes)
+        atomicWrite(path, bytes);
 }
 void Navigation::loadView() {
-    gtk_paned_set_position(GTK_PANED(split), 200); gtk_paned_set_position(GTK_PANED(outer), 420);
+    gtk_paned_set_position(GTK_PANED(split), 200);
+    gtk_paned_set_position(GTK_PANED(outer), 420);
     auto path = catalog->directory() / "view.ini";
-    if (!fs::exists(path)) { viewWritable = true; return; }
+    if (!fs::exists(path)) {
+        viewWritable = true;
+        return;
+    }
     std::unique_ptr<GKeyFile, decltype(&g_key_file_unref)> owner(g_key_file_new(), g_key_file_unref);
-    auto* key = owner.get(); auto bytes = read(path);
+    auto* key = owner.get();
+    auto bytes = read(path);
     auto integer = [&](const char* name) {
-        GError* error = nullptr; auto value = g_key_file_get_integer(key, "view", name, &error);
-        if (error) { g_error_free(error); throw std::runtime_error("Fehlende/ungültige Ansichtsoption in view.ini."); }
+        GError* error = nullptr;
+        auto value = g_key_file_get_integer(key, "view", name, &error);
+        if (error) {
+            g_error_free(error);
+            throw std::runtime_error("Fehlende/ungültige Ansichtsoption in view.ini.");
+        }
         return value;
     };
     if (!g_key_file_load_from_data(key, bytes.data(), bytes.size(), G_KEY_FILE_NONE, nullptr) ||
@@ -651,18 +828,23 @@ void Navigation::loadView() {
     int focusValue = integer("focus");
     focus = focusValue != 0;
     auto* selectedSection = g_key_file_get_string(key, "view", "section", nullptr);
-    if (selectedSection && catalog->nodes().count(selectedSection) && catalog->get(selectedSection).kind == Kind::Section)
+    if (selectedSection && catalog->nodes().count(selectedSection) &&
+        catalog->get(selectedSection).kind == Kind::Section)
         section = selectedSection;
     g_free(selectedSection);
-    gsize count = 0; auto** expanded = g_key_file_get_string_list(key, "view", "expanded", &count, nullptr);
+    gsize count = 0;
+    auto** expanded = g_key_file_get_string_list(key, "view", "expanded", &count, nullptr);
     for (gsize i = 0; i < count; ++i) savedExpanded.push_back(expanded[i]);
     g_strfreev(expanded);
     int tab = integer("tab");
-    gtk_notebook_set_current_page(GTK_NOTEBOOK(g_object_get_data(G_OBJECT(ribbon), "tabs")), std::max(0, std::min(3, tab)));
-    if (focusValue < 0 || focusValue > 1 || tab < 0 || tab > 3 || left < 120 || width < 240 || width > 16384 || left >= width || theme < 0 || theme > 2)
+    gtk_notebook_set_current_page(GTK_NOTEBOOK(g_object_get_data(G_OBJECT(ribbon), "tabs")),
+                                  std::max(0, std::min(3, tab)));
+    if (focusValue < 0 || focusValue > 1 || tab < 0 || tab > 3 || left < 120 || width < 240 || width > 16384 ||
+        left >= width || theme < 0 || theme > 2)
         throw std::runtime_error("Ungültige Ansichtsoptionen (view.ini).");
     viewWritable = true;
-    gtk_paned_set_position(GTK_PANED(split), left); gtk_paned_set_position(GTK_PANED(outer), width);
+    gtk_paned_set_position(GTK_PANED(split), left);
+    gtk_paned_set_position(GTK_PANED(outer), width);
     gtk_combo_box_set_active(GTK_COMBO_BOX(g_object_get_data(G_OBJECT(ribbon), "theme")), theme);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(g_object_get_data(G_OBJECT(ribbon), "focus")), focus);
 }

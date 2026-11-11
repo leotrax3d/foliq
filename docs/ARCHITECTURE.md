@@ -123,3 +123,26 @@ atomaren Staging-/Backup-/Konfliktschutz. PDF-Ausgabe verwendet dieselben Elemen
 clippt wählbare Ausschnitte und adressiert Teilseiten einzeln; keine große
 Zwischenbitmap. Direkter GTK-Druck freier Dokumente verweist ausdrücklich auf
 diesen PDF-Pfad, statt unbemerkt bei (0,0) abzuschneiden.
+
+## ADR-007: Gemeinsamer nativer Rich-Text-/Medienpfad (2026-11-11)
+
+ADR-003 ist mit `model/RichText` umgesetzt: validierte, versionierte Stilbereiche
+mit Unicode-Codepoint-Grenzen ergänzen Text. GtkTextBuffer-Tags sind die editierbare
+Ansicht dieses Modells, Pango-Attribute die gemeinsame Bildschirm-/Exportansicht.
+Ein zusätzlicher GtkTextView-Dialog verwendet denselben Buffer, keine zweite
+Dokumentkopie und keine fremde Editorbibliothek. Er macht die erweiterten Aktionen
+zugänglich, während der bisherige Canvas-Editor und GtkIMMulticontext erhalten
+bleiben. Tabellen sind rechteckige editierbare Zellen desselben Textmodells.
+
+Bildzuschnitt ist ein validiertes normalisiertes Rechteck über dem vollständigen
+Originalbild. Formeln behalten das vorhandene TexImage-Quelltext/PDF-Modell.
+Text-/Bild-/Formelersetzung verwendet die gemeinsame Elementauswahl und erhält
+den Layer-Index auch bei Undo/Redo. Aktive Textbearbeitung erhält einen begrenzten
+lokalen Verlauf; Abschluss ist eine Dokumentaktion. Dateiformat, Migration,
+Abhängigkeiten, Größen-/Überlagerungsverhalten und bewusste Grenzen stehen in
+[TEXT-AND-MEDIA.md](TEXT-AND-MEDIA.md).
+
+Keine neue Bibliothek: GTK3/Pango/Cairo bleiben offline und im vorhandenen
+Windows-UCRT64-Buildpfad. TeX ist weiterhin eine optionale lokale externe
+Abhängigkeit zum Bearbeiten, nicht zum Lesen/Exportieren gespeicherter Formeln.
+Linux-Tests ersetzen keine Windows-IME-, DPI- oder physische Stiftabnahme.

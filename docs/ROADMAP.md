@@ -47,3 +47,12 @@ M4-Implementierung: Papier und freie Weltkoordinaten statt endlicher Auto-Grow-
 Seite, mit Kamera, Undo, kopierender Umwandlung und PDF-Ausschnitt/Teilung.
 Stand und Grenzen in SURFACES.md; Linux-Nachweise in validation/SURFACES-VALIDATION.md.
 Windows-Stift-/Touch-/Latenzabnahme bleibt eigenständig offen.
+
+M3-Implementierung: native gemischte Textstile, Listen-/Checklistenbearbeitung,
+Links und Seitenverweise, strukturierte editierbare Tabellen, formatierte interne
+Zwischenablage sowie lokales Text-Undo sind umgesetzt. Dazu reversibler
+Bildzuschnitt und atomare Formelersetzung mit erhaltenem Quelltext. Präziser
+Umfang, Format und offene Grenzen: TEXT-AND-MEDIA.md; Tests:
+validation/TEXT-MEDIA-VALIDATION.md. HTML/RTF-Import, mehrzeilige/verbundene
+Tabellenzellen, stabile seitenübergreifende Katalogverweise und Windows-/IME-/
+Stiftabnahme bleiben offen. Diese Textänderung ersetzt keine Windows-/Gesamtabnahme der übrigen Meilensteine.

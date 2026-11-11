@@ -80,7 +80,8 @@ auto TexImage::getText() const -> std::string { return this->text; }
 
 auto TexImage::loadData(std::string&& bytes, GError** err) -> bool {
     this->freeImageAndPdf();
-    this->binaryData = bytes;
+    this->binaryData = std::move(bytes);
+    this->read = 0;
     if (this->binaryData.length() < 4) {
         return false;
     }
@@ -100,8 +101,10 @@ auto TexImage::loadData(std::string&& bytes, GError** err) -> bool {
     } else if (type == "PNG") {
         this->image = cairo_image_surface_create_from_png_stream(
                 reinterpret_cast<cairo_read_func_t>(&cairoReadFunction), this);
+        return cairo_surface_status(this->image) == CAIRO_STATUS_SUCCESS;
     } else {
         g_warning("Unknown Latex image type: \"%s\"", type.c_str());
+        return false;
     }
 
     return true;

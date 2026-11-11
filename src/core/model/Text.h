@@ -20,6 +20,7 @@
 
 #include "AudioElement.h"  // for AudioElement
 #include "Font.h"          // for XojFont
+#include "RichText.h"
 
 class Element;
 class ObjectInputStream;
@@ -39,6 +40,8 @@ public:
 
     const std::string& getText() const;
     void setText(std::string text);
+    const RichText& getRichText() const { return richText; }
+    void setRichText(RichText value);
 
     void setWidth(double width);
     void setHeight(double height);
@@ -75,6 +78,7 @@ private:
     XojFont font;
 
     std::string text;
+    RichText richText;
 
     bool inEditing = false;
 };

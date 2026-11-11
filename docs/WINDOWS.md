@@ -153,3 +153,17 @@ abwarten, dann Anfang/Maximum/Ende messen. Bei großen Auswahlbereichen kann die
 auf 2.048 Pixel begrenzte temporäre Vorschau weich erscheinen; die Vektoren und
 der finale PDF-Export müssen scharf bleiben. Direkten Druck freier Dokumente
 über den angezeigten PDF-Weg durchführen. Audio ist hiervon nicht abgenommen.
+
+## Text-/Medienregression nach M3
+
+Zusätzlich [TEXT-AND-MEDIA.md](TEXT-AND-MEDIA.md) und die Linux-Belege unter
+[TEXT-MEDIA-VALIDATION.md](validation/TEXT-MEDIA-VALIDATION.md) beachten. Auf
+Windows noch auszuführen: deutsche Umlaut-/ß-/AltGr-/Tottasteneingabe, native
+IME-Komposition/Kandidatenfenster, Text-/Elementzwischenablage, Klartext-Fallback
+aus Office/Browser, Tabellen nach Neustart weiterbearbeiten, Text- und Dokument-
+Undo, proportionaler Bildzuschnitt, Offline-TeX einschließlich Fehler und
+Formel-Undo sowie gemischte PDF-Ausgabe. Mit Stift prüfen, dass Textdialog/
+Tabellenzellen den Canvas nicht zeichnen lassen und nach dem Schließen dieselbe
+Seitenposition/Zoom-Auswahl gilt. DPI/NVDA nicht aus den Linux-Screenshots ableiten.
+TeX/Pakete lokal vorinstallieren; gespeicherte Formeln müssen auch ohne TeX
+angezeigt und exportiert werden. Kein neuer Windows-Testnachweis in diesem Schritt.

@@ -3,7 +3,8 @@
 #include <algorithm>  // for min
 #include <array>      // for array
 #include <cmath>      // for sqrt
-#include <utility>    // for move, pair
+#include <stdexcept>
+#include <utility>  // for move, pair
 
 #include <cairo.h>    // for cairo_surface_destroy
 #include <gdk/gdk.h>  // for gdk_cairo_set_sourc...
@@ -42,12 +43,22 @@ auto Image::clone() const -> Element* {
     img->width = this->width;
     img->height = this->height;
     img->data = this->data;
+    img->crop = this->crop;
 
-    img->image = cairo_surface_reference(this->image);
+    img->image = this->image ? cairo_surface_reference(this->image) : nullptr;
     img->snappedBounds = this->snappedBounds;
     img->sizeCalculated = this->sizeCalculated;
 
     return img;
+}
+
+bool Image::setCrop(Crop value) {
+    if (!std::isfinite(value.left) || !std::isfinite(value.top) || !std::isfinite(value.right) ||
+        !std::isfinite(value.bottom) || value.left < 0 || value.top < 0 || value.right > 1 || value.bottom > 1 ||
+        value.right - value.left < .001 || value.bottom - value.top < .001)
+        return false;
+    crop = value;
+    return true;
 }
 
 void Image::setWidth(double width) {
@@ -223,7 +234,8 @@ void Image::scale(double x0, double y0, double fx, double fy, double rotation,
 void Image::rotate(double x0, double y0, double th) {}
 
 void Image::serialize(ObjectOutputStream& out) const {
-    out.writeObject("Image");
+    bool cropped = crop.left != 0 || crop.top != 0 || crop.right != 1 || crop.bottom != 1;
+    out.writeObject(cropped ? "ImageCropV1" : "Image");
 
     this->Element::serialize(out);
 
@@ -231,12 +243,21 @@ void Image::serialize(ObjectOutputStream& out) const {
     out.writeDouble(this->height);
 
     out.writeImage(this->data);
+    if (cropped) {
+        out.writeDouble(crop.left);
+        out.writeDouble(crop.top);
+        out.writeDouble(crop.right);
+        out.writeDouble(crop.bottom);
+    }
 
     out.endObject();
 }
 
 void Image::readSerialized(ObjectInputStream& in) {
-    in.readObject("Image");
+    auto name = in.readObject();
+    bool cropped = name == "ImageCropV1";
+    if (!cropped && name != "Image")
+        throw std::runtime_error("Unsupported image object");
 
     this->Element::readSerialized(in);
 
@@ -249,6 +270,9 @@ void Image::readSerialized(ObjectInputStream& in) {
     }
 
     this->data = in.readImage();
+    crop = Crop{};
+    if (cropped && !setCrop({in.readDouble(), in.readDouble(), in.readDouble(), in.readDouble()}))
+        throw std::runtime_error("Invalid image crop");
 
     in.endObject();
     this->calcSize();

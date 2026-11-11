@@ -17,17 +17,25 @@ void ImageView::draw(const Context& ctx) const {
     cairo_save(cr);
 
     cairo_surface_t* img = image->getImage();
+    if (!img || cairo_surface_status(img) != CAIRO_STATUS_SUCCESS) {
+        cairo_restore(cr);
+        return;
+    }
     int width = cairo_image_surface_get_width(img);
     int height = cairo_image_surface_get_height(img);
 
     cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
 
-    double xFactor = image->getElementWidth() / width;
-    double yFactor = image->getElementHeight() / height;
+    auto crop = image->getCrop();
+    cairo_translate(cr, image->getX(), image->getY());
+    cairo_rectangle(cr, 0, 0, image->getElementWidth(), image->getElementHeight());
+    cairo_clip(cr);
+    double xFactor = image->getElementWidth() / (width * (crop.right - crop.left));
+    double yFactor = image->getElementHeight() / (height * (crop.bottom - crop.top));
 
     cairo_scale(cr, xFactor, yFactor);
 
-    cairo_set_source_surface(cr, img, image->getX() / xFactor, image->getY() / yFactor);
+    cairo_set_source_surface(cr, img, -crop.left * width, -crop.top * height);
     // make images translucent when highlighting elements with audio, as they can not have audio
     if (ctx.fadeOutNonAudio) {
         cairo_paint_with_alpha(cr, OPACITY_NO_AUDIO);

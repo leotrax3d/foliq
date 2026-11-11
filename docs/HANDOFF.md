@@ -556,3 +556,137 @@ abschließenden Validierung; kein neuer Hardwaretest behauptet.
 Git-Identität lokal explizit auf leotrax3d@gmx.net gesetzt, Author und Committer
 geprüft. Regulärer Push von HEAD nach origin/main; Remote-HEAD und Arbeitsbaum
 anschließend kontrollieren. Windows-CI-Ergebnis ist separat abzuwarten.
+
+## M3 Text und Medien – 2026-11-11
+
+AGENTS und Projektdokumentation sowie TextEditor/GtkTextBuffer, Text/Layer/XojPage,
+Objektzwischenablage, XOPP, gemeinsame Auswahl/Koordinaten, Undo und Cairo/Pango-
+PDF-Pfad untersucht. Anfänglicher Checkout e94b6344; der Remote-Vergleich ergab
+zwischenzeitlich den neueren Seitentyp-Stand 81d5201e. Diesen regulär per
+Fast-forward übernommen, lokale Textänderungen erhalten und Dokumentationskonflikte
+unter Erhalt beider Arbeiten aufgelöst. Kein Frameworkwechsel, keine neue
+Editor-/Laufzeitbibliothek. ADR-007 dokumentiert den nativen Erweiterungspfad.
+
+Umgesetzt:
+
+- RichText v1 mit Unicode-Codepoint-Bereichen, gemischter Schrift/Größe,
+  fett/kursiv/unterstrichen, Text-/Hintergrundfarbe und Link-/Seitenverweisen.
+  Gemeinsamer GtkTextBuffer für Canvas und ausführlichen GtkTextView-Dialog;
+  Start → Text formatieren…, F4 und dokumentierte Tastenkürzel.
+- Absätze/Überschriftvorgaben, Listen-/Nummerierungs-/Einrück-/Checklistenaktionen.
+  Listenmarker bleiben bearbeitbarer Unicode; kein separates Aufgabenmodell.
+  Native interne formatierte Zwischenablage, externer Klartext-Fallback und
+  explizites Klartext-Paste mit CRLF/CR-Normalisierung.
+- Strukturierte rechteckige Tabellen mit editierbaren Zellen, Zeilen-/Spalten-
+  operationen und erneutem Bearbeiten nach Neustart. Gemeinsames Pango-Layout
+  und Cairo-Raster für Bildschirm und PDF. Ein Absatz je Zelle; keine gerenderten
+  Tabellenbilder als vermeintlich bearbeitbare Daten.
+- Proportionale Bilder und reversibler normalisierter Zuschnitt bei vollständig
+  erhaltenem Original. Größen-/Zuschnittdialog auf der gemeinsamen Auswahl;
+  ein Undo-Schritt, unveränderte Ebenenposition.
+- Bestehende TexImage-Quelle/PDF-Speicherung erhalten und im Einfügen-Reiter
+  erreichbar. Verständlicher umbrochener Fehlerstatus samt Compilerprotokoll;
+  fehlender Generator mit Installationshinweis. Formelersetzung erst nach gültigem
+  Rendern, eine Undo-Aktion, alte Formel bei Fehler/Abbruch erhalten. Asynchrones
+  Render-Ergebnis erhält die tatsächlich gerenderte Quelle. PNG-Leseposition bei
+  erneutem Laden zurücksetzen; unbekannte/defekte Bilddaten nicht als Erfolg melden.
+- Begrenzter lokaler Textverlauf für Eingabe/Formatierung/Tabellen, danach eine
+  Aktion im bestehenden Dokumentverlauf. Text-/Medienersetzung und Undo/Redo
+  behalten Layer-Indizes. Oberstes Textobjekt wird bearbeitet. Unverändertes
+  Öffnen erzeugt keine Aktion; resultierende Auswahl behält den gültigen Original-
+  zeiger statt eines verworfenen Bearbeitungsklons.
+- Gemeinsame freie Koordinaten geprüft: Clipboard-Einfügen klemmt nur im
+  Papiermodus auf positive Werte; Bildimport auf freien Seiten skaliert nicht
+  gegen entfernte Papierkanten. Rückgängig machbarer Kamera-Pan/Zoom beendet
+  vorher die Textsitzung, damit die Reihenfolge im Dokument-Undo stimmt.
+
+Dateien mit neuen Inhalten verwenden XOPP-Version 5, Inhaltsversion 1; Klartext
+bleibt lesbar. Bisherige reine Inhalte bleiben Version 4. Validierte strukturierte
+Daten und Zuschnitt werden im bestehenden `.saving`-/Backup-/atomaren Replace-
+Pfad gespeichert. Unbekannte Versionen und widersprüchliche Daten werden
+abgewiesen. XML-Textblöcke werden vollständig zusammengesetzt statt überschrieben;
+CR wird als XML-Entity erhalten, ungültige XML-Zeichen im Rich-Text-Modell
+zurückgewiesen. Helferfehler werden sofort an GMarkup weitergegeben, damit der
+aktuelle Eingabeblock nicht trotz Fehler weiterverarbeitet wird. Neue
+Objektzwischenablagen sind versioniert; alte Text-/Bildobjekte bleiben lesbar.
+Legacy-XOJ-Export verweigert nicht darstellbare Erweiterungen vor dem Schreiben.
+
+Bedienung, Format, Migration, Überlagerung, Größenänderung und Abhängigkeiten:
+TEXT-AND-MEDIA.md. Architektur, Produkt, Roadmap, UPSTREAM und Windows-Matrix
+aktualisiert. TeX bleibt optional/external: lokal pdflatex und die in der Vorlage
+benutzten Pakete; Lesen/Export gespeicherter Formeln benötigt kein TeX. Keine
+TeX-Distribution gebündelt. Offline-/MiKTeX-/TeX-Live-/Lizenzhinweise dokumentiert.
+
+### Tatsächlich ausgeführte Prüfungen
+
+Frischer Ubuntu-24.04-Container `foliq-text-dev`, Build als UID 1000, Debug,
+CMake/Ninja, GTK 3.24.41, GLib 2.80, Pango 1.52/GCC 13.3. Host ohne CMake/sudo;
+vorhandenen verwalteten Docker-Daemon verwendet. Bestehende Entwicklungsabhängigkeiten
+sowie TeX Live und poppler-utils für Tests installiert; clang-format 18 nur als
+Entwicklungswerkzeug. Keine neue Laufzeitbibliothek der App.
+
+- Vollständiger Editor-/Unit-Build erfolgreich; integrierter Stand **128/128 Tests
+  aus 23 Suites**, darunter zwölf neue Rich-Text-/Medientests. XML:
+  validation/text-media-linux-tests.xml. Originale Oberflächentests bleiben dabei
+  enthalten. Unicode, gemischte Stile, Formatversionen, lange XML-Blöcke,
+  Tabellenpersistenz, CRLF/CR, Objekt-/GTK-Zwischenablage, Klonen/Skalieren,
+  Stapelreihenfolge, Zuschnittpixel und Formelquelle/PDF tatsächlich geprüft.
+- GTK-Texttest auf Papier: native deutsche Zwischenablage und GTK-Unicode-
+  Komposition, Tastatur/Enter, Stile, Listen-/Aufgaben-/Einrück-Undo, interne
+  formatierte und erzwungene Klartext-Zwischenablage, Seitenlink, unveränderte
+  Bearbeitung → Auswahl → Objekt-Copy/Paste/Undo, Tabellenoperationen,
+  Neustart/erneute Zelledition und PDF-Textextraktion bestanden.
+- Derselbe GTK-Texttest auf freier Seite mit negativen Koordinaten bestanden,
+  einschließlich Text-/Kamera-Undo-Reihenfolge, Elementzwischenablage,
+  Tabellenpersistenz und gekacheltem PDF. Zusätzlicher Unit-Test verbindet
+  negative Rich-Text-/Tabellen-/Formelkoordinaten, Papierkopie und vier PDF-Kacheln.
+- GTK-Medientest bestanden: Bild auswählen, Breite/Zuschnitt/Verhältnis,
+  Undo/Redo und Layer-Reihenfolge; reale Kompilierung mit Standard-TeX-Vorlage,
+  Formel ändern, Quelle speichern/neustarten/erneut editieren, Syntaxfehler mit
+  gesperrtem OK und erhaltenem Original; gemischte Text/Bild/Formel/Handschrift-
+  Seite als PDF exportieren und deutsche Zeichen extrahieren.
+- Bestehendes surfaces-ui-smoke.py erneut erfolgreich: **zehn PASS-Schritte**
+  für Stift/Lasso/Skalieren/Textmarker/Radierer, Pan/Zoom samt Undo, Umwandlung,
+  Papiereinstellungen und Neustart. Ursprüngliche M4-Screenshots erhalten,
+  neue Durchlaufbilder als text-media-surfaces-*.png abgelegt.
+- Keine Critical-/Assertion-Meldungen in den App-Logs der finalen vier GTK-Läufe.
+  Erwartete ALSA/JACK-Meldungen im hardwarelosen Container sind kein Audiotest.
+  `xdotool type` mit dynamischen Unicode-Tastenbelegungen war unzuverlässig;
+  stattdessen echte GTK-Zwischenablage und GTK-Unicode-Komposition geprüft.
+  Strg+Umschalt+U darf deshalb nicht vom Unterstreichen-Shortcut abgefangen werden.
+
+Reproduzierbare Kommandos und Grenzen: validation/TEXT-MEDIA-VALIDATION.md;
+Ergebnisse: validation/text-media-results.txt; ausführbare Text-/Medien-GTK-Skripte
+und synthetische Screenshots liegen daneben. Scratch-Logs/Build unter work/ bzw.
+build-codex/ sind nicht versioniert. `git diff --check` erfolgreich; keine
+Konfliktmarker, HEAD und zuletzt aktualisiertes origin/main identisch (0/0),
+Änderungen lokal uncommitted. Git-Identität lokal auf leotrax3d@gmx.net gesetzt.
+Kein Commit/Push, kein neuer Windows-CI-Lauf und kein Windows-Paket in diesem Auftrag.
+
+### Bekannte Grenzen und nächster überprüfbarer Schritt
+
+HTML/RTF aus Office/Browser fällt auf Klartext zurück; keine verbundenen oder
+mehrzeiligen Tabellenzellen. Überschriften sind Stilvorgaben, Listen einfache
+Marker. Interne Verweise sind physische XOPP-Seitenzahlen, keine stabilen
+Notizbuch-UUIDs; PDF exportiert sie visuell ohne eigene klickbare Annotation.
+Der lokale Textverlauf ist begrenzt und wird beim Abschluss zu einer gemeinsamen
+Dokumentaktion; noch aktive Eingabe vor Abschluss ist kein eigener gespeicherter
+Zustand. Diese Grenzen sind in der Bedienungsdokumentation ausdrücklich benannt.
+
+Nächster überprüfbarer Schritt: Änderungen reviewen und Windows-UCRT64-Paket
+bauen; deutsche Tastatur/AltGr/Tottasten, japanische/chinesische IME-Kandidaten,
+NVDA und 100/150/200 % DPI, Offline-TeX sowie physischen Stift/Touch/Palm-Rejection
+auf Papier und freien Seiten gemäß WINDOWS.md abnehmen. Linux-/Maus-/AT-SPI-
+Prüfungen ersetzen diese Plattform-/Hardwareabnahme nicht.
+
+## Text und Medien auf main veröffentlichen – 2026-11-11
+
+Auf ausdrücklichen Nutzerauftrag den vollständigen oben geprüften Text-/Medien-
+Stand samt Dokumentation, Testskripten, XML-Beleg und synthetischen Screenshots
+für origin/main übernommen. Vor Commit `git fetch origin`: HEAD und origin/main
+identisch (0/0), keine weitere Integration oder Historienumschreibung nötig.
+`git diff --check` erfolgreich; Test-XML erneut geprüft: 128 Tests, keine Fehler
+oder deaktivierten Tests. Keine Produktänderung seit der abschließenden Prüfung.
+Author und Committer ausdrücklich leotrax3d@gmx.net. Regulärer Push nach main;
+Remote-HEAD und Arbeitsbaum anschließend kontrollieren. Ein neuer Windows-CI-
+Lauf ist separat zu bewerten und ersetzt keine Hardwareabnahme.

@@ -11,7 +11,9 @@
 
 #pragma once
 
+#include <map>
 #include <string>  // for string
+#include <vector>
 
 #include <gdk/gdk.h>      // for GdkEventKey
 #include <glib.h>         // for gint, gboolean, gchar
@@ -20,7 +22,8 @@
 
 #include "model/OverlayBase.h"
 #include "model/PageRef.h"  // for PageRef
-#include "util/Color.h"     // for Color
+#include "model/RichText.h"
+#include "util/Color.h"  // for Color
 #include "util/Range.h"
 #include "util/raii/CStringWrapper.h"
 #include "util/raii/GObjectSPtr.h"
@@ -61,8 +64,18 @@ public:
      * Use `updateTextElementContent` to sync them
      */
     Text* getTextElement() const;
+    Text* getElementAfterEdition();
 
     bool bufferEmpty() const;
+    void showFormattingDialog();
+    bool undoEdition(bool redo = false);
+    bool canUndoEdition() const;
+    bool canRedoEdition() const;
+    void applyStyle(const std::string& kind, const std::string& value, bool toggle = false);
+    void editTable();
+    void paragraph(const std::string& prefix);
+    void editLink();
+    void followLink();
 
     void setFont(XojFont font);
     void setColor(Color color);
@@ -81,13 +94,15 @@ public:
     void deleteFromCursor(GtkDeleteType type, int count);
     void copyToClipboard() const;
     void cutToClipboard();
-    void pasteFromClipboard();
+    void pasteFromClipboard(bool plain = false);
     void selectAtCursor(TextEditor::SelectType ty);
 
 private:
+    void applyStyles(std::initializer_list<std::pair<std::string, std::string>> styles);
     void toggleOverwrite();
     void toggleBoldFace();
     void increaseFontSize();
+    void adjustFontSize(double delta);
     void decreaseFontSize();
     void moveCursor(GtkMovementStep step, int count, bool extendSelection);
     void backspace();
@@ -146,6 +161,23 @@ private:
     static bool blinkCallback(TextEditor* te);
 
 private:
+    struct EditionState {
+        RichText rich;
+        std::string font;
+        double size;
+        Color color;
+        int cursor;
+        int anchor;
+    };
+    std::vector<EditionState> history;
+    size_t historyIndex = 0;
+    bool restoringHistory = false;
+    bool dialogOpen = false;
+    size_t pendingLinkPage = 0;
+    int tableColumns = 0;
+    std::map<std::string, std::string> pendingStyles;
+    void recordHistory();
+    void restoreHistory();
     Control* control;
     PageRef page;
 

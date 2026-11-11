@@ -1,5 +1,6 @@
 #include "Text.h"
 
+#include <stdexcept>
 #include <utility>  // for move
 
 #include <glib.h>  // for g_warning
@@ -29,6 +30,7 @@ auto Text::clone() const -> Text* {
     Text* text = new Text();
     text->font = this->font;
     text->text = this->text;
+    text->richText = this->richText;
     text->setColor(this->getColor());
     text->x = this->x;
     text->y = this->y;
@@ -57,6 +59,17 @@ auto Text::getText() const -> const std::string& { return this->text; }
 
 void Text::setText(std::string text) {
     this->text = std::move(text);
+    // Plain replacement must not leave style ranges/table separators referring to the old content.
+    richText = RichText{};
+    richText.text = this->text;
+    sizeCalculated = false;
+}
+
+void Text::setRichText(RichText value) {
+    if (!value.valid())
+        throw std::runtime_error("Invalid rich text");
+    text = value.text;
+    richText = std::move(value);
     sizeCalculated = false;
 }
 
@@ -66,7 +79,7 @@ void Text::calcSize() const {
     int w = 0;
     int h = 0;
     pango_layout_get_size(layout.get(), &w, &h);
-    this->width = (static_cast<double>(w)) / PANGO_SCALE;
+    this->width = std::max((static_cast<double>(w)) / PANGO_SCALE, richText.tableWidth(layout.get()));
     this->height = (static_cast<double>(h)) / PANGO_SCALE;
     this->updateSnapping();
 }
@@ -94,6 +107,7 @@ auto Text::createPangoLayout() const -> xoj::util::GObjectSPtr<PangoLayout> {
 #endif
 
     updatePangoFont(layout.get());
+    richText.configureLayout(layout.get(), getFontSize());
 
     return layout;
 }
@@ -123,6 +137,7 @@ void Text::scale(double x0, double y0, double fx, double fy, double rotation,
 
     double size = this->font.getSize() * fx;
     this->font.setSize(size);
+    richText.scale(fx);
 
     sizeCalculated = false;
 }
@@ -134,25 +149,35 @@ auto Text::isInEditing() const -> bool { return this->inEditing; }
 auto Text::rescaleOnlyAspectRatio() -> bool { return true; }
 
 void Text::serialize(ObjectOutputStream& out) const {
-    out.writeObject("Text");
+    bool rich = !richText.spans.empty() || richText.columns;
+    out.writeObject(rich ? "TextRichV1" : "Text");
 
     this->AudioElement::serialize(out);
 
     out.writeString(this->text);
 
     font.serialize(out);
+    if (rich)
+        out.writeString(richText.encode());
 
     out.endObject();
 }
 
 void Text::readSerialized(ObjectInputStream& in) {
-    in.readObject("Text");
+    auto name = in.readObject();
+    bool rich = name == "TextRichV1";
+    if (!rich && name != "Text")
+        throw std::runtime_error("Unsupported text object");
 
     this->AudioElement::readSerialized(in);
 
     this->text = in.readString();
 
     font.readSerialized(in);
+    richText = rich ? RichText::decode(in.readString()) : RichText{};
+    if (rich && richText.text != text)
+        throw std::runtime_error("Rich text/plain text mismatch");
+    richText.text = text;
 
     in.endObject();
 }

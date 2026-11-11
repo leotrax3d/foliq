@@ -10,12 +10,15 @@
 #include "control/xojfile/XojExportHandler.h"  // for XojExportHandler
 #include "gui/MainWindow.h"                    // for MainWindow
 #include "gui/dialog/ExportDialog.h"           // for ExportDialog
-#include "model/Document.h"                    // for Document
-#include "pdf/base/XojPdfExport.h"             // for XojPdfExport
-#include "pdf/base/XojPdfExportFactory.h"      // for XojPdfExportFactory
-#include "util/PathUtil.h"                     // for clearExtensions
-#include "util/XojMsgBox.h"                    // for XojMsgBox
-#include "util/i18n.h"                         // for _, FS, _F
+#include "model/Document.h"
+#include "model/Image.h"
+#include "model/Text.h"
+#include "model/XojPage.h"                 // for Document
+#include "pdf/base/XojPdfExport.h"         // for XojPdfExport
+#include "pdf/base/XojPdfExportFactory.h"  // for XojPdfExportFactory
+#include "util/PathUtil.h"                 // for clearExtensions
+#include "util/XojMsgBox.h"                // for XojMsgBox
+#include "util/i18n.h"                     // for _, FS, _F
 
 #include "ImageExport.h"  // for ImageExport, EXPORT_GR...
 #include "SaveJob.h"      // for SaveJob
@@ -115,6 +118,26 @@ void CustomExportJob::run() {
         SaveJob::updatePreview(control);
         Document* doc = this->control->getDocument();
 
+        // Legacy Xournal cannot round-trip rich content. Refuse before opening the target.
+        for (size_t p = 0; p < doc->getPageCount(); ++p) {
+            for (auto* layer: *doc->getPage(p)->getLayers())
+                for (auto* element: layer->getElements()) {
+                    bool rich = false;
+                    if (auto* text = dynamic_cast<Text*>(element))
+                        rich = !text->getRichText().spans.empty() || text->getRichText().columns;
+                    if (auto* image = dynamic_cast<Image*>(element)) {
+                        auto crop = image->getCrop();
+                        rich = crop.left != 0 || crop.top != 0 || crop.right != 1 || crop.bottom != 1;
+                    }
+                    if (rich) {
+                        this->lastError =
+                                _("This document contains rich text, tables or image crops that legacy Xournal cannot "
+                                  "preserve. Save as XOPP for editing, or export as PDF, SVG or PNG.");
+                        callAfterRun();
+                        return;
+                    }
+                }
+        }
         XojExportHandler h;
         doc->lock();
         h.prepareSave(doc);

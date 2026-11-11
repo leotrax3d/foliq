@@ -432,10 +432,18 @@ void Control::actionPerformed(ActionType type, ActionGroup group, GtkToolButton*
             break;
             // Menu Edit
         case ACTION_UNDO:
+            if (auto* editor = getTextEditor()) {
+                editor->undoEdition();
+                break;
+            }
             clearSelectionEndText();
             UndoRedoController::undo(this);
             break;
         case ACTION_REDO:
+            if (auto* editor = getTextEditor()) {
+                editor->undoEdition(true);
+                break;
+            }
             clearSelectionEndText();
             UndoRedoController::redo(this);
             break;
@@ -1879,7 +1887,7 @@ void Control::selectTool(ToolType type) {
     if (oldTool && win && isSelectToolType(type) && oldTool->getToolType() == ToolType::TOOL_TEXT &&
         this->win->getXournal()->getTextEditor() && !(this->win->getXournal()->getTextEditor()->bufferEmpty())) {
         auto xournal = this->win->getXournal();
-        Text* textobj = xournal->getTextEditor()->getTextElement();
+        Text* textobj = xournal->getTextEditor()->getElementAfterEdition();
         clearSelectionEndText();
 
         auto pageNr = getCurrentPageNo();
@@ -2231,8 +2239,12 @@ void Control::showSettings() {
 
 auto Control::newFile(string pageTemplate, fs::path filepath) -> bool {
     if (!filepath.empty()) {
-        try { foliq::watchDocument(filepath); }
-        catch (const std::exception& e) { XojMsgBox::showErrorToUser(getGtkWindow(), e.what()); return false; }
+        try {
+            foliq::watchDocument(filepath);
+        } catch (const std::exception& e) {
+            XojMsgBox::showErrorToUser(getGtkWindow(), e.what());
+            return false;
+        }
     }
     if (!this->close(true)) {
         return false;
@@ -2297,8 +2309,12 @@ auto Control::openFile(fs::path filepath, int scrollToPage, bool forceOpen) -> b
         return loadPdf(filepath, scrollToPage);
     }
 
-    try { foliq::watchDocument(filepath); }
-    catch (const std::exception& e) { XojMsgBox::showErrorToUser(getGtkWindow(), e.what()); return false; }
+    try {
+        foliq::watchDocument(filepath);
+    } catch (const std::exception& e) {
+        XojMsgBox::showErrorToUser(getGtkWindow(), e.what());
+        return false;
+    }
     LoadHandler loadHandler;
     Document* loadedDocument = loadHandler.loadDocument(filepath);
 
@@ -2646,8 +2662,10 @@ auto Control::save(bool synchron) -> bool {
     if (synchron) {
         result = job->save();
         unblock();
-        if (result) this->resetSavedStatus();
-        else XojMsgBox::showErrorToUser(getGtkWindow(), job->errorMessage());
+        if (result)
+            this->resetSavedStatus();
+        else
+            XojMsgBox::showErrorToUser(getGtkWindow(), job->errorMessage());
     } else {
         this->scheduler->addJob(job, JOB_PRIORITY_URGENT);
     }
@@ -2704,8 +2722,12 @@ auto Control::showSaveDialog() -> bool {
     // The overwrite dialog authorizes this revision, not subsequent external changes.
     fs::path target = filename;
     Util::safeReplaceExtension(target, "xopp");
-    try { foliq::watchDocument(target); }
-    catch (const std::exception& e) { XojMsgBox::showErrorToUser(getGtkWindow(), e.what()); return false; }
+    try {
+        foliq::watchDocument(target);
+    } catch (const std::exception& e) {
+        XojMsgBox::showErrorToUser(getGtkWindow(), e.what());
+        return false;
+    }
     this->doc->lock();
 
     this->doc->setFilepath(filename);
@@ -2828,7 +2850,8 @@ void Control::quit(bool allowCancel) {
 }
 
 auto Control::close(const bool allowDestroy, const bool allowCancel) -> bool {
-    if (win && !win->rememberNotebookPosition()) return false;
+    if (win && !win->rememberNotebookPosition())
+        return false;
     clearSelectionEndText();
     metadata->documentChanged();
 
@@ -3010,8 +3033,12 @@ void Control::clipboardPaste(Element* e) {
     double width = e->getElementWidth();
     double height = e->getElementHeight();
 
-    x = std::max(0.0, x - width / 2);
-    y = std::max(0.0, y - height / 2);
+    x -= width / 2;
+    y -= height / 2;
+    if (!page->isInfinite()) {
+        x = std::max(0.0, x);
+        y = std::max(0.0, y);
+    }
 
     e->setX(x);
     e->setY(y);
@@ -3070,11 +3097,11 @@ void Control::clipboardPasteXournal(ObjectInputStream& in) {
 
             if (name == "Stroke") {
                 element = std::make_unique<Stroke>();
-            } else if (name == "Image") {
+            } else if ((name == "Image" || name == "ImageCropV1")) {
                 element = std::make_unique<Image>();
             } else if (name == "TexImage") {
                 element = std::make_unique<TexImage>();
-            } else if (name == "Text") {
+            } else if ((name == "Text" || name == "TextRichV1")) {
                 element = std::make_unique<Text>();
             } else {
                 throw InputStreamException(FS(FORMAT_STR("Get unknown object {1}") % name), __FILE__, __LINE__);
@@ -3093,8 +3120,12 @@ void Control::clipboardPasteXournal(ObjectInputStream& in) {
         // calculate x/y of paste target, see clipboardPaste(Element* e)
         win->getXournal()->getPasteTarget(x, y);
 
-        x = std::max(0.0, x - selection->getWidth() / 2);
-        y = std::max(0.0, y - selection->getHeight() / 2);
+        x -= selection->getWidth() / 2;
+        y -= selection->getHeight() / 2;
+        if (!page->isInfinite()) {
+            x = std::max(0.0, x);
+            y = std::max(0.0, y);
+        }
 
         // calculate difference between current selection position and destination
         auto dx = x - selection->getXOnView();

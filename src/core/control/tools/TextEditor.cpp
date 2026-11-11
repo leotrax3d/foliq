@@ -1,9 +1,11 @@
 #include "TextEditor.h"
 
+#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <cstring>  // for strcmp, size_t
 #include <memory>   // for allocator, make_unique, __shared_p...
+#include <regex>
 #include <utility>  // for move
 
 #include <gdk/gdkkeysyms.h>  // for GDK_KEY_B, GDK_KEY_ISO_Enter, GDK_...
@@ -13,6 +15,7 @@
 #include "control/Control.h"  // for Control
 #include "control/settings/Settings.h"
 #include "gui/XournalppCursor.h"  // for XournalppCursor
+#include "model/Document.h"       // for Document
 #include "model/Font.h"           // for XojFont
 #include "model/Text.h"           // for Text
 #include "model/XojPage.h"        // for XojPage
@@ -27,7 +30,6 @@
 #include "view/overlays/TextEditionView.h"
 
 #include "TextEditorWidget.h"  // for gtk_xoj_int_txt_new
-#include "model/Document.h"  // for Document
 
 class UndoAction;
 
@@ -88,13 +90,6 @@ static auto cloneToCString(GtkTextBuffer* buf) {
 }
 
 /**
- * @brief Clone the buffer's content
- *
- * This is pretty inefficient: the text gets copied twice
- */
-static auto cloneToStdString(GtkTextBuffer* buf) -> std::string { return cloneToCString(buf).get(); }
-
-/**
  * @brief Clone the buffer's content and insert a string into the clone
  * This makes one less copy operation over using cloneToStdString followed by insert()
  * (The text is copied "only" twice, and not three times)
@@ -131,6 +126,26 @@ TextEditor::TextEditor(Control* control, const PageRef& page, GtkWidget* xournal
     gtk_text_buffer_add_selection_clipboard(buffer.get(), gtk_clipboard_get(GDK_SELECTION_PRIMARY));
 
     this->initializeEditionAt(x, y);
+    tableColumns = textElement->getRichText().columns;
+    textElement->getRichText().toBuffer(buffer.get());
+    layoutStatus = LayoutStatus::NEEDS_COMPLETE_UPDATE;
+    gtk_text_buffer_register_serialize_tagset(buffer.get(), "foliq-v1");
+    auto richFormat = gtk_text_buffer_register_deserialize_tagset(buffer.get(), "foliq-v1");
+    gtk_text_buffer_deserialize_set_can_create_tags(buffer.get(), richFormat, true);
+    recordHistory();
+    g_signal_connect_after(buffer.get(), "insert-text",
+                           G_CALLBACK(+[](GtkTextBuffer* b, GtkTextIter* end, gchar* text, gint length, gpointer p) {
+                               auto* self = static_cast<TextEditor*>(p);
+                               if (self->restoringHistory)
+                                   return;
+                               GtkTextIter begin = *end;
+                               gtk_text_iter_backward_chars(&begin, static_cast<int>(g_utf8_strlen(text, length)));
+                               for (const auto& style: self->pendingStyles) {
+                                   if (auto* tag = RichText::tag(b, style.first, style.second))
+                                       gtk_text_buffer_apply_tag(b, tag, &begin, end);
+                               }
+                           }),
+                           this);
 
     g_signal_connect(this->buffer.get(), "paste-done", G_CALLBACK(bufferPasteDoneCallback), this);
 
@@ -182,6 +197,17 @@ auto TextEditor::getViewPool() const -> const std::shared_ptr<xoj::util::Dispatc
 
 auto TextEditor::getTextElement() const -> Text* { return this->textElement.get(); }
 
+Text* TextEditor::getElementAfterEdition() {
+    updateTextElementContent();
+    if (originalTextElement && originalTextElement->getText() == textElement->getText() &&
+        originalTextElement->getRichText().encode() == textElement->getRichText().encode() &&
+        originalTextElement->getFontName() == textElement->getFontName() &&
+        originalTextElement->getFontSize() == textElement->getFontSize() &&
+        originalTextElement->getColor() == textElement->getColor())
+        return originalTextElement;
+    return textElement.get();
+}
+
 bool TextEditor::bufferEmpty() const { return gtk_text_buffer_get_char_count(this->buffer.get()) == 0; }
 
 void TextEditor::replaceBufferContent(const std::string& text) {
@@ -195,13 +221,23 @@ void TextEditor::replaceBufferContent(const std::string& text) {
 }
 
 void TextEditor::setColor(Color color) {
-    this->textElement->setColor(color);
-    repaintEditor(false);
+    if (gtk_text_buffer_get_char_count(buffer.get()))
+        applyStyle("foreground", Util::rgb_to_hex_string(color));
+    else {
+        this->textElement->setColor(color);
+        contentsChanged(true);
+        repaintEditor(false);
+    }
 }
 
 void TextEditor::setFont(XojFont font) {
-    this->textElement->setFont(font);
-    afterFontChange();
+    if (gtk_text_buffer_get_char_count(buffer.get())) {
+        applyStyles({{"font", font.getName()}, {"size", std::to_string(font.getSize())}});
+    } else {
+        this->textElement->setFont(font);
+        afterFontChange();
+        contentsChanged(true);
+    }
 }
 
 void TextEditor::afterFontChange() {
@@ -217,7 +253,30 @@ void TextEditor::iMCommitCallback(GtkIMContext* context, const gchar* str, TextE
     gtk_text_buffer_delete_selection(te->buffer.get(), true, true);
 
     if (!strcmp(str, "\n")) {
-        if (!gtk_text_buffer_insert_interactive_at_cursor(te->buffer.get(), "\n", 1, true)) {
+        std::string inserted = "\n";
+        auto cursor = getIteratorAtCursor(te->buffer.get());
+        auto start = cursor;
+        gtk_text_iter_set_line_offset(&start, 0);
+        char* raw = gtk_text_buffer_get_text(te->buffer.get(), &start, &cursor, true);
+        std::string line(raw);
+        g_free(raw);
+        std::smatch match;
+        static const std::regex list(R"(^([ \t]*)(• |☐ |☑ |([0-9]{1,6})\. )(.*)$)");
+        if (std::regex_match(line, match, list)) {
+            if (match[4].str().empty()) {
+                gtk_text_buffer_delete(te->buffer.get(), &start, &cursor);
+                inserted.clear();
+            } else {
+                std::string marker = match[2];
+                if (match[3].matched)
+                    marker = std::to_string(std::stoi(match[3]) + 1) + ". ";
+                if (marker == "☑ ")
+                    marker = "☐ ";
+                inserted += match[1].str() + marker;
+            }
+        }
+        if (!gtk_text_buffer_insert_interactive_at_cursor(te->buffer.get(), inserted.c_str(),
+                                                          static_cast<int>(inserted.size()), true)) {
             gtk_widget_error_bell(te->xournalWidget);
         } else {
             te->contentsChanged(true);
@@ -300,6 +359,55 @@ auto TextEditor::imDeleteSurroundingCallback(GtkIMContext* context, gint offset,
 }
 
 auto TextEditor::onKeyPressEvent(GdkEventKey* event) -> bool {
+    if (event->keyval == GDK_KEY_F4) {
+        showFormattingDialog();
+        return true;
+    }
+    if ((event->state & GDK_CONTROL_MASK) && !(event->state & GDK_MOD1_MASK)) {
+        auto key = gdk_keyval_to_lower(event->keyval);
+        if (key == GDK_KEY_z) {
+            undoEdition(event->state & GDK_SHIFT_MASK);
+            return true;
+        }
+        if (key == GDK_KEY_y) {
+            undoEdition(true);
+            return true;
+        }
+        if (key == GDK_KEY_i && !(event->state & GDK_SHIFT_MASK)) {
+            applyStyle("italic", "1", true);
+            return true;
+        }
+        if (key == GDK_KEY_u && !(event->state & GDK_SHIFT_MASK)) {
+            applyStyle("underline", "1", true);
+            return true;
+        }
+        if (key == GDK_KEY_v && (event->state & GDK_SHIFT_MASK)) {
+            pasteFromClipboard(true);
+            return true;
+        }
+        if (key == GDK_KEY_k) {
+            editLink();
+            return true;
+        }
+        if (key == GDK_KEY_e && (event->state & GDK_SHIFT_MASK)) {
+            showFormattingDialog();
+            return true;
+        }
+        if (key == GDK_KEY_t && (event->state & GDK_SHIFT_MASK)) {
+            editTable();
+            return true;
+        }
+        if (event->keyval == GDK_KEY_Return) {
+            followLink();
+            return true;
+        }
+    }
+    if (tableColumns && !(event->state & GDK_CONTROL_MASK) &&
+        (gdk_keyval_to_unicode(event->keyval) || event->keyval == GDK_KEY_BackSpace ||
+         event->keyval == GDK_KEY_Delete)) {
+        editTable();
+        return true;
+    }
     bool retval = false;
     bool obscure = false;
 
@@ -386,37 +494,19 @@ void TextEditor::toggleOverwrite() {
  * I know it's a bit rough and duplicated
  * Improve that later on...
  */
-void TextEditor::decreaseFontSize() {
-    XojFont& font = textElement->getFont();
-    if (double size = font.getSize(); size > 1) {
-        font.setSize(font.getSize() - 1);
-        afterFontChange();
-    }
+void TextEditor::decreaseFontSize() { adjustFontSize(-1); }
+void TextEditor::increaseFontSize() { adjustFontSize(1); }
+void TextEditor::adjustFontSize(double delta) {
+    auto it = getIteratorAtCursor(buffer.get());
+    int pos = gtk_text_iter_get_offset(&it);
+    double size = textElement->getFontSize();
+    for (const auto& span: RichText::fromBuffer(buffer.get()).spans)
+        if (span.kind == "size" && span.start <= pos && span.end >= pos)
+            size = g_ascii_strtod(span.value.c_str(), nullptr);
+    applyStyle("size", std::to_string(std::clamp(size + delta, 1.0, 1000.0)));
 }
 
-void TextEditor::increaseFontSize() {
-    XojFont& font = textElement->getFont();
-    font.setSize(font.getSize() + 1);
-    afterFontChange();
-}
-
-void TextEditor::toggleBoldFace() {
-    // get the current/used font
-    XojFont& font = textElement->getFont();
-    std::string fontName = font.getName();
-
-    std::size_t found = fontName.find(" Bold");
-
-    // toggle bold
-    if (found == std::string::npos) {
-        fontName = fontName + " Bold";
-    } else {
-        fontName = fontName.erase(found, 5);
-    }
-
-    font.setName(fontName);
-    afterFontChange();
-}
+void TextEditor::toggleBoldFace() { applyStyle("bold", "1", true); }
 
 void TextEditor::selectAtCursor(TextEditor::SelectType ty) {
     GtkTextIter startPos;
@@ -599,10 +689,15 @@ void TextEditor::findPos(GtkTextIter* iter, double xPos, double yPos) const {
     gtk_text_iter_forward_chars(iter, trailing);
 }
 
-void TextEditor::updateTextElementContent() { this->textElement->setText(cloneToStdString(this->buffer.get())); }
+void TextEditor::updateTextElementContent() {
+    auto rich = RichText::fromBuffer(buffer.get(), tableColumns);
+    if (rich.valid())
+        textElement->setRichText(std::move(rich));
+}
 
 void TextEditor::contentsChanged(bool forceCreateUndoAction) {
-    // Todo: Reinstate text edition undo stack
+    if (!restoringHistory)
+        recordHistory();
     this->layoutStatus = LayoutStatus::NEEDS_COMPLETE_UPDATE;
     this->computeVirtualCursorPosition();
 }
@@ -874,8 +969,28 @@ void TextEditor::cutToClipboard() {
     this->repaintEditor();
 }
 
-void TextEditor::pasteFromClipboard() {
+void TextEditor::pasteFromClipboard(bool plain) {
     GtkClipboard* clipboard = gtk_widget_get_clipboard(this->xournalWidget, GDK_SELECTION_CLIPBOARD);
+    if (plain) {
+        char* content = gtk_clipboard_wait_for_text(clipboard);
+        if (content) {
+            gtk_text_buffer_delete_selection(buffer.get(), true, true);
+            auto a = getIteratorAtCursor(buffer.get());
+            int start = gtk_text_iter_get_offset(&a);
+            std::string normalized(content);
+            for (size_t pos = 0; (pos = normalized.find("\r\n", pos)) != std::string::npos;)
+                normalized.replace(pos, 2, "\n");
+            std::replace(normalized.begin(), normalized.end(), '\r', '\n');
+            gtk_text_buffer_insert(buffer.get(), &a, normalized.c_str(), -1);
+            auto b = a;
+            gtk_text_buffer_get_iter_at_offset(buffer.get(), &a, start);
+            gtk_text_buffer_remove_all_tags(buffer.get(), &a, &b);
+            g_free(content);
+            contentsChanged(true);
+            repaintEditor();
+        }
+        return;
+    }
     gtk_text_buffer_paste_clipboard(this->buffer.get(), clipboard, nullptr, true);
 }
 
@@ -908,6 +1023,8 @@ auto TextEditor::blinkCallback(TextEditor* te) -> bool {
 }
 
 void TextEditor::setTextToPangoLayout(PangoLayout* pl) const {
+    auto rich = RichText::fromBuffer(buffer.get(), tableColumns);
+    rich.configureLayout(pl, textElement->getFontSize());
     std::string_view preed(preeditString);
 
     if (!preed.empty()) {
@@ -915,7 +1032,7 @@ void TextEditor::setTextToPangoLayout(PangoLayout* pl) const {
         std::string txt = cloneWithInsertToStdString(this->buffer.get(), preed);
 
         int pos = getByteOffsetOfCursor(this->buffer.get());
-        xoj::util::PangoAttrListSPtr attrlist(pango_attr_list_new(), xoj::util::adopt);
+        xoj::util::PangoAttrListSPtr attrlist(RichText::fromBuffer(buffer.get()).attributes(), xoj::util::adopt);
         pango_attr_list_splice(attrlist.get(), this->preeditAttrList.get(), pos, static_cast<int>(preed.length()));
 
         pango_layout_set_attributes(pl, attrlist.get());
@@ -930,7 +1047,7 @@ void TextEditor::setTextToPangoLayout(PangoLayout* pl) const {
 Color TextEditor::getSelectionColor() const { return this->control->getSettings()->getSelectionColor(); }
 
 void TextEditor::setSelectionAttributesToPangoLayout(PangoLayout* pl) const {
-    xoj::util::PangoAttrListSPtr attrlist(pango_attr_list_new(), xoj::util::adopt);
+    xoj::util::PangoAttrListSPtr attrlist(RichText::fromBuffer(buffer.get()).attributes(), xoj::util::adopt);
 
     GtkTextIter start;
     GtkTextIter end;
@@ -957,7 +1074,8 @@ auto TextEditor::computeBoundingBox() const -> Range {
     int w = 0;
     int h = 0;
     pango_layout_get_size(getUpToDateLayout(), &w, &h);
-    double width = (static_cast<double>(w)) / PANGO_SCALE;
+    double width = std::max((static_cast<double>(w)) / PANGO_SCALE,
+                            textElement->getRichText().tableWidth(getUpToDateLayout()));
     double height = (static_cast<double>(h)) / PANGO_SCALE;
     double x = textElement->getX();
     double y = textElement->getY();
@@ -1050,6 +1168,12 @@ void TextEditor::finalizeEdition() {
     }
 
     this->updateTextElementContent();
+    if (originalTextElement && getElementAfterEdition() == originalTextElement) {
+        originalTextElement->setInEditing(false);
+        viewPool->dispatchAndClear(xoj::view::TextEditionView::FINALIZATION_REQUEST, previousBoundingBox);
+        page->fireElementChanged(originalTextElement);
+        return;
+    }
     if (originalTextElement) {
         // Modifying a preexisting element
         this->viewPool->dispatchAndClear(xoj::view::TextEditionView::FINALIZATION_REQUEST, this->previousBoundingBox);
@@ -1057,7 +1181,7 @@ void TextEditor::finalizeEdition() {
         doc->lock();
         Layer* layer = this->page->getSelectedLayer();
         auto index = layer->removeElement(this->originalTextElement, false);
-        layer->addElement(this->textElement.get());
+        layer->insertElement(this->textElement.get(), index);
         doc->unlock();
 
         this->page->fireElementChanged(this->textElement.get());
@@ -1065,7 +1189,7 @@ void TextEditor::finalizeEdition() {
         if (index != Element::InvalidIndex) [[likely]] {
             this->originalTextElement->setInEditing(false);
             undo->addUndoAction(std::make_unique<TextBoxUndoAction>(this->page, layer, this->textElement.release(),
-                                                                this->originalTextElement));
+                                                                    this->originalTextElement));
         } else {
             // A warning has already been issued
             undo->addUndoAction(std::make_unique<InsertUndoAction>(this->page, layer, this->textElement.release()));
@@ -1088,7 +1212,9 @@ void TextEditor::initializeEditionAt(double x, double y) {
     Text* text = nullptr;
 
     // Should we reverse this loop to select the most recent text rather than the oldest?
-    for (Element* e: this->page->getSelectedLayer()->getElements()) {
+    const auto& elements = this->page->getSelectedLayer()->getElements();
+    for (auto it = elements.rbegin(); it != elements.rend(); ++it) {
+        Element* e = *it;
         if (e->getType() == ELEMENT_TEXT) {
             GdkRectangle matchRect = {gint(x), gint(y), 1, 1};
             if (e->intersectsArea(&matchRect)) {

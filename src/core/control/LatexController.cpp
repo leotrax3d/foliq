@@ -29,14 +29,15 @@
 #include "model/Text.h"                      // for Text
 #include "model/XojPage.h"                   // for XojPage
 #include "undo/InsertUndoAction.h"           // for InsertUndoAction
-#include "undo/UndoRedoHandler.h"            // for UndoRedoHandler
-#include "util/Color.h"                      // for Color, get_color_contrast
-#include "util/PathUtil.h"                   // for ensureFolderExists, getT...
-#include "util/PlaceholderString.h"          // for PlaceholderString
-#include "util/Rectangle.h"                  // for Rectangle
-#include "util/Util.h"                       // for npos
-#include "util/XojMsgBox.h"                  // for XojMsgBox
-#include "util/i18n.h"                       // for FS, _, _F, N_
+#include "undo/TextBoxUndoAction.h"
+#include "undo/UndoRedoHandler.h"    // for UndoRedoHandler
+#include "util/Color.h"              // for Color, get_color_contrast
+#include "util/PathUtil.h"           // for ensureFolderExists, getT...
+#include "util/PlaceholderString.h"  // for PlaceholderString
+#include "util/Rectangle.h"          // for Rectangle
+#include "util/Util.h"               // for npos
+#include "util/XojMsgBox.h"          // for XojMsgBox
+#include "util/i18n.h"               // for FS, _, _F, N_
 
 #include "Control.h"  // for Control
 
@@ -187,6 +188,8 @@ void LatexController::triggerImageUpdate(const string& texString) {
     const std::string texContents = LatexGenerator::templateSub(texString, this->latexTemplate, textColor);
     auto result = generator.asyncRun(this->texTmpDir, texContents);
     if (auto* err = std::get_if<LatexGenerator::GenError>(&result)) {
+        this->isValidTex = false;
+        this->texProcessOutput = err->message;
         XojMsgBox::showErrorToUser(this->control->getGtkWindow(), err->message);
     } else if (auto** proc = std::get_if<GSubprocess*>(&result)) {
         // Render the TeX and capture the process' output.
@@ -265,7 +268,7 @@ void LatexController::onPdfRenderComplete(GObject* procObj, GAsyncResult* res, L
     const string currentTex = self->dlg.getBufferContents();
     bool shouldUpdate = self->lastPreviewedTex != currentTex;
     if (self->isValidTex) {
-        self->temporaryRender = self->loadRendered(currentTex);
+        self->temporaryRender = self->loadRendered(self->lastPreviewedTex);
         if (self->temporaryRender != nullptr) {
             self->dlg.setTempRender(self->temporaryRender->getPdf());
         }
@@ -300,7 +303,13 @@ void LatexController::updateStatus() {
 
     // Show error warning only if LaTeX is invalid.
     GtkLabel* errorLabel = GTK_LABEL(this->dlg.get("texErrorLabel"));
-    gtk_label_set_text(errorLabel, this->isValidTex ? "" : N_("The formula is empty when rendered or invalid."));
+    gtk_label_set_line_wrap(errorLabel, true);
+    gtk_label_set_max_width_chars(errorLabel, 72);
+    gtk_label_set_text(errorLabel,
+                       this->isValidTex ?
+                               "" :
+                               _("The formula could not be rendered. Check the LaTeX syntax and installed packages in "
+                                 "the command output below. Your previous formula has not been changed."));
 
     // Update the output pane.
     GtkTextView* commandOutputDisplay = GTK_TEXT_VIEW(this->dlg.get("texCommandOutputText"));
@@ -363,15 +372,23 @@ void LatexController::insertTexImage() {
     TexImage* img = this->temporaryRender.release();
 
     this->control->clearSelectionEndText();
-    this->deleteOldImage();
-
+    Element* previous = this->selectedElem;
     doc->lock();
-    layer->addElement(img);
+    if (previous) {
+        auto index = layer->removeElement(previous, false);
+        layer->insertElement(img, index);
+    } else
+        layer->addElement(img);
     view->rerenderElement(img);
     auto* selection = new EditSelection(control->getUndoRedoHandler(), img, view, page);
     doc->unlock();
 
-    control->getUndoRedoHandler()->addUndoAction(std::make_unique<InsertUndoAction>(page, layer, img));
+    if (previous) {
+        page->firePageChanged();
+        control->getUndoRedoHandler()->addUndoAction(std::make_unique<TextBoxUndoAction>(page, layer, img, previous));
+    } else
+        control->getUndoRedoHandler()->addUndoAction(std::make_unique<InsertUndoAction>(page, layer, img));
+    this->selectedElem = nullptr;
 
     // Select element
     view->getXournal()->setSelection(selection);

@@ -1,0 +1,37 @@
+Foliq text/media validation — 2026-11-11
+Integrated baseline: 81d5201e442a0c4a2f2d05481d0a03ae18ec1300
+Linux GTK/Xvfb, synthetic notes only; no Windows/hardware acceptance.
+
+text-ui-results:
+PASS German Unicode, multiline, formatted/native clipboard, plain paste, local undo/redo and XOPP save
+PASS table cell edits, insert/delete rows and columns, undo/redo, restart/reedit and PDF Unicode extraction
+Critical/assertion messages: 0
+
+text-free-ui-results:
+PASS German Unicode, multiline, formatted/native clipboard, plain paste, local undo/redo and XOPP save
+PASS shared text/camera undo ordering on free pages
+PASS table cell edits, insert/delete rows and columns, undo/redo, restart/reedit and PDF Unicode extraction
+PASS free-page negative-coordinate text, object clipboard, table persistence and tiled PDF
+Critical/assertion messages: 0
+
+media-ui-results:
+PASS image crop/size, original retained, aspect ratio, stacking and one-step undo/redo
+PASS real TeX compile, source save/reopen/reedit, syntax error preserving original, one-step undo/redo and mixed PDF export
+Critical/assertion messages: 0
+
+text-surfaces-ui-results:
+PASS GTK negative-coordinate pen input and save
+PASS GTK stroke undo/redo
+PASS GTK lasso move and undo/redo at negative coordinates
+PASS GTK selection scaling and undo/redo
+PASS GTK highlighter and eraser with undo/redo
+PASS GTK Hand panning into negative space and undo/redo
+PASS GTK real zoom keeps pointer world anchor
+PASS GTK conversion preserves original, translates copy, undo/redo
+PASS GTK paper settings undo/redo
+PASS GTK restart preserves page modes, camera and negative content
+Critical/assertion messages: 0
+
+Unit tests: 128/128 in 23 suites; see text-media-linux-tests.xml.
+Build and final git diff --check passed.
+Known limits and open Windows/IME/pen checks: TEXT-MEDIA-VALIDATION.md.

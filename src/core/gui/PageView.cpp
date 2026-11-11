@@ -299,7 +299,8 @@ auto XojPageView::onButtonPressEvent(const PositionInputData& pos) -> bool {
             this->verticalSpace.reset();
         }
         auto* zoomControl = this->getXournal()->getControl()->getZoomControl();
-        this->verticalSpace = std::make_unique<VerticalToolHandler>(this->page, this->getXournal()->getControl(), y, pos.isControlDown());
+        this->verticalSpace = std::make_unique<VerticalToolHandler>(this->page, this->getXournal()->getControl(), y,
+                                                                    pos.isControlDown());
         this->overlayViews.emplace_back(this->verticalSpace->createView(this, zoomControl, this->settings));
     } else if (h->getToolType() == TOOL_SELECT_RECT || h->getToolType() == TOOL_SELECT_REGION ||
                h->getToolType() == TOOL_SELECT_MULTILAYER_RECT || h->getToolType() == TOOL_SELECT_MULTILAYER_REGION ||
@@ -1177,6 +1178,8 @@ void XojPageView::panSurface(double dx, double dy, bool recordUndo) {
             std::clamp(s.cameraY + dy, -PageSurface::COORDINATE_LIMIT + 14400, PageSurface::COORDINATE_LIMIT - 14400);
     if (s.cameraX == oldX && s.cameraY == oldY)
         return;
+    if (recordUndo)
+        endText();  // Commit text before the camera's document-undo action.
     page->setSurface(s);
     if (recordUndo)
         xournal->getControl()->getUndoRedoHandler()->addUndoAction(

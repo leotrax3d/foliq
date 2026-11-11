@@ -21,8 +21,8 @@ using namespace xoj::util;
 
 LatexGenerator::LatexGenerator(const LatexSettings& settings): settings(settings) {}
 
-auto LatexGenerator::templateSub(const std::string& input, const std::string& templ, const Color textColor)
-        -> std::string {
+auto LatexGenerator::templateSub(const std::string& input, const std::string& templ,
+                                 const Color textColor) -> std::string {
     const static std::regex substRe("%%XPP_((TOOL_INPUT)|(TEXT_COLOR))%%");
     std::string output;
     output.reserve(templ.length());
@@ -52,7 +52,7 @@ auto LatexGenerator::asyncRun(const fs::path& texDir, const std::string& texFile
     try {
         texFilePathOSEncoding = (Util::getLongPath(texDir) / "tex.tex").string();
     } catch (const fs::filesystem_error& e) {
-        GenError res{FS(_F("Failed to parse LaTeX generator path: {1}") % e.what())};
+        return GenError{FS(_F("Failed to parse LaTeX generator path: {1}") % e.what())};
     }
 
     for (auto i = cmd.find(u8"{}"); i != std::string::npos; i = cmd.find(u8"{}", i + texFilePathOSEncoding.length())) {
@@ -73,7 +73,10 @@ auto LatexGenerator::asyncRun(const fs::path& texDir, const std::string& texFile
                           "example, by running:\n\n$ flatpak install flathub org.freedesktop.Sdk.Extension.texlive") %
                        argv.get()[0])};
         } else {
-            return GenError{FS(_F("Failed to find LaTeX generator program in PATH: {1}") % argv.get()[0])};
+            return GenError{FS(_F("Failed to find LaTeX generator program in PATH: {1}. Install TeX Live or MiKTeX "
+                                  "with the packages required by your template, then restart Foliq. Local formulas can "
+                                  "be displayed and exported without TeX; editing requires a local TeX installation.") %
+                               argv.get()[0])};
         }
     }
     g_free(argv.get()[0]);

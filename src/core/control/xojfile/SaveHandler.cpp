@@ -1,4 +1,3 @@
-#include "folio/Storage.h"
 #include "SaveHandler.h"
 
 #include <cinttypes>   // for PRIx32
@@ -17,26 +16,27 @@
 #include "control/xml/XmlPointNode.h"          // for XmlPointNode
 #include "control/xml/XmlTexNode.h"            // for XmlTexNode
 #include "control/xml/XmlTextNode.h"           // for XmlTextNode
-#include "model/AudioElement.h"                // for AudioElement
-#include "model/BackgroundImage.h"             // for BackgroundImage
-#include "model/Document.h"                    // for Document
-#include "model/Element.h"                     // for Element, ELEMENT_IMAGE
-#include "model/Font.h"                        // for XojFont
-#include "model/Image.h"                       // for Image
-#include "model/Layer.h"                       // for Layer
-#include "model/LineStyle.h"                   // for LineStyle
-#include "model/PageType.h"                    // for PageType
-#include "model/Point.h"                       // for Point
-#include "model/Stroke.h"                      // for Stroke, StrokeCapStyle
-#include "model/StrokeStyle.h"                 // for StrokeStyle
-#include "model/TexImage.h"                    // for TexImage
-#include "model/Text.h"                        // for Text
-#include "model/XojPage.h"                     // for XojPage
-#include "pdf/base/XojPdfDocument.h"           // for XojPdfDocument
-#include "util/OutputStream.h"                 // for GzOutputStream, Output...
-#include "util/PathUtil.h"                     // for clearExtensions
-#include "util/PlaceholderString.h"            // for PlaceholderString
-#include "util/i18n.h"                         // for FS, _F
+#include "folio/Storage.h"
+#include "model/AudioElement.h"       // for AudioElement
+#include "model/BackgroundImage.h"    // for BackgroundImage
+#include "model/Document.h"           // for Document
+#include "model/Element.h"            // for Element, ELEMENT_IMAGE
+#include "model/Font.h"               // for XojFont
+#include "model/Image.h"              // for Image
+#include "model/Layer.h"              // for Layer
+#include "model/LineStyle.h"          // for LineStyle
+#include "model/PageType.h"           // for PageType
+#include "model/Point.h"              // for Point
+#include "model/Stroke.h"             // for Stroke, StrokeCapStyle
+#include "model/StrokeStyle.h"        // for StrokeStyle
+#include "model/TexImage.h"           // for TexImage
+#include "model/Text.h"               // for Text
+#include "model/XojPage.h"            // for XojPage
+#include "pdf/base/XojPdfDocument.h"  // for XojPdfDocument
+#include "util/OutputStream.h"        // for GzOutputStream, Output...
+#include "util/PathUtil.h"            // for clearExtensions
+#include "util/PlaceholderString.h"   // for PlaceholderString
+#include "util/i18n.h"                // for FS, _F
 
 #include "config.h"  // for FILE_FORMAT_VERSION
 
@@ -78,7 +78,7 @@ void SaveHandler::prepareSave(Document* doc) {
 
 void SaveHandler::writeHeader() {
     this->root->setAttrib("creator", PROJECT_STRING);
-    this->root->setAttrib("fileversion", FILE_FORMAT_VERSION);
+    this->root->setAttrib("fileversion", 4);
     this->root->addChild(new XmlTextNode("title", std::string{"Xournal++ document - see "} + PROJECT_HOMEPAGE_URL));
 }
 
@@ -179,6 +179,11 @@ void SaveHandler::visitLayer(XmlNode* page, Layer* l) {
 
             XojFont& f = t->getFont();
 
+            if (!t->getRichText().spans.empty() || t->getRichText().columns) {
+                text->setAttrib("foliq-rich", t->getRichText().encode());
+                this->root->setAttrib("foliq-content-version", 1);
+                this->root->setAttrib("fileversion", 5);
+            }
             text->setAttrib("font", f.getName().c_str());
             text->setAttrib("size", f.getSize());
             text->setAttrib("x", t->getX());
@@ -192,6 +197,16 @@ void SaveHandler::visitLayer(XmlNode* page, Layer* l) {
             layer->addChild(image);
 
             image->setImage(i->getImage());
+            auto crop = i->getCrop();
+            if (crop.left != 0 || crop.top != 0 || crop.right != 1 || crop.bottom != 1) {
+                image->setAttrib("foliq-crop-version", 1);
+                image->setAttrib("crop-left", crop.left);
+                image->setAttrib("crop-top", crop.top);
+                image->setAttrib("crop-right", crop.right);
+                image->setAttrib("crop-bottom", crop.bottom);
+                this->root->setAttrib("foliq-content-version", 1);
+                this->root->setAttrib("fileversion", 5);
+            }
 
             image->setAttrib("left", i->getX());
             image->setAttrib("top", i->getY());
@@ -376,11 +391,15 @@ void SaveHandler::saveTo(OutputStream* out, const fs::path& filepath, ProgressLi
 
     for (BackgroundImage const& img: backgroundImages) {
         auto tmpfn = (fs::path(filepath) += ".") += img.getFilepath();
-        gchar* buffer = nullptr; gsize size = 0;
+        gchar* buffer = nullptr;
+        gsize size = 0;
         bool saved = gdk_pixbuf_save_to_buffer(img.getPixbuf(), &buffer, &size, "png", nullptr, nullptr);
         if (saved) {
-            try { foliq::atomicWrite(tmpfn, std::string(buffer, size)); }
-            catch (const std::exception&) { saved = false; }
+            try {
+                foliq::atomicWrite(tmpfn, std::string(buffer, size));
+            } catch (const std::exception&) {
+                saved = false;
+            }
         }
         g_free(buffer);
         if (!saved) {

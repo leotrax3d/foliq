@@ -27,6 +27,7 @@ public:
 
 public:
     bool insertImage(double x, double y);
+    static void editSelectedImage(Control* control);
     // does the complete insertion based on create and add
     bool insertImage(GFile* file, double x, double y);
     // creates the image and does automatic scaling of the image

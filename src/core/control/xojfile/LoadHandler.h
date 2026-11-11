@@ -143,6 +143,8 @@ private:
     Layer* layer;
     Stroke* stroke;
     Text* text;
+    std::string textContent;
+    std::string richContent;
     Image* image;
     TexImage* teximage;
     GHashTable* audioFiles = nullptr;

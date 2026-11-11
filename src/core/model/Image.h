@@ -36,6 +36,15 @@ public:
     virtual ~Image();
 
 public:
+    struct Crop {
+        double left = 0;
+        double top = 0;
+        double right = 1;
+        double bottom = 1;
+    };
+    bool setCrop(Crop value);
+    Crop getCrop() const { return crop; }
+    bool rescaleOnlyAspectRatio() override { return true; }
     void setWidth(double width);
     void setHeight(double height);
 
@@ -105,4 +114,5 @@ private:
     mutable std::pair<int, int> imageSize = {-1, -1};
 
     std::string data;
+    Crop crop;
 };

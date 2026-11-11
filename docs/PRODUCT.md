@@ -27,9 +27,12 @@ Diese Funktionen wurden übernommen; ihre vollständige Hardwareabnahme steht au
 Lokale Notizbuchhierarchie mit XOPP-Navigation und Speicherung ist implementiert;
 Bedienung und Grenzen stehen in [NOTEBOOKS.md](NOTEBOOKS.md).
 
-Noch nicht implementiert: Rich Text mit gemischten Stilen,
-strukturierte Tabellen/Listen, beliebige Anhänge, Tags/Aufgaben, globale Suche,
-OCR, Handschrift-zu-Text und verschlüsselte Notizbücher. Die neue GTK-Hauptoberfläche ist implementiert; Bedienung und
+Implementiert: gemischte Textstile, native Formatierungsbearbeitung, editierbare
+Tabellen, Listen-/Checklistenmarker, Links/Seitenverweise, reversibler Bildzuschnitt
+und erneut bearbeitbare LaTeX-Formeln. Umfang und Grenzen: [TEXT-AND-MEDIA.md](TEXT-AND-MEDIA.md).
+
+Noch nicht implementiert: beliebige Anhänge, globale Tags/Aufgabenverwaltung, globale Suche,
+OCR, Handschrift-zu-Text, verschlüsselte Notizbücher. Die neue GTK-Hauptoberfläche ist implementiert; Bedienung und
 Gestaltungsgrundlagen: [FOLIQ-UI.md](design-references/FOLIQ-UI.md). `HandRecognition` im Upstream ist
 Handballen-/Touch-Unterdrückung und keine Handschrifterkennung.
 

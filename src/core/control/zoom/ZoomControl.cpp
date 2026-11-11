@@ -285,6 +285,8 @@ void ZoomControl::setZoom(double zoomI) {
     }
     auto* pv = view ? view->getViewFor(view->getCurrentPage()) : nullptr;
     const bool free = pv && pv->getPage()->isInfinite();
+    if (free && isZoomSequenceActive() && !restoringSurfaceHistory)
+        pv->endText();
     const auto oldZoom = this->zoom;
     const auto oldSurface = free ? pv->getPage()->getSurface() : PageSurface{};
     auto center = isZoomSequenceActive() ? zoomWidgetPos : utl::Point<double>{0, 0};

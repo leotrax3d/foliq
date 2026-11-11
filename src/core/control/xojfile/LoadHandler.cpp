@@ -273,6 +273,12 @@ void LoadHandler::parseStart() {
     if (strcmp(elementName, "xournal") == 0) {
         endRootTag = "xournal";
 
+        int foliqVersion = 0;
+        if (LoadHandlerHelper::getAttribInt("foliq-content-version", true, this, foliqVersion) && foliqVersion != 1) {
+            error("Unsupported Foliq content version; file was not opened");
+            return;
+        }
+
         // Read the document version
         const char* version = LoadHandlerHelper::getAttrib("version", true, this);
         if (version) {
@@ -697,6 +703,9 @@ void LoadHandler::parseStroke() {
 }
 
 void LoadHandler::parseText() {
+    textContent.clear();
+    const char* rich = LoadHandlerHelper::getAttrib("foliq-rich", true, this);
+    richContent = rich ? rich : "";
     this->text = new Text();
     this->layer->addElement(this->text);
 
@@ -747,6 +756,15 @@ void LoadHandler::parseImage() {
     this->image->setY(top);
     this->image->setWidth(right - left);
     this->image->setHeight(bottom - top);
+    int cropVersion = 0;
+    if (LoadHandlerHelper::getAttribInt("foliq-crop-version", true, this, cropVersion)) {
+        if (cropVersion != 1 || !this->image->setCrop({LoadHandlerHelper::getAttribDouble("crop-left", this),
+                                                       LoadHandlerHelper::getAttribDouble("crop-top", this),
+                                                       LoadHandlerHelper::getAttribDouble("crop-right", this),
+                                                       LoadHandlerHelper::getAttribDouble("crop-bottom", this)})) {
+            error("Unsupported or invalid image crop; file was not opened");
+        }
+    }
 }
 
 void LoadHandler::parseTexImage() {
@@ -924,6 +942,11 @@ void LoadHandler::parserStartElement(GMarkupParseContext* context, const gchar* 
         }
     }
 
+    // Stop GMarkup immediately, including within the current input block. Helpers
+    // report via the handler; GMarkup's callback error slot is a different pointer.
+    if (handler->error && !*error && error != &handler->error) {
+        g_propagate_error(error, std::exchange(handler->error, nullptr));
+    }
     handler->attributeNames = nullptr;
     handler->attributeValues = nullptr;
     handler->elementName = nullptr;
@@ -957,6 +980,18 @@ void LoadHandler::parserEndElement(GMarkupParseContext* context, const gchar* el
         handler->pos = PARSER_POS_IN_LAYER;
         handler->stroke = nullptr;
     } else if (handler->pos == PARSER_POS_IN_TEXT && strcmp(elementName, "text") == 0) {
+        try {
+            if (handler->richContent.empty())
+                handler->text->setText(handler->textContent);
+            else {
+                auto rich = RichText::decode(handler->richContent);
+                if (rich.text != handler->textContent)
+                    throw std::runtime_error("Rich text/plain text mismatch");
+                handler->text->setRichText(std::move(rich));
+            }
+        } catch (const std::exception& e) {
+            g_set_error(error, G_MARKUP_ERROR, G_MARKUP_ERROR_INVALID_CONTENT, "%s", e.what());
+        }
         handler->pos = PARSER_POS_IN_LAYER;
         handler->text = nullptr;
     } else if (handler->pos == PARSER_POS_IN_IMAGE && strcmp(elementName, "image") == 0) {
@@ -1095,9 +1130,7 @@ void LoadHandler::parserText(GMarkupParseContext* context, const gchar* text, gs
             handler->pressureBuffer.clear();
         }
     } else if (handler->pos == PARSER_POS_IN_TEXT) {
-        gchar* txt = g_strndup(text, textLen);
-        handler->text->setText(txt);
-        g_free(txt);
+        handler->textContent.append(text, textLen);
     } else if (handler->pos == PARSER_POS_IN_IMAGE) {
         handler->readImage(text, textLen);
     } else if (handler->pos == PARSER_POS_IN_TEXIMAGE) {

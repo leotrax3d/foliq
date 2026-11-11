@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="128" failures="0" disabled="0" errors="0" time="0.524" timestamp="2026-11-11T11:22:35.454" name="AllTests">
+  <testsuite name="FoliqCatalogTest" tests="8" failures="0" disabled="0" skipped="0" errors="0" time="0.092" timestamp="2026-11-11T11:22:35.454">
+    <testcase name="RestartMoveTrashAndPositionKeepDocumentIdentity" file="/src/test/unit_tests/FoliqCatalogTest.cpp" line="33" status="run" result="completed" time="0.031" timestamp="2026-11-11T11:22:35.454" classname="FoliqCatalogTest" />
+    <testcase name="OrderingDuplicateAndCycleRollback" file="/src/test/unit_tests/FoliqCatalogTest.cpp" line="70" status="run" result="completed" time="0.021" timestamp="2026-11-11T11:22:35.486" classname="FoliqCatalogTest" />
+    <testcase name="FailedMetadataWriteDoesNotPublishOrLoseContent" file="/src/test/unit_tests/FoliqCatalogTest.cpp" line="95" status="run" result="completed" time="0.009" timestamp="2026-11-11T11:22:35.507" classname="FoliqCatalogTest" />
+    <testcase name="LocksExternalEditsAndUnknownVersionsFailClosed" file="/src/test/unit_tests/FoliqCatalogTest.cpp" line="118" status="run" result="completed" time="0.007" timestamp="2026-11-11T11:22:35.517" classname="FoliqCatalogTest" />
+    <testcase name="InterruptedStageAndBackupFailureKeepLastCompleteRevision" file="/src/test/unit_tests/FoliqCatalogTest.cpp" line="140" status="run" result="completed" time="0.004" timestamp="2026-11-11T11:22:35.524" classname="FoliqCatalogTest" />
+    <testcase name="DocumentConflictDetection" file="/src/test/unit_tests/FoliqCatalogTest.cpp" line="153" status="run" result="completed" time="0.003" timestamp="2026-11-11T11:22:35.528" classname="FoliqCatalogTest" />
+    <testcase name="MissingOrCorruptCatalogNeverReinitializesBackup" file="/src/test/unit_tests/FoliqCatalogTest.cpp" line="166" status="run" result="completed" time="0.003" timestamp="2026-11-11T11:22:35.532" classname="FoliqCatalogTest" />
+    <testcase name="CorruptRelationsAndMissingDocumentAreRejectedWithoutRewriting" file="/src/test/unit_tests/FoliqCatalogTest.cpp" line="191" status="run" result="completed" time="0.01" timestamp="2026-11-11T11:22:35.535" classname="FoliqCatalogTest" />
+  </testsuite>
+  <testsuite name="ControlLoadHandler" tests="20" failures="0" disabled="0" skipped="0" errors="0" time="0.108" timestamp="2026-11-11T11:22:35.546">
+    <testcase name="testLoad" file="/src/test/unit_tests/control/LoadHandlerTest.cpp" line="162" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.546" classname="ControlLoadHandler" />
+    <testcase name="testLoadZipped" file="/src/test/unit_tests/control/LoadHandlerTest.cpp" line="180" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.546" classname="ControlLoadHandler" />
+    <testcase name="testLoadUnzipped" file="/src/test/unit_tests/control/LoadHandlerTest.cpp" line="198" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.546" classname="ControlLoadHandler" />
+    <testcase name="testPages" file="/src/test/unit_tests/control/LoadHandlerTest.cpp" line="216" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.546" classname="ControlLoadHandler" />
+    <testcase name="testPagesZipped" file="/src/test/unit_tests/control/LoadHandlerTest.cpp" line="223" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.547" classname="ControlLoadHandler" />
+    <testcase name="testPageType" file="/src/test/unit_tests/control/LoadHandlerTest.cpp" line="231" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.548" classname="ControlLoadHandler" />
+    <testcase name="testPageTypeZipped" file="/src/test/unit_tests/control/LoadHandlerTest.cpp" line="244" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.548" classname="ControlLoadHandler" />
+    <testcase name="testPageTypeFormatCopyFix" file="/src/test/unit_tests/control/LoadHandlerTest.cpp" line="257" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.549" classname="ControlLoadHandler" />
+    <testcase name="testLayer" file="/src/test/unit_tests/control/LoadHandlerTest.cpp" line="267" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.549" classname="ControlLoadHandler" />
+    <testcase name="testLayerZipped" file="/src/test/unit_tests/control/LoadHandlerTest.cpp" line="280" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.549" classname="ControlLoadHandler" />
+    <testcase name="testText" file="/src/test/unit_tests/control/LoadHandlerTest.cpp" line="293" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.549" classname="ControlLoadHandler" />
+    <testcase name="testTextZipped" file="/src/test/unit_tests/control/LoadHandlerTest.cpp" line="321" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.550" classname="ControlLoadHandler" />
+    <testcase name="testImageZipped" file="/src/test/unit_tests/control/LoadHandlerTest.cpp" line="349" status="run" result="completed" time="0.035" timestamp="2026-11-11T11:22:35.550" classname="ControlLoadHandler" />
+    <testcase name="imageLoadJpeg" file="/src/test/unit_tests/control/LoadHandlerTest.cpp" line="377" status="run" result="completed" time="0.007" timestamp="2026-11-11T11:22:35.585" classname="ControlLoadHandler" />
+    <testcase name="imageSaveJpegBackwardCompat" file="/src/test/unit_tests/control/LoadHandlerTest.cpp" line="395" status="run" result="completed" time="0.04" timestamp="2026-11-11T11:22:35.593" classname="ControlLoadHandler" />
+    <testcase name="linebreaksLatex" file="/src/test/unit_tests/control/LoadHandlerTest.cpp" line="428" status="run" result="completed" time="0.003" timestamp="2026-11-11T11:22:35.633" classname="ControlLoadHandler" />
+    <testcase name="testLoadStoreLoadDefault" file="/src/test/unit_tests/control/LoadHandlerTest.cpp" line="463" status="run" result="completed" time="0.011" timestamp="2026-11-11T11:22:35.637" classname="ControlLoadHandler" />
+    <testcase name="testLoadStoreLoadFloatBwCompat" file="/src/test/unit_tests/control/LoadHandlerTest.cpp" line="469" status="run" result="completed" time="0.003" timestamp="2026-11-11T11:22:35.649" classname="ControlLoadHandler" />
+    <testcase name="testStrokeWidthRecovery" file="/src/test/unit_tests/control/LoadHandlerTest.cpp" line="473" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.653" classname="ControlLoadHandler" />
+    <testcase name="testLoadStoreCJK" file="/src/test/unit_tests/control/LoadHandlerTest.cpp" line="527" status="run" result="completed" time="0.001" timestamp="2026-11-11T11:22:35.653" classname="ControlLoadHandler" />
+  </testsuite>
+  <testsuite name="ToolEnumsTest" tests="2" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-11T11:22:35.654">
+    <testcase name="testToolSizeSerialization" file="/src/test/unit_tests/control/ToolEnumsTest.cpp" line="24" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.654" classname="ToolEnumsTest" />
+    <testcase name="testToolTypeSerialization" file="/src/test/unit_tests/control/ToolEnumsTest.cpp" line="38" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.654" classname="ToolEnumsTest" />
+  </testsuite>
+  <testsuite name="ColorPalette" tests="8" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-11T11:22:35.655">
+    <testcase name="testDefaultWrite" file="/src/test/unit_tests/model/ColorPaletteTest.cpp" line="31" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.655" classname="ColorPalette" />
+    <testcase name="testDefaultLoad" file="/src/test/unit_tests/model/ColorPaletteTest.cpp" line="42" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.655" classname="ColorPalette" />
+    <testcase name="testRainbowLoad" file="/src/test/unit_tests/model/ColorPaletteTest.cpp" line="60" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.655" classname="ColorPalette" />
+    <testcase name="testNotExistLoad" file="/src/test/unit_tests/model/ColorPaletteTest.cpp" line="74" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.655" classname="ColorPalette" />
+    <testcase name="testEmptyLoad" file="/src/test/unit_tests/model/ColorPaletteTest.cpp" line="79" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.655" classname="ColorPalette" />
+    <testcase name="testWrongHeader" file="/src/test/unit_tests/model/ColorPaletteTest.cpp" line="84" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.655" classname="ColorPalette" />
+    <testcase name="testAttributesLoad" file="/src/test/unit_tests/model/ColorPaletteTest.cpp" line="89" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.655" classname="ColorPalette" />
+    <testcase name="testWrongColor" file="/src/test/unit_tests/model/ColorPaletteTest.cpp" line="98" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.655" classname="ColorPalette" />
+  </testsuite>
+  <testsuite name="DocumentName" tests="1" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-11T11:22:35.655">
+    <testcase name="testUTF8" file="/src/test/unit_tests/model/DocumentNameTest.cpp" line="20" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.655" classname="DocumentName" />
+  </testsuite>
+  <testsuite name="ErasableStroke" tests="3" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-11T11:22:35.655">
+    <testcase name="testOverlapTree" file="/src/test/unit_tests/model/ErasableStrokeTest.cpp" line="22" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.655" classname="ErasableStroke" />
+    <testcase name="testGetStrokes" file="/src/test/unit_tests/model/ErasableStrokeTest.cpp" line="81" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.655" classname="ErasableStroke" />
+    <testcase name="testIntersectWithPaddedBox" file="/src/test/unit_tests/model/ErasableStrokeTest.cpp" line="175" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.655" classname="ErasableStroke" />
+  </testsuite>
+  <testsuite name="Image" tests="1" failures="0" disabled="0" skipped="0" errors="0" time="0.004" timestamp="2026-11-11T11:22:35.655">
+    <testcase name="testGetImageApplyOrientation" file="/src/test/unit_tests/model/ImageTest.cpp" line="20" status="run" result="completed" time="0.004" timestamp="2026-11-11T11:22:35.655" classname="Image" />
+  </testsuite>
+  <testsuite name="LineStyle" tests="1" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-11T11:22:35.660">
+    <testcase name="testLineStyle" file="/src/test/unit_tests/model/LineStyleTest.cpp" line="18" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.660" classname="LineStyle" />
+  </testsuite>
+  <testsuite name="PageSurface" tests="16" failures="0" disabled="0" skipped="0" errors="0" time="0.006" timestamp="2026-11-11T11:22:35.660">
+    <testcase name="ZoomAnchorsInAllQuadrants" file="/src/test/unit_tests/model/PageSurfaceTest.cpp" line="40" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.660" classname="PageSurface" />
+    <testcase name="ValidatesFiniteValuesAndLimits" file="/src/test/unit_tests/model/PageSurfaceTest.cpp" line="51" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.660" classname="PageSurface" />
+    <testcase name="LazyTilesCoverNegativeCropWithoutGaps" file="/src/test/unit_tests/model/PageSurfaceTest.cpp" line="63" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.660" classname="PageSurface" />
+    <testcase name="ConversionPreservesOriginalPressureAndOverflow" file="/src/test/unit_tests/model/PageSurfaceTest.cpp" line="86" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.660" classname="PageSurface" />
+    <testcase name="SettingsUndoRedoSwapsCompleteState" file="/src/test/unit_tests/model/PageSurfaceTest.cpp" line="110" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.660" classname="PageSurface" />
+    <testcase name="PanHistoryMergesOnlySamePage" file="/src/test/unit_tests/model/PageSurfaceTest.cpp" line="134" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.660" classname="PageSurface" />
+    <testcase name="SaveLoadRoundtripAndLegacyMigration" file="/src/test/unit_tests/model/PageSurfaceTest.cpp" line="141" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.660" classname="PageSurface" />
+    <testcase name="UnknownSurfaceVersionAndCorruptionAreRejected" file="/src/test/unit_tests/model/PageSurfaceTest.cpp" line="179" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.661" classname="PageSurface" />
+    <testcase name="BoundedRenderingAtDistantAndNegativeCoordinates" file="/src/test/unit_tests/model/PageSurfaceTest.cpp" line="194" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.661" classname="PageSurface" />
+    <testcase name="PdfExportTilingIncludesNegativeCoordinates" file="/src/test/unit_tests/model/PageSurfaceTest.cpp" line="230" status="run" result="completed" time="0.002" timestamp="2026-11-11T11:22:35.662" classname="PageSurface" />
+    <testcase name="PdfPreflightDoesNotOverwriteDestinationOnExcessiveTiles" file="/src/test/unit_tests/model/PageSurfaceTest.cpp" line="273" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.664" classname="PageSurface" />
+    <testcase name="StrictSurfaceMetadataValidationPreservesInput" file="/src/test/unit_tests/model/PageSurfaceTest.cpp" line="295" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.664" classname="PageSurface" />
+    <testcase name="SingleCropAndMixedPaperPdfExport" file="/src/test/unit_tests/model/PageSurfaceTest.cpp" line="324" status="run" result="completed" time="0.001" timestamp="2026-11-11T11:22:35.665" classname="PageSurface" />
+    <testcase name="NegativeOnlyStrokeBoundsDoNotExpandToOrigin" file="/src/test/unit_tests/model/PageSurfaceTest.cpp" line="358" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.666" classname="PageSurface" />
+    <testcase name="LargeSparsePenCrossesDistantViewport" file="/src/test/unit_tests/model/PageSurfaceTest.cpp" line="371" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.666" classname="PageSurface" />
+    <testcase name="BackgroundSuppressionKeepsFreeExportTransparent" file="/src/test/unit_tests/model/PageSurfaceTest.cpp" line="394" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.666" classname="PageSurface" />
+  </testsuite>
+  <testsuite name="FoliqRichText" tests="12" failures="0" disabled="0" skipped="0" errors="0" time="0.156" timestamp="2026-11-11T11:22:35.666">
+    <testcase name="UnicodeStylesVersionAndValidation" file="/src/test/unit_tests/model/RichTextTest.cpp" line="52" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.666" classname="FoliqRichText" />
+    <testcase name="GtkTagsSurviveEditingAndFormattedClipboardSerialization" file="/src/test/unit_tests/model/RichTextTest.cpp" line="93" status="run" result="completed" time="0.1" timestamp="2026-11-11T11:22:35.667" classname="FoliqRichText" />
+    <testcase name="TableStructureLayoutAndReediting" file="/src/test/unit_tests/model/RichTextTest.cpp" line="127" status="run" result="completed" time="0.001" timestamp="2026-11-11T11:22:35.767" classname="FoliqRichText" />
+    <testcase name="ObjectClipboardCloneAndProportionalResize" file="/src/test/unit_tests/model/RichTextTest.cpp" line="153" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.769" classname="FoliqRichText" />
+    <testcase name="RealXoppRoundtripAndLongMultilineText" file="/src/test/unit_tests/model/RichTextTest.cpp" line="174" status="run" result="completed" time="0.015" timestamp="2026-11-11T11:22:35.769" classname="FoliqRichText" />
+    <testcase name="NewerContentRefusedWithoutModifyingFile" file="/src/test/unit_tests/model/RichTextTest.cpp" line="216" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.785" classname="FoliqRichText" />
+    <testcase name="ReplacementUndoRedoPreservesStackingOrder" file="/src/test/unit_tests/model/RichTextTest.cpp" line="228" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.785" classname="FoliqRichText" />
+    <testcase name="NonDestructiveImageCropValidationAndSerialization" file="/src/test/unit_tests/model/RichTextTest.cpp" line="255" status="run" result="completed" time="0.006" timestamp="2026-11-11T11:22:35.785" classname="FoliqRichText" />
+    <testcase name="CropRendererClipsWithoutDestroyingOriginalPixels" file="/src/test/unit_tests/model/RichTextTest.cpp" line="310" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.791" classname="FoliqRichText" />
+    <testcase name="FormulaSourceAndOriginalImageSurviveXoppAndClipboard" file="/src/test/unit_tests/model/RichTextTest.cpp" line="343" status="run" result="completed" time="0.017" timestamp="2026-11-11T11:22:35.792" classname="FoliqRichText" />
+    <testcase name="CorruptRichContentAndNewerCropRefused" file="/src/test/unit_tests/model/RichTextTest.cpp" line="393" status="run" result="completed" time="0.001" timestamp="2026-11-11T11:22:35.809" classname="FoliqRichText" />
+    <testcase name="FreeCoordinatesConversionAndTiledPdfPreserveEditableContent" file="/src/test/unit_tests/model/RichTextTest.cpp" line="414" status="run" result="completed" time="0.011" timestamp="2026-11-11T11:22:35.810" classname="FoliqRichText" />
+  </testsuite>
+  <testsuite name="StrokeStyle" tests="2" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-11T11:22:35.822">
+    <testcase name="testParseStyle" file="/src/test/unit_tests/model/StrokeStyleTest.cpp" line="24" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.822" classname="StrokeStyle" />
+    <testcase name="testFormatStyle" file="/src/test/unit_tests/model/StrokeStyleTest.cpp" line="34" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.822" classname="StrokeStyle" />
+  </testsuite>
+  <testsuite name="UtilColor" tests="2" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-11T11:22:35.822">
+    <testcase name="testColorToRGB" file="/src/test/unit_tests/util/ColorTest.cpp" line="30" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.822" classname="UtilColor" />
+    <testcase name="testColorToRGBAndBack" file="/src/test/unit_tests/util/ColorTest.cpp" line="49" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.822" classname="UtilColor" />
+  </testsuite>
+  <testsuite name="UtilElementRange" tests="3" failures="0" disabled="0" skipped="0" errors="0" time="0.015" timestamp="2026-11-11T11:22:35.822">
+    <testcase name="testParse" file="/src/test/unit_tests/util/ElementRangeTest.cpp" line="26" status="run" result="completed" time="0.001" timestamp="2026-11-11T11:22:35.822" classname="UtilElementRange" />
+    <testcase name="testInvalid" file="/src/test/unit_tests/util/ElementRangeTest.cpp" line="39" status="run" result="completed" time="0.013" timestamp="2026-11-11T11:22:35.824" classname="UtilElementRange" />
+    <testcase name="testPageCountIsZero" file="/src/test/unit_tests/util/ElementRangeTest.cpp" line="56" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.837" classname="UtilElementRange" />
+  </testsuite>
+  <testsuite name="UtilI18n" tests="7" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-11T11:22:35.837">
+    <testcase name="testNoPlaceholder" file="/src/test/unit_tests/util/I18nTest.cpp" line="25" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.837" classname="UtilI18n" />
+    <testcase name="testEscape" file="/src/test/unit_tests/util/I18nTest.cpp" line="31" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.837" classname="UtilI18n" />
+    <testcase name="testReplace" file="/src/test/unit_tests/util/I18nTest.cpp" line="37" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.837" classname="UtilI18n" />
+    <testcase name="testMissing" file="/src/test/unit_tests/util/I18nTest.cpp" line="43" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.837" classname="UtilI18n" />
+    <testcase name="testOrder" file="/src/test/unit_tests/util/I18nTest.cpp" line="49" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.837" classname="UtilI18n" />
+    <testcase name="testLatexString" file="/src/test/unit_tests/util/I18nTest.cpp" line="55" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.837" classname="UtilI18n" />
+    <testcase name="test3" file="/src/test/unit_tests/util/I18nTest.cpp" line="63" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.837" classname="UtilI18n" />
+  </testsuite>
+  <testsuite name="UtilIntervals" tests="2" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-11T11:22:35.837">
+    <testcase name="testInterval" file="/src/test/unit_tests/util/IntervalTest.cpp" line="8" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.838" classname="UtilIntervals" />
+    <testcase name="testUnionOfIntervals" file="/src/test/unit_tests/util/IntervalTest.cpp" line="66" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.838" classname="UtilIntervals" />
+  </testsuite>
+  <testsuite name="UtilObjectIOStream" tests="8" failures="0" disabled="0" skipped="0" errors="0" time="0.139" timestamp="2026-11-11T11:22:35.838">
+    <testcase name="testReadData" file="/src/test/unit_tests/util/ObjectIOStreamTest.cpp" line="95" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.838" classname="UtilObjectIOStream" />
+    <testcase name="testReadImage" file="/src/test/unit_tests/util/ObjectIOStreamTest.cpp" line="111" status="run" result="completed" time="0.139" timestamp="2026-11-11T11:22:35.838" classname="UtilObjectIOStream" />
+    <testcase name="testReadString" file="/src/test/unit_tests/util/ObjectIOStreamTest.cpp" line="150" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilObjectIOStream" />
+    <testcase name="testReadSizeT" file="/src/test/unit_tests/util/ObjectIOStreamTest.cpp" line="172" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilObjectIOStream" />
+    <testcase name="testReadInt" file="/src/test/unit_tests/util/ObjectIOStreamTest.cpp" line="191" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilObjectIOStream" />
+    <testcase name="testReadDouble" file="/src/test/unit_tests/util/ObjectIOStreamTest.cpp" line="211" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilObjectIOStream" />
+    <testcase name="testReadComplexObject" file="/src/test/unit_tests/util/ObjectIOStreamTest.cpp" line="230" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilObjectIOStream" />
+    <testcase name="testReadStroke" file="/src/test/unit_tests/util/ObjectIOStreamTest.cpp" line="319" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilObjectIOStream" />
+  </testsuite>
+  <testsuite name="UtilPath" tests="4" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-11T11:22:35.977">
+    <testcase name="testUnsupportedUri" file="/src/test/unit_tests/util/PathTest.cpp" line="22" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilPath" />
+    <testcase name="testPathFromUri" file="/src/test/unit_tests/util/PathTest.cpp" line="29" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilPath" />
+    <testcase name="testPathIsChildOf" file="/src/test/unit_tests/util/PathTest.cpp" line="35" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilPath" />
+    <testcase name="testClearExtensions" file="/src/test/unit_tests/util/PathTest.cpp" line="53" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilPath" />
+  </testsuite>
+  <testsuite name="UtilsRAII" tests="6" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-11T11:22:35.977">
+    <testcase name="testCLibbrairiesSPtr_Constructors" file="/src/test/unit_tests/util/RAIIWrappersTest.cpp" line="39" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilsRAII" />
+    <testcase name="testCLibbrairiesSPtr_MoveAssignments" file="/src/test/unit_tests/util/RAIIWrappersTest.cpp" line="72" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilsRAII" />
+    <testcase name="testCLibbrairiesSPtr_CopyAssignments" file="/src/test/unit_tests/util/RAIIWrappersTest.cpp" line="137" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilsRAII" />
+    <testcase name="testCLibbrairiesSPtr_Reset" file="/src/test/unit_tests/util/RAIIWrappersTest.cpp" line="189" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilsRAII" />
+    <testcase name="testGObjectSPtrConstructors" file="/src/test/unit_tests/util/RAIIWrappersTest.cpp" line="260" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilsRAII" />
+    <testcase name="testGObjectSPtrReset" file="/src/test/unit_tests/util/RAIIWrappersTest.cpp" line="290" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilsRAII" />
+  </testsuite>
+  <testsuite name="UtilRange" tests="3" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-11T11:22:35.977">
+    <testcase name="testEmptyValid" file="/src/test/unit_tests/util/RangeTest.cpp" line="29" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilRange" />
+    <testcase name="testUnite" file="/src/test/unit_tests/util/RangeTest.cpp" line="36" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilRange" />
+    <testcase name="testIntersect" file="/src/test/unit_tests/util/RangeTest.cpp" line="50" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilRange" />
+  </testsuite>
+  <testsuite name="SaveNameUtils" tests="1" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-11T11:22:35.977">
+    <testcase name="testWildcardExpansion" file="/src/test/unit_tests/util/SaveNameUtilsTest.cpp" line="17" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="SaveNameUtils" />
+  </testsuite>
+  <testsuite name="UtilStringUtils" tests="6" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-11T11:22:35.977">
+    <testcase name="testStartWith" file="/src/test/unit_tests/util/StringUtilsTest.cpp" line="25" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilStringUtils" />
+    <testcase name="testSplit" file="/src/test/unit_tests/util/StringUtilsTest.cpp" line="33" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilStringUtils" />
+    <testcase name="testSplitEmpty" file="/src/test/unit_tests/util/StringUtilsTest.cpp" line="41" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilStringUtils" />
+    <testcase name="testSplitOne" file="/src/test/unit_tests/util/StringUtilsTest.cpp" line="47" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilStringUtils" />
+    <testcase name="testEndsWith" file="/src/test/unit_tests/util/StringUtilsTest.cpp" line="54" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilStringUtils" />
+    <testcase name="testCompare" file="/src/test/unit_tests/util/StringUtilsTest.cpp" line="62" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilStringUtils" />
+  </testsuite>
+  <testsuite name="UtilsVectors" tests="3" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-11T11:22:35.977">
+    <testcase name="testTinyVector" file="/src/test/unit_tests/util/TinySmallVectorTest.cpp" line="42" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.977" classname="UtilsVectors" />
+    <testcase name="testSmallVectorPushPop" file="/src/test/unit_tests/util/TinySmallVectorTest.cpp" line="165" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.978" classname="UtilsVectors" />
+    <testcase name="testSmallVectorCopyMove" file="/src/test/unit_tests/util/TinySmallVectorTest.cpp" line="241" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.978" classname="UtilsVectors" />
+  </testsuite>
+  <testsuite name="UtilXojPreviewExtractor" tests="9" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-11-11T11:22:35.978">
+    <testcase name="testNonExistingFile" file="/src/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="25" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.978" classname="UtilXojPreviewExtractor" />
+    <testcase name="testExtensionCheck" file="/src/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="32" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.978" classname="UtilXojPreviewExtractor" />
+    <testcase name="testLoadGzipped" file="/src/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="39" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.978" classname="UtilXojPreviewExtractor" />
+    <testcase name="testLoadGzipped2" file="/src/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="50" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.978" classname="UtilXojPreviewExtractor" />
+    <testcase name="testLoad1Unzipped" file="/src/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="61" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.978" classname="UtilXojPreviewExtractor" />
+    <testcase name="testLoad1Zipped" file="/src/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="72" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.978" classname="UtilXojPreviewExtractor" />
+    <testcase name="testLoad2Zipped" file="/src/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="83" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.978" classname="UtilXojPreviewExtractor" />
+    <testcase name="testNoPreview" file="/src/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="94" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.978" classname="UtilXojPreviewExtractor" />
+    <testcase name="testInvalidFile" file="/src/test/unit_tests/util/XojPreviewExtractorTest.cpp" line="101" status="run" result="completed" time="0." timestamp="2026-11-11T11:22:35.978" classname="UtilXojPreviewExtractor" />
+  </testsuite>
+</testsuites>

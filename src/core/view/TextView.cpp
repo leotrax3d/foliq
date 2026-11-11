@@ -3,12 +3,12 @@
 #include <algorithm>  // for max
 #include <cstddef>    // for size_t
 
-#include "model/Text.h"           // for Text
-#include "util/Color.h"           // for cairo_set_source_rgbi
-#include "util/StringUtils.h"     // for StringUtils
+#include "model/Text.h"        // for Text
+#include "util/Color.h"        // for cairo_set_source_rgbi
+#include "util/StringUtils.h"  // for StringUtils
 #include "util/raii/CairoWrappers.h"
 #include "util/raii/GObjectSPtr.h"
-#include "view/View.h"            // for Context, OPACITY_NO_AUDIO, view
+#include "view/View.h"  // for Context, OPACITY_NO_AUDIO, view
 
 #include "filesystem.h"  // for path
 
@@ -39,7 +39,7 @@ void TextView::draw(const Context& ctx) const {
         cairo_set_operator(ctx.cr, CAIRO_OPERATOR_OVER);
         Util::cairo_set_source_rgbi(ctx.cr, text->getColor(), OPACITY_NO_AUDIO);
     } else {
-        cairo_set_operator(ctx.cr, CAIRO_OPERATOR_SOURCE);
+        cairo_set_operator(ctx.cr, CAIRO_OPERATOR_OVER);
         Util::cairo_set_source_rgbi(ctx.cr, text->getColor());
     }
 
@@ -49,5 +49,6 @@ void TextView::draw(const Context& ctx) const {
     const std::string& content = text->getText();
     pango_layout_set_text(layout.get(), content.c_str(), static_cast<int>(content.length()));
 
+    text->getRichText().drawTable(ctx.cr, layout.get());
     pango_cairo_show_layout(ctx.cr, layout.get());
 }

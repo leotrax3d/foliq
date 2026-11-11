@@ -40,11 +40,11 @@ TextBoxUndoAction::~TextBoxUndoAction() {
     this->oldelement = nullptr;
 }
 
-auto TextBoxUndoAction::getText() -> std::string { return _("Edit text"); }
+auto TextBoxUndoAction::getText() -> std::string { return _("Edit object"); }
 
 auto TextBoxUndoAction::undo(Control* control) -> bool {
-    this->layer->removeElement(this->element, false);
-    this->layer->addElement(this->oldelement);
+    auto index = this->layer->removeElement(this->element, false);
+    this->layer->insertElement(this->oldelement, index);
 
     double x1 = element->getX();
     double y1 = element->getY();
@@ -65,8 +65,8 @@ auto TextBoxUndoAction::undo(Control* control) -> bool {
 }
 
 auto TextBoxUndoAction::redo(Control* control) -> bool {
-    this->layer->removeElement(this->oldelement, false);
-    this->layer->addElement(this->element);
+    auto index = this->layer->removeElement(this->oldelement, false);
+    this->layer->insertElement(this->element, index);
 
     double x1 = oldelement->getX();
     double y1 = oldelement->getY();

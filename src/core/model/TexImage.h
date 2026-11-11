@@ -35,6 +35,7 @@ public:
     ~TexImage() override;
 
 public:
+    bool rescaleOnlyAspectRatio() override { return true; }
     void setWidth(double width);
     void setHeight(double height);
 
