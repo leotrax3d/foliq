@@ -293,3 +293,16 @@ Hardware-/OS-Angaben ausführen, anschließend M2-Navigation/Accessibility ausba
 Alle neu erstellten Commits mit Author und Committer leotrax3d@gmx.net geprüft.
 `git diff --check` erfolgreich; keine neuen Laufzeitbibliotheken. GLib ≥ 2.66
 ist jetzt eine explizite Mindestversion für den atomaren/durablen Schreibpfad.
+
+## Übernahme nach main – 2026-11-11
+
+Auf ausdrückliche Nutzeranweisung den vollständigen Stand von
+`feat/local-notebooks` nach `main` übernommen. Vorher `git fetch origin`, sauberen
+Arbeitsbaum und gemeinsame Historie geprüft: Remote-main ist Vorfahr des
+Feature-Stands; neun vorhandene Commits per Fast-forward übernommen, keine
+Konflikte oder Historienumschreibung. Produktcode unverändert gegenüber dem
+verifizierten Windows-Paket c1e5c012; danach kamen ausschließlich Testbelege und
+Dokumentation hinzu. Author-/Committer-E-Mail aller übernommenen Foliq-Commits
+und dieses Übergabecommits geprüft: leotrax3d@gmx.net. `git diff --check`
+erfolgreich; kein erneuter Editorbuild für die reine Git-/Dokumentationsübernahme.
+Push regulär nach origin/main; abschließend Remote-HEAD und Arbeitsbaum prüfen.
